@@ -18,11 +18,7 @@ async function bootstrap() {
   const logger = WinstonModule.createLogger({
     transports: [
       new winston.transports.Console({
-        format: winston.format.combine(
-          winston.format.timestamp(),
-          winston.format.colorize(),
-          winston.format.simple(),
-        ),
+        format: winston.format.combine(winston.format.timestamp(), winston.format.colorize(), winston.format.simple()),
       }),
     ],
   });
@@ -60,12 +56,7 @@ async function bootstrap() {
 
   // Swagger documentation
   if (process.env.NODE_ENV !== 'production') {
-    const config = new DocumentBuilder()
-      .setTitle('Hyperion API')
-      .setDescription('A secure NestJS backend application')
-      .setVersion('1.0')
-      .addBearerAuth()
-      .build();
+    const config = new DocumentBuilder().setTitle('Hyperion API').setDescription('A secure NestJS backend application').setVersion('1.0').addBearerAuth().build();
 
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api-docs', app, document);
@@ -75,9 +66,7 @@ async function bootstrap() {
   await app.listen(port);
 
   logger.log(`Application is running on: http://localhost:${port}`);
-  logger.log(
-    `API documentation available at: http://localhost:${port}/api-docs`,
-  );
+  logger.log(`API documentation available at: http://localhost:${port}/api-docs`);
 }
 
 bootstrap();

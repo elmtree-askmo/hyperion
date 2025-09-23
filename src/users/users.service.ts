@@ -42,10 +42,7 @@ export class UsersService {
     return await this.userRepository.findOne({ where: { email } });
   }
 
-  async update(
-    id: number,
-    updateUserDto: UpdateUserDto,
-  ): Promise<Omit<User, 'password'>> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<Omit<User, 'password'>> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');

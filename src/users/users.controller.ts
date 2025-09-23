@@ -1,15 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Request,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ForbiddenException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -58,12 +47,12 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async findOne(@Param('id') id: string, @Request() req) {
     const userId = +id;
-    
+
     // Users can only view their own profile unless they are admin
     if (req.user.role !== 'admin' && req.user.id !== userId) {
       throw new ForbiddenException('You can only view your own profile');
     }
-    
+
     return this.usersService.findById(userId);
   }
 
@@ -73,12 +62,12 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Request() req) {
     const userId = +id;
-    
+
     // Users can only update their own profile unless they are admin
     if (req.user.role !== 'admin' && req.user.id !== userId) {
       throw new ForbiddenException('You can only update your own profile');
     }
-    
+
     return this.usersService.update(userId, updateUserDto);
   }
 

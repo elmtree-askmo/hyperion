@@ -8,7 +8,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { VideoTransformModule } from './video-transform/video-transform.module';
 import { User } from './users/entities/user.entity';
+import { VideoJob } from './video-transform/entities/video-job.entity';
 
 @Module({
   imports: [
@@ -29,15 +31,12 @@ import { User } from './users/entities/user.entity';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         schema: configService.get('DB_SCHEMA', 'public'), // 默认使用 public schema
-        entities: [User],
+        entities: [User, VideoJob],
         migrations: ['dist/migrations/*.js'],
         migrationsRun: configService.get('NODE_ENV') === 'production', // 生产环境自动运行迁移
         synchronize: configService.get('NODE_ENV') !== 'production', // 生产环境中应该设为 false
         logging: configService.get('NODE_ENV') === 'development',
-        ssl:
-          configService.get('NODE_ENV') === 'production'
-            ? { rejectUnauthorized: false }
-            : false,
+        ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
       }),
       inject: [ConfigService],
     }),
@@ -53,6 +52,7 @@ import { User } from './users/entities/user.entity';
     // Feature modules
     AuthModule,
     UsersModule,
+    VideoTransformModule,
   ],
   controllers: [AppController],
   providers: [

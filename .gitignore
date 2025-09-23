@@ -51,3 +51,6 @@ jest.config.js
 
 # TypeScript
 *.tsbuildinfo
+
+# Downloaded files
+metadata/
