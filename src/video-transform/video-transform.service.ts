@@ -6,6 +6,7 @@ import { CreateVideoJobDto } from './dto/create-video-job.dto';
 import { VideoJobQueryDto } from './dto/video-job-query.dto';
 import { YouTubeService } from './services/youtube.service';
 import { ContentAnalysisService } from './services/content-analysis.service';
+import { LangChainContentAnalysisService } from './services/langchain-content-analysis.service';
 
 @Injectable()
 export class VideoTransformService {
@@ -14,6 +15,7 @@ export class VideoTransformService {
     private readonly videoJobRepository: Repository<VideoJob>,
     private readonly youtubeService: YouTubeService,
     private readonly contentAnalysisService: ContentAnalysisService,
+    private readonly langChainContentAnalysisService: LangChainContentAnalysisService,
   ) {}
 
   async createVideoJob(createVideoJobDto: CreateVideoJobDto, userId: string): Promise<VideoJob> {
@@ -67,7 +69,7 @@ export class VideoTransformService {
   async startVideoProcessing(id: string, userId: string): Promise<VideoJob> {
     const videoJob = await this.getVideoJob(id, userId);
 
-    if (videoJob.status !== JobStatus.PENDING) {
+    if (videoJob.status !== JobStatus.PENDING && videoJob.status !== JobStatus.PROCESSING) {
       throw new BadRequestException('Video job cannot be started in current status');
     }
 
@@ -103,22 +105,46 @@ export class VideoTransformService {
       // Step 1: Extract video metadata from YouTube
       const videoMetadata = await this.youtubeService.getVideoMetadata(videoJob.youtubeUrl);
 
+      if (videoMetadata && videoJob.title !== videoMetadata.title) {
+        videoJob.title = videoMetadata.title;
+        videoJob.description = videoMetadata.description;
+        videoJob.updatedAt = new Date();
+        await this.videoJobRepository.save(videoJob);
+      }
+
       // Step 2: Download video transcript/subtitles
       const transcript = await this.youtubeService.getVideoTranscript(videoJob.youtubeUrl);
 
-      // Step 3: Analyze content and create segments optimized for Thai college students
-      const segments = await this.contentAnalysisService.analyzeAndSegmentContent(videoMetadata, transcript, videoJob.targetSegmentDuration, videoJob.targetAudience);
-
-      // Step 4: Generate educational enhancements for each segment
-      const enhancedSegments = await Promise.all(
-        segments.map(async (segment) => {
-          const enhancements = await this.contentAnalysisService.generateEducationalEnhancements(segment, videoJob.targetAudience);
-          return {
-            ...segment,
-            ...enhancements,
-          };
-        }),
+      // Step 3: Use LangChain with OpenAI GPT for comprehensive content analysis
+      const lessonAnalysis = await this.langChainContentAnalysisService.analyzeVideoContent(
+        videoMetadata,
+        transcript,
+        videoJob.targetAudience,
+        videoJob.targetSegmentDuration,
+        videoJob.youtubeUrl,
       );
+
+      // Extract segments and analysis data
+      const enhancedSegments = lessonAnalysis.segments.map((segment) => ({
+        segmentNumber: parseInt(segment.id.split('_')[1]) || 1,
+        startTime: segment.startTime,
+        endTime: segment.endTime,
+        title: segment.title,
+        content: segment.content,
+        keyTopics: segment.keyTopics,
+        difficulty: segment.difficulty,
+        estimatedComprehensionTime: Math.round(segment.duration / 60), // Convert to minutes
+        vocabularyLevel: this.mapDifficultyToLevel(segment.difficulty),
+        grammarFocus: segment.keyTopics.slice(0, 3), // Use key topics as grammar focus
+        // Add lesson analysis data
+        learningObjectives: segment.learningObjectives,
+        prerequisites: segment.prerequisites,
+        lessonAnalysis: {
+          objectives: lessonAnalysis.learningObjectives,
+          prerequisites: lessonAnalysis.prerequisites,
+          seriesStructure: lessonAnalysis.seriesStructure,
+        },
+      }));
 
       // Update job with results
       videoJob.status = JobStatus.COMPLETED;
@@ -135,5 +161,14 @@ export class VideoTransformService {
       videoJob.updatedAt = new Date();
       await this.videoJobRepository.save(videoJob);
     }
+  }
+
+  private mapDifficultyToLevel(difficulty: 'beginner' | 'intermediate' | 'advanced'): number {
+    const levelMap = {
+      beginner: 3,
+      intermediate: 6,
+      advanced: 9,
+    };
+    return levelMap[difficulty] || 5;
   }
 }

@@ -14,6 +14,8 @@ A secure NestJS backend application with enterprise-grade security features.
 - 🔒 **Role-based Access Control (RBAC)**
 - 🗄️ **PostgreSQL + TypeORM** with Schema Support
 - 🔄 **Database Migrations** for Schema Management
+- 🎓 **AI-Powered Content Analysis** with LangChain & OpenAI GPT-4
+- 📺 **YouTube Video Processing** with intelligent segmentation
 
 ## Security Features
 
@@ -99,22 +101,63 @@ A secure NestJS backend application with enterprise-grade security features.
 
 ## Environment Variables
 
-| Variable           | Description                          | Default                 |
-| ------------------ | ------------------------------------ | ----------------------- |
-| `NODE_ENV`         | Environment (development/production) | `development`           |
-| `PORT`             | Server port                          | `3000`                  |
-| `JWT_SECRET`       | JWT signing secret                   | Required                |
-| `JWT_EXPIRES_IN`   | JWT expiration time                  | `1d`                    |
-| `CORS_ORIGIN`      | Allowed CORS origins                 | `http://localhost:3000` |
-| `RATE_LIMIT_TTL`   | Rate limit time window (seconds)     | `60`                    |
-| `RATE_LIMIT_LIMIT` | Max requests per TTL                 | `10`                    |
-| `LOG_LEVEL`        | Logging level                        | `info`                  |
-| `DB_HOST`          | Database host                        | `localhost`             |
-| `DB_PORT`          | Database port                        | `5432`                  |
-| `DB_USERNAME`      | Database username                    | `postgres`              |
-| `DB_PASSWORD`      | Database password                    | `password`              |
-| `DB_DATABASE`      | Database name                        | `hyperion`              |
-| `DB_SCHEMA`        | Database schema                      | `public`                |
+| Variable               | Description                           | Default                               |
+| ---------------------- | ------------------------------------- | ------------------------------------- |
+| `NODE_ENV`             | Environment (development/production)  | `development`                         |
+| `PORT`                 | Server port                           | `3000`                                |
+| `JWT_SECRET`           | JWT signing secret                    | Required                              |
+| `JWT_EXPIRES_IN`       | JWT expiration time                   | `1d`                                  |
+| `CORS_ORIGIN`          | Allowed CORS origins                  | `http://localhost:3000`               |
+| `RATE_LIMIT_TTL`       | Rate limit time window (seconds)      | `60`                                  |
+| `RATE_LIMIT_LIMIT`     | Max requests per TTL                  | `10`                                  |
+| `LOG_LEVEL`            | Logging level                         | `info`                                |
+| `DB_HOST`              | Database host                         | `localhost`                           |
+| `DB_PORT`              | Database port                         | `5432`                                |
+| `DB_USERNAME`          | Database username                     | `postgres`                            |
+| `DB_PASSWORD`          | Database password                     | `password`                            |
+| `DB_DATABASE`          | Database name                         | `hyperion`                            |
+| `DB_SCHEMA`            | Database schema                       | `public`                              |
+| `LLM_PROVIDER`         | LLM provider to use                   | `openrouter` (openai/openrouter/groq) |
+| `OPENAI_API_KEY`       | OpenAI API key for GPT models         | Required if using OpenAI              |
+| `OPENROUTER_API_KEY`   | OpenRouter API key for diverse models | Required if using OpenRouter          |
+| `GROQ_API_KEY`         | Groq API key for fast inference       | Required if using Groq                |
+| `LANGCHAIN_API_KEY`    | LangSmith API key for LLM debugging   | Optional for debugging                |
+| `LANGCHAIN_TRACING_V2` | Enable LangSmith tracing              | `true` (optional)                     |
+| `LANGCHAIN_PROJECT`    | LangSmith project name                | `hyperion-content-analysis`           |
+
+## LLM Provider Configuration
+
+The application supports multiple LLM providers for content analysis. You can switch between providers using the `LLM_PROVIDER` environment variable.
+
+### Supported Providers
+
+| Provider       | Value        | Description                           | Model Used                 |
+| -------------- | ------------ | ------------------------------------- | -------------------------- |
+| **OpenRouter** | `openrouter` | Access to multiple open-source models | `openai/gpt-oss-120b:free` |
+| **OpenAI**     | `openai`     | Direct OpenAI API access              | `gpt-5`                    |
+| **Groq**       | `groq`       | Fast inference with Groq hardware     | `openai/gpt-oss-120b`      |
+
+### Configuration Examples
+
+```bash
+# Use OpenRouter (default)
+LLM_PROVIDER=openrouter
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+
+# Use OpenAI
+LLM_PROVIDER=openai
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Use Groq
+LLM_PROVIDER=groq
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+### Provider Selection Guidelines
+
+- **OpenRouter**: Best for cost-effectiveness and access to diverse models
+- **OpenAI**: Best for highest quality results (requires paid API)
+- **Groq**: Best for speed and low-latency inference
 
 ## API Documentation
 

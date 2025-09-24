@@ -53,4 +53,4 @@ jest.config.js
 *.tsbuildinfo
 
 # Downloaded files
-metadata/
+videos/

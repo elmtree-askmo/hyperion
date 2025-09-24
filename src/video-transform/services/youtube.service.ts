@@ -32,18 +32,15 @@ interface YoutubeVideoInfo {
 @Injectable()
 export class YouTubeService {
   // Define the directory to save JSON files
-  private readonly metadataDir = path.join(process.cwd(), 'metadata');
+  private readonly videosDir = path.join(process.cwd(), 'videos');
 
-  constructor() {
-    // Ensure metadata directory exists
-    this.ensureMetadataDir();
-  }
+  constructor() {}
 
-  private async ensureMetadataDir(): Promise<void> {
+  private async ensureDir(dir: string): Promise<void> {
     try {
-      await fs.mkdir(this.metadataDir, { recursive: true });
+      await fs.mkdir(dir, { recursive: true });
     } catch (error) {
-      console.error('Failed to create metadata directory:', error);
+      console.error('Failed to create videos directory:', error);
     }
   }
 
@@ -92,8 +89,8 @@ export class YouTubeService {
    */
   private async loadExistingMetadata(videoId: string): Promise<YoutubeVideoInfo | null> {
     try {
-      const filename = `${videoId}.json`;
-      const filepath = path.join(this.metadataDir, filename);
+      const filename = 'metadata.json';
+      const filepath = path.join(`${this.videosDir}/${videoId}`, filename);
 
       // Check if file exists
       await fs.access(filepath);
@@ -159,8 +156,9 @@ export class YouTubeService {
 
   private async saveVideoDetailsToFile(videoInfo: YoutubeVideoInfo, videoId: string): Promise<void> {
     try {
-      const filename = `${videoId}.json`;
-      const filepath = path.join(this.metadataDir, filename);
+      const filename = 'metadata.json';
+      const filepath = path.join(`${this.videosDir}/${videoId}`, filename);
+      await this.ensureDir(`${this.videosDir}/${videoId}`);
 
       // Convert videoInfo to JSON string with proper formatting
       const jsonContent = JSON.stringify(videoInfo, null, 2);
@@ -181,7 +179,7 @@ export class YouTubeService {
       }
 
       // Check if transcript file already exists
-      const subtitlePath = path.join(this.metadataDir, `${videoId}.en.vtt`);
+      const subtitlePath = path.join(`${this.videosDir}/${videoId}`, 'subtitles.en.vtt');
       const existingTranscript = await this.loadExistingTranscript(subtitlePath);
       if (existingTranscript) {
         console.log(`Using cached transcript for video ${videoId}`);
@@ -191,12 +189,14 @@ export class YouTubeService {
       // If no cached transcript, download from API
       console.log(`Downloading new transcript for video ${videoId}`);
       try {
+        await this.ensureDir(`${this.videosDir}/${videoId}`);
         await youtubedl(youtubeUrl, {
           writeAutoSub: true,
           subLang: 'en', // Fixed: use subLang instead of writeSubsLang
           skipDownload: true,
-          output: path.join(this.metadataDir, `${videoId}.%(ext)s`),
+          output: path.join(`${this.videosDir}/${videoId}`, 'subtitles'),
         });
+        console.log(`Video subtitles saved to: ${subtitlePath}`);
 
         // Read the subtitle file if it was created
         try {
@@ -217,19 +217,134 @@ export class YouTubeService {
 
   private parseVTTSubtitles(vttContent: string): string {
     try {
-      // Simple VTT parser - extract text content only
       const lines = vttContent.split('\n');
-      const textLines: string[] = [];
+      const textSegments: string[] = [];
+      let currentSegment = '';
+      let isReadingText = false;
 
-      for (const line of lines) {
-        // Skip header, timestamps, and empty lines
-        if (!line.startsWith('WEBVTT') && !line.match(/^\d{2}:\d{2}:\d{2}\.\d{3}/) && line.trim() !== '' && !line.includes('-->')) {
-          textLines.push(line.trim());
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        // Skip empty lines
+        if (line === '') {
+          if (currentSegment) {
+            textSegments.push(currentSegment);
+            currentSegment = '';
+          }
+          isReadingText = false;
+          continue;
+        }
+
+        // Skip header lines
+        if (line.startsWith('WEBVTT') || line.startsWith('Kind:') || line.startsWith('Language:')) {
+          continue;
+        }
+
+        // Skip timestamp lines (format: HH:MM:SS.mmm --> HH:MM:SS.mmm)
+        if (line.includes('-->')) {
+          if (currentSegment) {
+            textSegments.push(currentSegment);
+            currentSegment = '';
+          }
+          isReadingText = true;
+          continue;
+        }
+
+        // Skip position/alignment information
+        if (line.includes('align:') || line.includes('position:')) {
+          continue;
+        }
+
+        // Process text lines
+        if (isReadingText && line !== '') {
+          // Clean the text by removing time stamps and HTML-like tags
+          let cleanText = line;
+
+          // Remove time stamp markers like <00:00:08.280>
+          cleanText = cleanText.replace(/<\d{2}:\d{2}:\d{2}\.\d{3}>/g, '');
+
+          // Remove HTML-like tags like <c> and </c>
+          cleanText = cleanText.replace(/<\/?[^>]+(>|$)/g, '');
+
+          // Clean up extra spaces
+          cleanText = cleanText.replace(/\s+/g, ' ').trim();
+
+          // Only add non-empty text
+          if (cleanText !== '') {
+            currentSegment = cleanText;
+          }
         }
       }
 
-      return textLines.join(' ');
+      // Add final segment if exists
+      if (currentSegment) {
+        textSegments.push(currentSegment);
+      }
+
+      // Remove duplicate segments and create clean transcript
+      const uniqueSegments: string[] = [];
+      const seenSegments = new Set<string>();
+
+      for (const segment of textSegments) {
+        const normalizedSegment = segment.toLowerCase().replace(/[^\w\s\[\]]/g, '');
+
+        // Only add if we haven't seen this exact segment before
+        if (!seenSegments.has(normalizedSegment)) {
+          seenSegments.add(normalizedSegment);
+          uniqueSegments.push(segment);
+        }
+      }
+
+      // Join segments and do final cleanup for overlapping phrases
+      let result = uniqueSegments.join(' ');
+
+      // Advanced duplicate removal for overlapping phrases
+      const words = result.split(/\s+/);
+      const finalWords: string[] = [];
+
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+
+        // Look for repeated sequences starting from this position
+        let skipCount = 0;
+
+        // Check for various lengths of repeated sequences (3-10 words)
+        for (let seqLen = 3; seqLen <= Math.min(10, Math.floor((words.length - i) / 2)); seqLen++) {
+          const sequence1 = words.slice(i, i + seqLen);
+          const sequence2 = words.slice(i + seqLen, i + 2 * seqLen);
+
+          // If sequences match, skip the repeated part
+          if (sequence1.length === sequence2.length && sequence1.every((w, idx) => w.toLowerCase() === sequence2[idx]?.toLowerCase())) {
+            skipCount = seqLen;
+            break;
+          }
+        }
+
+        if (skipCount > 0) {
+          // Add the first occurrence and skip the repeated part
+          for (let j = 0; j < skipCount; j++) {
+            if (i + j < words.length) {
+              finalWords.push(words[i + j]);
+            }
+          }
+          i += skipCount * 2 - 1; // Skip both sequences (minus 1 because loop will increment)
+        } else {
+          finalWords.push(word);
+        }
+      }
+
+      // Final cleanup: remove extra spaces and format properly
+      result = finalWords.join(' ').replace(/\s+/g, ' ').trim();
+
+      // Add line breaks after common markers for better readability
+      result = result.replace(/(\[Music\])/g, '\n\n$1\n\n');
+      result = result.replace(/(\[Applause\])/g, '\n\n$1\n\n');
+      result = result.replace(/\n\n+/g, '\n\n'); // Clean up multiple line breaks
+      result = result.trim();
+
+      return result;
     } catch (error) {
+      console.error('Error parsing VTT subtitles:', error);
       return 'Failed to parse subtitle content';
     }
   }
