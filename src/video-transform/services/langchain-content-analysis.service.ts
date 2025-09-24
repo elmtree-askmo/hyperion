@@ -5,7 +5,7 @@ import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { VideoMetadata } from './youtube.service';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, access, readFile } from 'fs/promises';
 import { join } from 'path';
 
 // Core types and interfaces for lesson analysis
@@ -182,6 +182,15 @@ export class LangChainContentAnalysisService {
     targetSegmentDuration: number = 300, // 5 minutes in seconds
     videoUrl?: string,
   ): Promise<LessonAnalysis> {
+    const videoId = this.extractVideoId(videoUrl || '');
+
+    // Check if lesson analysis already exists
+    const existingAnalysis = await this.loadExistingLessonAnalysis(videoId);
+    if (existingAnalysis) {
+      console.log(`Found existing lesson analysis for video ${videoId}, returning cached result`);
+      return existingAnalysis;
+    }
+
     console.log('Starting comprehensive video content analysis...');
 
     // Extract core learning objectives
@@ -206,7 +215,7 @@ export class LangChainContentAnalysisService {
 
     // Create comprehensive analysis
     const analysis: LessonAnalysis = {
-      videoId: this.extractVideoId(videoUrl || ''),
+      videoId,
       title: metadata.title || 'Unknown Title',
       totalDuration: metadata.duration || 0,
       language: 'english',
@@ -549,6 +558,44 @@ Respond in JSON format:
     } catch (error) {
       console.error('Error saving lesson analysis:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Load existing lesson analysis from JSON file if it exists
+   */
+  private async loadExistingLessonAnalysis(videoId: string): Promise<LessonAnalysis | null> {
+    try {
+      if (!videoId || videoId === 'unknown') {
+        return null;
+      }
+
+      const videosDir = join(process.cwd(), 'videos', videoId);
+      const filePath = join(videosDir, 'lesson_analysis.json');
+
+      // Check if file exists
+      await access(filePath);
+
+      // Read and parse the existing analysis
+      const fileContent = await readFile(filePath, 'utf8');
+      const analysis: LessonAnalysis = JSON.parse(fileContent);
+
+      // Validate that it's a proper LessonAnalysis object
+      if (analysis.videoId && analysis.title && analysis.learningObjectives && analysis.segments) {
+        console.log(`Successfully loaded existing lesson analysis for video ${videoId}`);
+        return analysis;
+      } else {
+        console.warn(`Invalid lesson analysis file format for video ${videoId}, will regenerate`);
+        return null;
+      }
+    } catch (error) {
+      // File doesn't exist or is not readable, return null to trigger new analysis
+      console.log(`No existing lesson analysis found for video ${videoId}, will generate new analysis`);
+      if (error && typeof error === 'object' && 'code' in error && error.code !== 'ENOENT') {
+        // Log non-file-not-found errors for debugging
+        console.debug(`Error loading existing analysis for ${videoId}:`, error.message || error);
+      }
+      return null;
     }
   }
 

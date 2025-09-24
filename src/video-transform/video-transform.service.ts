@@ -7,6 +7,7 @@ import { VideoJobQueryDto } from './dto/video-job-query.dto';
 import { YouTubeService } from './services/youtube.service';
 import { ContentAnalysisService } from './services/content-analysis.service';
 import { LangChainContentAnalysisService } from './services/langchain-content-analysis.service';
+import { MicrolessonScriptService } from './services/microlesson-script.service';
 
 @Injectable()
 export class VideoTransformService {
@@ -16,6 +17,7 @@ export class VideoTransformService {
     private readonly youtubeService: YouTubeService,
     private readonly contentAnalysisService: ContentAnalysisService,
     private readonly langChainContentAnalysisService: LangChainContentAnalysisService,
+    private readonly microlessonScriptService: MicrolessonScriptService,
   ) {}
 
   async createVideoJob(createVideoJobDto: CreateVideoJobDto, userId: string): Promise<VideoJob> {
@@ -146,6 +148,15 @@ export class VideoTransformService {
         },
       }));
 
+      // Step 4: Generate microlesson script for Thai context
+      try {
+        const microlessonScript = await this.microlessonScriptService.generateMicrolessonScript(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
+        console.log('Microlesson script generated successfully:', microlessonScript.lesson.title);
+      } catch (scriptError) {
+        console.warn('Failed to generate microlesson script:', scriptError.message);
+        // Continue without failing the entire job
+      }
+
       // Update job with results
       videoJob.status = JobStatus.COMPLETED;
       videoJob.originalDuration = videoMetadata.duration;
@@ -170,5 +181,12 @@ export class VideoTransformService {
       advanced: 9,
     };
     return levelMap[difficulty] || 5;
+  }
+
+  private extractVideoIdFromUrl(youtubeUrl: string): string {
+    // Extract video ID from YouTube URL
+    const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
+    const match = youtubeUrl.match(regex);
+    return match ? match[1] : youtubeUrl;
   }
 }
