@@ -8,20 +8,53 @@ import { VideoMetadata } from './youtube.service';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 
-// Core interfaces for lesson analysis
+// Core types and interfaces for lesson analysis
+export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
+export type BasicDifficultyLevel = 'basic' | 'intermediate' | 'advanced';
+
 export interface LearningObjective {
   id: string;
   title: string;
   description: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: DifficultyLevel;
   estimatedTime: number; // in minutes
   skills: string[];
+}
+
+export interface VocabularyItem {
+  word: string;
+  definition: string;
+  thaiTranslation: string;
+  difficulty: BasicDifficultyLevel;
+  partOfSpeech: string;
+  exampleSentence: string;
+  phonetic: string;
+  frequency: number; // how often it appears in the content
+}
+
+export interface GrammarPoint {
+  id: string;
+  structure: string;
+  description: string;
+  difficulty: BasicDifficultyLevel;
+  examples: string[];
+  thaiExplanation: string;
+  commonMistakes: string[];
+}
+
+export interface CulturalContext {
+  id: string;
+  topic: string;
+  description: string;
+  culturalNotes: string[];
+  thaiContext: string;
+  practicalTips: string[];
 }
 
 export interface PrerequisiteKnowledge {
   id: string;
   topic: string;
-  level: 'basic' | 'intermediate' | 'advanced';
+  level: BasicDifficultyLevel;
   description: string;
   suggestedResources?: string[];
 }
@@ -35,7 +68,7 @@ export interface ContentSegment {
   content: string;
   keyTopics: string[];
   learningObjectives: string[];
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: DifficultyLevel;
   prerequisites: string[]; // IDs of prerequisite knowledge
 }
 
@@ -68,11 +101,17 @@ export interface LessonAnalysis {
   prerequisites: PrerequisiteKnowledge[];
   segments: ContentSegment[];
   seriesStructure: SeriesStructure;
+  vocabulary: VocabularyItem[];
+  grammarPoints: GrammarPoint[];
+  culturalContexts: CulturalContext[];
   metadata: {
     originalVideoLength: number;
     targetSegmentLength: number;
     actualSegments: number;
     averageSegmentLength: number;
+    vocabularyCount: number;
+    grammarPointsCount: number;
+    culturalContextsCount: number;
   };
 }
 
@@ -92,8 +131,7 @@ export class LangChainContentAnalysisService {
     });
 
     this.openrouterClient = new ChatOpenAI({
-      // model: 'deepseek/deepseek-chat-v3.1:free',
-      model: 'openai/gpt-oss-120b:free',
+      model: 'deepseek/deepseek-chat-v3.1:free',
       temperature: 0,
       apiKey: process.env.OPENROUTER_API_KEY,
       configuration: {
@@ -158,6 +196,14 @@ export class LangChainContentAnalysisService {
     // Generate series structure
     const seriesStructure = await this.generateSeriesStructure(segments, learningObjectives, metadata);
 
+    // Extract vocabulary, grammar points, and cultural context
+    console.log('Extracting vocabulary, grammar points, and cultural context...');
+    const [vocabulary, grammarPoints, culturalContexts] = await Promise.all([
+      this.extractVocabulary(transcript, targetAudience),
+      this.extractGrammarPoints(transcript, targetAudience),
+      this.extractCulturalContext(transcript, metadata, targetAudience),
+    ]);
+
     // Create comprehensive analysis
     const analysis: LessonAnalysis = {
       videoId: this.extractVideoId(videoUrl || ''),
@@ -170,11 +216,17 @@ export class LangChainContentAnalysisService {
       prerequisites,
       segments,
       seriesStructure,
+      vocabulary,
+      grammarPoints,
+      culturalContexts,
       metadata: {
         originalVideoLength: metadata.duration || 0,
         targetSegmentLength: targetSegmentDuration,
         actualSegments: segments.length,
         averageSegmentLength: segments.length > 0 ? Math.round(segments.reduce((sum, s) => sum + s.duration, 0) / segments.length) : 0,
+        vocabularyCount: vocabulary.length,
+        grammarPointsCount: grammarPoints.length,
+        culturalContextsCount: culturalContexts.length,
       },
     };
 
@@ -595,5 +647,265 @@ Respond in JSON format:
       learningPath: episodes.map((ep) => ep.title),
       estimatedTotalTime: Math.round((metadata.duration || 0) / 60),
     };
+  }
+
+  /**
+   * Extract key vocabulary from the video transcript
+   */
+  private async extractVocabulary(transcript: string, targetAudience: string): Promise<VocabularyItem[]> {
+    const prompt = PromptTemplate.fromTemplate(`
+You are an expert language educator analyzing video content for vocabulary teaching. Extract key vocabulary words that are important for {audience} learners.
+
+Transcript:
+{transcript}
+
+Extract 15-25 important vocabulary items that learners should focus on. For each word:
+1. Identify the most useful and relevant words for learning
+2. Consider frequency of use in the content
+3. Include words of varying difficulty levels
+4. Focus on practical, useful vocabulary
+5. Include context-specific terms and general English words
+
+For each vocabulary item provide:
+- The word in its base form
+- Clear, simple definition
+- Thai translation
+- Difficulty level (basic/intermediate/advanced)
+- Part of speech
+- Example sentence from the context
+- Phonetic pronunciation
+- Frequency (how many times it appears)
+
+Respond in JSON format:
+[
+  {{
+    "word": "vocabulary",
+    "definition": "words used in a language",
+    "thaiTranslation": "คำศัพท์",
+    "difficulty": "intermediate",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Building vocabulary is essential for language learning.",
+    "phonetic": "/vəˈkæbjʊləri/",
+    "frequency": 3
+  }}
+]
+`);
+
+    try {
+      const chain = RunnableSequence.from([prompt, this.llm, new StringOutputParser()]);
+
+      const result = await chain.invoke(
+        {
+          audience: targetAudience,
+          transcript: transcript,
+        },
+        {
+          tags: ['vocabulary-extraction', 'content-analysis', targetAudience],
+          metadata: {
+            step: 'extract_vocabulary',
+            target_audience: targetAudience,
+            transcript_length: transcript.length,
+          },
+        },
+      );
+
+      return JSON.parse(this.extractJSONFromResponse(result));
+    } catch (error) {
+      console.error('Error extracting vocabulary:', error);
+      return this.getFallbackVocabulary();
+    }
+  }
+
+  /**
+   * Extract grammar points from the video transcript
+   */
+  private async extractGrammarPoints(transcript: string, targetAudience: string): Promise<GrammarPoint[]> {
+    const prompt = PromptTemplate.fromTemplate(`
+You are an expert English grammar instructor analyzing video content for grammar teaching. Identify key grammar structures and patterns that are demonstrated in the content.
+
+Target Audience: {audience}
+Transcript:
+{transcript}
+
+Identify 8-15 important grammar points that appear in the content. Focus on:
+1. Common grammar structures used in the dialogue
+2. Patterns that are useful for learners
+3. Grammar that matches the proficiency level of the audience
+4. Practical grammar for real-world communication
+
+For each grammar point provide:
+- Unique ID (gram_1, gram_2, etc.)
+- The grammar structure/pattern
+- Clear description of how it's used
+- Difficulty level (basic/intermediate/advanced)
+- 2-3 example sentences from the content
+- Thai explanation for better understanding
+- Common mistakes learners make with this structure
+
+Respond in JSON format:
+[
+  {{
+    "id": "gram_1",
+    "structure": "Present Continuous Tense",
+    "description": "Used to describe actions happening right now or around now",
+    "difficulty": "basic",
+    "examples": ["I am studying English", "She is working on her project"],
+    "thaiExplanation": "ใช้เพื่อบรรยายการกระทำที่กำลังเกิดขึ้นในขณะนี้",
+    "commonMistakes": ["Forgetting 'be' verb", "Using wrong 'be' form with subject"]
+  }}
+]
+`);
+
+    try {
+      const chain = RunnableSequence.from([prompt, this.llm, new StringOutputParser()]);
+
+      const result = await chain.invoke(
+        {
+          audience: targetAudience,
+          transcript: transcript,
+        },
+        {
+          tags: ['grammar-extraction', 'content-analysis', targetAudience],
+          metadata: {
+            step: 'extract_grammar_points',
+            target_audience: targetAudience,
+            transcript_length: transcript.length,
+          },
+        },
+      );
+
+      return JSON.parse(this.extractJSONFromResponse(result));
+    } catch (error) {
+      console.error('Error extracting grammar points:', error);
+      return this.getFallbackGrammarPoints();
+    }
+  }
+
+  /**
+   * Analyze cultural context relevant to the target audience
+   */
+  private async extractCulturalContext(transcript: string, metadata: VideoMetadata, targetAudience: string): Promise<CulturalContext[]> {
+    const prompt = PromptTemplate.fromTemplate(`
+You are a cultural education expert analyzing video content for cross-cultural learning. Identify cultural elements, references, and contexts that would be important for {audience} to understand.
+
+Video Title: {title}
+Target Audience: {audience}
+Transcript:
+{transcript}
+
+Analyze the content for cultural elements including:
+1. Cultural references, idioms, or expressions
+2. Social behaviors and norms demonstrated
+3. Communication styles and patterns
+4. Cultural contexts that might be unfamiliar to Thai learners
+5. Practical cultural knowledge for real-world application
+
+Identify 5-10 cultural context items. For each provide:
+- Unique ID (culture_1, culture_2, etc.)
+- Topic or cultural element
+- Clear description of the cultural aspect
+- Specific cultural notes and explanations
+- How this relates to Thai cultural context
+- Practical tips for Thai learners
+
+Respond in JSON format:
+[
+  {{
+    "id": "culture_1",
+    "topic": "Dining Etiquette",
+    "description": "Western restaurant service and customer interaction patterns",
+    "culturalNotes": ["Servers introduce themselves", "Customers can ask for recommendations", "Tipping is expected"],
+    "thaiContext": "Different from Thai restaurant culture where servers are more formal and less interactive",
+    "practicalTips": ["Practice polite requests to servers", "Learn to express preferences clearly", "Understand appropriate responses to service"]
+  }}
+]
+`);
+
+    try {
+      const chain = RunnableSequence.from([prompt, this.llm, new StringOutputParser()]);
+
+      const result = await chain.invoke(
+        {
+          title: metadata.title || 'Unknown',
+          audience: targetAudience,
+          transcript: transcript,
+        },
+        {
+          tags: ['cultural-analysis', 'content-analysis', targetAudience],
+          metadata: {
+            step: 'extract_cultural_context',
+            video_title: metadata.title,
+            target_audience: targetAudience,
+            transcript_length: transcript.length,
+          },
+        },
+      );
+
+      return JSON.parse(this.extractJSONFromResponse(result));
+    } catch (error) {
+      console.error('Error extracting cultural context:', error);
+      return this.getFallbackCulturalContext();
+    }
+  }
+
+  /**
+   * Fallback vocabulary when LLM extraction fails
+   */
+  private getFallbackVocabulary(): VocabularyItem[] {
+    return [
+      {
+        word: 'conversation',
+        definition: 'a talk between two or more people',
+        thaiTranslation: 'การสนทนา',
+        difficulty: 'basic',
+        partOfSpeech: 'noun',
+        exampleSentence: 'They had a long conversation about their plans.',
+        phonetic: '/ˌkɒnvəˈseɪʃən/',
+        frequency: 1,
+      },
+      {
+        word: 'practice',
+        definition: 'to do something regularly to improve skill',
+        thaiTranslation: 'ฝึกฝน',
+        difficulty: 'basic',
+        partOfSpeech: 'verb',
+        exampleSentence: 'Students need to practice English every day.',
+        phonetic: '/ˈpræktɪs/',
+        frequency: 1,
+      },
+    ];
+  }
+
+  /**
+   * Fallback grammar points when LLM extraction fails
+   */
+  private getFallbackGrammarPoints(): GrammarPoint[] {
+    return [
+      {
+        id: 'gram_1',
+        structure: 'Simple Present Tense',
+        description: 'Used for habits, facts, and general truths',
+        difficulty: 'basic',
+        examples: ['I speak English', 'She works in Bangkok'],
+        thaiExplanation: 'ใช้สำหรับนิสัย ข้อเท็จจริง และความจริงทั่วไป',
+        commonMistakes: ['Forgetting -s for third person singular', 'Using wrong auxiliary verbs'],
+      },
+    ];
+  }
+
+  /**
+   * Fallback cultural context when LLM extraction fails
+   */
+  private getFallbackCulturalContext(): CulturalContext[] {
+    return [
+      {
+        id: 'culture_1',
+        topic: 'English Communication Style',
+        description: 'Direct and polite communication patterns in English',
+        culturalNotes: ['Clear and direct expression', 'Polite phrases for requests', 'Active listening responses'],
+        thaiContext: 'More direct than typical Thai communication style',
+        practicalTips: ['Practice expressing needs clearly', 'Use polite phrases consistently', 'Give clear responses'],
+      },
+    ];
   }
 }
