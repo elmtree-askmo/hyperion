@@ -109,14 +109,17 @@ export class MicrolessonScriptService {
   }
 
   private async createMicrolessonFromAnalysis(analysis: LessonAnalysis): Promise<MicrolessonScript> {
-    // Generate Thai title
-    const titleTh = await this.generateThaiTitle(analysis.title);
+    // Calculate target duration for microlesson (5 minutes)
+    const targetDuration = 300; // 5 minutes in seconds
 
-    // Use LLM approach for content generation
+    // Use LLM approach for content generation including title
     console.log('🚀 Using LLM approach for microlesson generation...');
 
     const llmResults = await this.llmEnhancedService.generateEnhancedMicrolessonScript(analysis.videoId || 'unknown', analysis);
 
+    // Extract all generated content
+    const microlessonTitle = llmResults.enhancedTitle;
+    const titleTh = llmResults.enhancedTitleTh;
     const learningObjectives = llmResults.enhancedObjectives;
     const keyVocabulary = llmResults.enhancedVocabulary;
     const comprehensionQuestions = llmResults.enhancedQuestions;
@@ -124,7 +127,7 @@ export class MicrolessonScriptService {
     // Extract enhanced grammar points (2-5 items) - use template-based for structure consistency
     const grammarPoints = this.extractEnhancedGrammarPoints(analysis);
 
-    // Get original segment titles
+    // Get original segment titles for reference
     const originalSegments = analysis.segments.map((seg) => seg.title);
 
     // Create series info with Thai context
@@ -132,9 +135,9 @@ export class MicrolessonScriptService {
 
     return {
       lesson: {
-        title: analysis.title,
+        title: microlessonTitle,
         titleTh,
-        duration: analysis.totalDuration,
+        duration: targetDuration,
         learningObjectives,
         keyVocabulary,
         grammarPoints,
@@ -144,35 +147,6 @@ export class MicrolessonScriptService {
       seriesInfo,
       audioUrl: null,
     };
-  }
-
-  private async generateThaiTitle(englishTitle: string): Promise<string> {
-    // Map common English learning titles to Thai
-    const titleMappings: { [key: string]: string } = {
-      'Everyday English Conversation Practice': 'การฝึกฝนการสนทนาภาษาอังกฤษในชีวิตประจำวัน',
-      'English Listening': 'การฟังภาษาอังกฤษ',
-      'Business English': 'ภาษาอังกฤษธุรกิจ',
-      'Travel English': 'ภาษาอังกฤษสำหรับการเดินทาง',
-      'Hotel English': 'ภาษาอังกฤษสำหรับโรงแรม',
-      'Restaurant English': 'ภาษาอังกฤษสำหรับร้านอาหาร',
-    };
-
-    // Try exact match first
-    for (const [englishPattern, thaiTitle] of Object.entries(titleMappings)) {
-      if (englishTitle.includes(englishPattern)) {
-        return thaiTitle;
-      }
-    }
-
-    // Fallback: create basic Thai translation
-    let thaiTitle = englishTitle;
-    thaiTitle = thaiTitle.replace(/English/g, 'ภาษาอังกฤษ');
-    thaiTitle = thaiTitle.replace(/Conversation/g, 'การสนทนา');
-    thaiTitle = thaiTitle.replace(/Practice/g, 'การฝึกฝน');
-    thaiTitle = thaiTitle.replace(/Listening/g, 'การฟัง');
-    thaiTitle = thaiTitle.replace(/Learning/g, 'การเรียนรู้');
-
-    return thaiTitle;
   }
 
   private extractEnhancedGrammarPoints(analysis: LessonAnalysis): any[] {
