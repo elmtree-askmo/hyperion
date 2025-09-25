@@ -19,7 +19,8 @@
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/config/typeorm.config.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/config/typeorm.config.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/config/typeorm.config.ts",
-    "migration:create": "typeorm-ts-node-commonjs migration:create"
+    "migration:create": "typeorm-ts-node-commonjs migration:create",
+    "test:openai": "ts-node scripts/test-openai-connectivity.ts"
   },
   "dependencies": {
     "@google-cloud/speech": "^7.2.0",
@@ -48,6 +49,7 @@
     "helmet": "^7.1.0",
     "langchain": "^0.3.34",
     "nest-winston": "^1.9.7",
+    "openai": "^5.23.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
