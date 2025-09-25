@@ -13,7 +13,8 @@ interface AudioSegment {
   textTh?: string;
   screenElement: string;
   vocabWord?: string;
-  visualDescription: string;
+  visualDescription?: string;
+  backgroundImageDescription?: string;
   metadata?: any;
 }
 
@@ -51,9 +52,9 @@ export class TtsAudioSegmentsService {
 
   async generateTtsAudioSegmentsForEpisode(videoId: string, episodeNumber: number): Promise<TtsTimingMetadata> {
     try {
-      const episodeDir = path.join(this.videosDir, videoId, `episode_${episodeNumber.toString()}`);
-      const segmentsPath = path.join(episodeDir, 'lesson_segments');
-      const audioSegmentsPath = path.join(episodeDir, 'audio_segments.json');
+      const lessonDir = path.join(this.videosDir, videoId, `lesson_${episodeNumber.toString()}`);
+      const segmentsPath = path.join(lessonDir, 'lesson_segments');
+      const audioSegmentsPath = path.join(lessonDir, 'audio_segments.json');
       const timingMetadataPath = path.join(segmentsPath, 'timing-metadata.json');
 
       // Create lesson_segments directory if it doesn't exist

@@ -84,8 +84,8 @@ export class AudioSegmentsService {
 
   async generateAudioSegmentsForEpisode(videoId: string, episodeNumber: number): Promise<AudioSegmentsResponse> {
     try {
-      const episodeDir = path.join(this.videosDir, videoId, `episode_${episodeNumber.toString()}`);
-      const audioSegmentsPath = path.join(episodeDir, 'audio_segments.json');
+      const lessonDir = path.join(this.videosDir, videoId, `lesson_${episodeNumber.toString()}`);
+      const audioSegmentsPath = path.join(lessonDir, 'audio_segments.json');
 
       // Check if audio segments already exist
       if (fs.existsSync(audioSegmentsPath)) {
@@ -94,7 +94,7 @@ export class AudioSegmentsService {
       }
 
       // Read the microlesson script file for this episode
-      const scriptPath = path.join(episodeDir, 'microlesson_script.json');
+      const scriptPath = path.join(lessonDir, 'microlesson_script.json');
       if (!fs.existsSync(scriptPath)) {
         throw new Error(`Microlesson script not found for video: ${videoId}, episode: ${episodeNumber}`);
       }
@@ -109,8 +109,8 @@ export class AudioSegmentsService {
       };
 
       // Ensure episode directory exists
-      if (!fs.existsSync(episodeDir)) {
-        fs.mkdirSync(episodeDir, { recursive: true });
+      if (!fs.existsSync(lessonDir)) {
+        fs.mkdirSync(lessonDir, { recursive: true });
       }
 
       // Save the generated audio segments
@@ -192,6 +192,12 @@ ${script.lesson.grammarPoints.map((grammar, i) => `${i + 1}. ${grammar.structure
 Practice Questions:
 ${script.lesson.comprehensionQuestions.map((q, i) => `${i + 1}. ${q.question}`).join('\n')}
 
+THAI CONTEXT EXAMPLES:
+${script.lesson.learningObjectives
+  .flatMap((obj) => obj.thaiContextExamples || [])
+  .map((example) => `- Context: ${example.thaiContext} | Situation: ${example.situation}`)
+  .join('\n')}
+
 INSTRUCTIONS:
 Create engaging audio segments with natural, conversational text suitable for English language learners. Each segment should:
 1. Use clear, simple English appropriate for the learning level
@@ -199,6 +205,7 @@ Create engaging audio segments with natural, conversational text suitable for En
 3. Include smooth transitions and engaging introductions
 4. Be concise but informative
 5. Encourage learner participation
+6. Include contextual background image descriptions that reflect Thai cultural settings
 
 Generate the following types of segments:
 - 1 intro segment welcoming learners
@@ -210,6 +217,14 @@ Generate the following types of segments:
 
 For vocabulary segments, include the target word clearly and use it in a natural example sentence.
 
+BACKGROUND IMAGE GUIDELINES:
+For each segment, create a backgroundImageDescription that:
+- Describes authentic Thai cultural settings and locations
+- Supports the learning content visually
+- Uses recognizable Bangkok/Thailand landmarks when appropriate
+- Creates an immersive cultural learning environment
+- Matches the segment's educational purpose
+
 Return ONLY a valid JSON object in this exact format:
 {{
   "audioSegments": [
@@ -217,13 +232,15 @@ Return ONLY a valid JSON object in this exact format:
       "id": "intro",
       "text": "Welcome to today's lesson...",
       "screenElement": "title_card",
-      "visualDescription": "..."
+      "visualDescription": "...",
+      "backgroundImageDescription": "Modern English language learning classroom in Bangkok with Thai and international students, bright natural lighting, Thai cultural elements visible through windows"
     }},
     {{
       "id": "vocab_word1", 
       "text": "First word: ...",
       "screenElement": "vocabulary_card",
-      "vocabWord": "target word"
+      "vocabWord": "target word",
+      "backgroundImageDescription": "Relevant Thai cultural scene that supports the vocabulary learning, such as Terminal 21 Food Court or Café Amazon setting"
     }}
   ]
 }}`;

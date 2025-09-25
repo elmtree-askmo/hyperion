@@ -48,20 +48,20 @@ export class SynchronizedLessonService {
     try {
       this.logger.log(`Starting synchronized lesson generation for video: ${videoId}, episode: ${episodeNumber}`);
 
-      const episodeDir = path.join(this.videosDir, videoId, `episode_${episodeNumber.toString()}`);
+      const lessonDir = path.join(this.videosDir, videoId, `lesson_${episodeNumber.toString()}`);
 
       // Load required data files for this episode
       const [microlessonScript, timingMetadata, audioSegments] = await Promise.all([
-        this.loadMicrolessonScriptForEpisode(episodeDir),
-        this.loadTimingMetadataForEpisode(episodeDir),
-        this.loadAudioSegmentsForEpisode(episodeDir),
+        this.loadMicrolessonScriptForEpisode(lessonDir),
+        this.loadTimingMetadataForEpisode(lessonDir),
+        this.loadAudioSegmentsForEpisode(lessonDir),
       ]);
 
       // Generate synchronized lesson structure
-      const synchronizedLesson = this.createSynchronizedLesson(microlessonScript, timingMetadata, audioSegments, episodeDir);
+      const synchronizedLesson = this.createSynchronizedLesson(microlessonScript, timingMetadata, audioSegments, lessonDir);
 
       // Save the synchronized lesson
-      await this.saveSynchronizedLesson(episodeDir, synchronizedLesson);
+      await this.saveSynchronizedLesson(lessonDir, synchronizedLesson);
 
       this.logger.log(`Successfully generated synchronized lesson for video: ${videoId}, episode: ${episodeNumber}`);
     } catch (error) {

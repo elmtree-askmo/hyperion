@@ -5,6 +5,7 @@ export interface AudioSegment {
   screenElement: string;
   visualDescription?: string;
   vocabWord?: string;
+  backgroundImageDescription?: string;
   metadata?: {
     thaiTranslation?: string;
     memoryHook?: string;

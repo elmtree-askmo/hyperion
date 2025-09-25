@@ -94,8 +94,8 @@ export class MicrolessonScriptService {
           console.log(`🚀 Generating microlesson script for Episode ${episode.episodeNumber}: ${episode.title}`);
 
           // Create episode directory path
-          const episodeDir = path.join(this.videosDir, videoId, `episode_${episode.episodeNumber.toString()}`);
-          const scriptPath = path.join(episodeDir, 'microlesson_script.json');
+          const lessonDir = path.join(this.videosDir, videoId, `lesson_${episode.episodeNumber.toString()}`);
+          const scriptPath = path.join(lessonDir, 'microlesson_script.json');
 
           // Check if episode script already exists
           if (fs.existsSync(scriptPath)) {
@@ -109,8 +109,8 @@ export class MicrolessonScriptService {
           const microlessonScript = await this.createMicrolessonFromEpisode(analysisData, episode);
 
           // Ensure episode directory exists
-          if (!fs.existsSync(episodeDir)) {
-            fs.mkdirSync(episodeDir, { recursive: true });
+          if (!fs.existsSync(lessonDir)) {
+            fs.mkdirSync(lessonDir, { recursive: true });
           }
 
           // Save the generated script
