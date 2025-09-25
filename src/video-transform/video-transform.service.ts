@@ -5,7 +5,6 @@ import { VideoJob, JobStatus } from './entities/video-job.entity';
 import { CreateVideoJobDto } from './dto/create-video-job.dto';
 import { VideoJobQueryDto } from './dto/video-job-query.dto';
 import { YouTubeService } from './services/youtube.service';
-import { ContentAnalysisService } from './services/content-analysis.service';
 import { LangChainContentAnalysisService } from './services/langchain-content-analysis.service';
 import { MicrolessonScriptService } from './services/microlesson-script.service';
 import { AudioSegmentsService } from './services/audio-segments.service';
@@ -18,7 +17,6 @@ export class VideoTransformService {
     @InjectRepository(VideoJob)
     private readonly videoJobRepository: Repository<VideoJob>,
     private readonly youtubeService: YouTubeService,
-    private readonly contentAnalysisService: ContentAnalysisService,
     private readonly langChainContentAnalysisService: LangChainContentAnalysisService,
     private readonly microlessonScriptService: MicrolessonScriptService,
     private readonly audioSegmentsService: AudioSegmentsService,

@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ChatOpenAI } from '@langchain/openai';
-import { ChatGroq } from '@langchain/groq';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { VideoMetadata } from './youtube.service';
 import { writeFile, mkdir, access, readFile } from 'fs/promises';
 import { join } from 'path';
+import { LLMConfigService } from './llm-config.service';
 
 // Core types and interfaces for lesson analysis
 export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
@@ -118,51 +117,10 @@ export interface LessonAnalysis {
 @Injectable()
 export class LangChainContentAnalysisService {
   private readonly llm;
-  private readonly openaiClient: ChatOpenAI;
-  private readonly openrouterClient: ChatOpenAI;
-  private readonly groqClient: ChatGroq;
 
-  constructor() {
-    // Initialize OpenAI client
-    this.openaiClient = new ChatOpenAI({
-      model: 'gpt-5',
-      temperature: 0, // Lower temperature for more consistent analysis
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    this.openrouterClient = new ChatOpenAI({
-      model: 'deepseek/deepseek-chat-v3.1:free',
-      temperature: 0,
-      apiKey: process.env.OPENROUTER_API_KEY,
-      configuration: {
-        baseURL: 'https://openrouter.ai/api/v1',
-      },
-    });
-
-    // Initialize Groq client
-    this.groqClient = new ChatGroq({
-      model: 'openai/gpt-oss-120b',
-      temperature: 0, // Lower temperature for more consistent analysis
-      apiKey: process.env.GROQ_API_KEY,
-    });
-
-    // Select LLM provider based on environment variable
-    const llmProvider = process.env.LLM_PROVIDER || 'openrouter';
-    switch (llmProvider.toLowerCase()) {
-      case 'openai':
-        this.llm = this.openaiClient;
-        console.log('🤖 Using OpenAI LLM provider');
-        break;
-      case 'groq':
-        this.llm = this.groqClient;
-        console.log('🤖 Using Groq LLM provider');
-        break;
-      case 'openrouter':
-      default:
-        this.llm = this.openrouterClient;
-        console.log('🤖 Using OpenRouter LLM provider');
-        break;
-    }
+  constructor(private readonly llmConfigService: LLMConfigService) {
+    // Get LLM instance from the config service
+    this.llm = this.llmConfigService.getLLM();
 
     // LangSmith is automatically enabled when environment variables are set
     if (process.env.LANGCHAIN_TRACING_V2 === 'true' && process.env.LANGCHAIN_API_KEY) {

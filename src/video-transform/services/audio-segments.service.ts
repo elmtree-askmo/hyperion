@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { PromptTemplate } from '@langchain/core/prompts';
+import { StringOutputParser } from '@langchain/core/output_parsers';
+import { RunnableSequence } from '@langchain/core/runnables';
 import { AudioSegmentsResponse, AudioSegment } from '../dto/audio-segments.dto';
+import { LLMConfigService, LLMConfig } from './llm-config.service';
 
 interface MicrolessonScript {
   lesson: {
@@ -56,6 +60,27 @@ interface MicrolessonScript {
 @Injectable()
 export class AudioSegmentsService {
   private readonly videosDir = path.join(process.cwd(), 'videos');
+  private readonly llm;
+
+  constructor(private readonly llmConfigService: LLMConfigService) {
+    // Get LLM instance with higher temperature for creative content
+    const llmConfig: LLMConfig = {
+      temperature: 0.7,
+      model: {
+        openai: 'gpt-4o',
+        openrouter: 'deepseek/deepseek-chat-v3.1:free',
+        groq: 'openai/gpt-oss-120b',
+      },
+    };
+
+    this.llm = this.llmConfigService.getLLMWithConfig(llmConfig);
+
+    if (this.llm) {
+      console.log(`🎵 AudioSegments using ${this.llmConfigService.getLLMProvider()} LLM provider`);
+    } else {
+      throw new Error('❌ LLM is required for audio segments generation. Please configure LLM_PROVIDER and corresponding API key.');
+    }
+  }
 
   async generateAudioSegments(videoId: string): Promise<AudioSegmentsResponse> {
     try {
@@ -75,8 +100,8 @@ export class AudioSegmentsService {
 
       const microlessonScript: MicrolessonScript = JSON.parse(fs.readFileSync(scriptPath, 'utf8'));
 
-      // Generate audio segments from microlesson script
-      const audioSegments = this.createAudioSegmentsFromScript(microlessonScript);
+      // Generate audio segments from microlesson script using LLM
+      const audioSegments = await this.generateAudioSegmentsWithLLM(microlessonScript);
 
       const result: AudioSegmentsResponse = {
         audioSegments,
@@ -92,97 +117,124 @@ export class AudioSegmentsService {
     }
   }
 
-  private createAudioSegmentsFromScript(script: MicrolessonScript): AudioSegment[] {
-    const segments: AudioSegment[] = [];
-
-    // 1. Introduction segment - use lesson title
-    segments.push({
-      id: 'intro',
-      text: `Welcome to today's lesson: ${script.lesson.title}. This lesson will help you master English conversation skills in real-world situations.`,
-      textTh: script.lesson.titleTh,
-      screenElement: 'title_card',
-      visualDescription: `Title card showing "${script.lesson.title}" in English and "${script.lesson.titleTh}" in Thai with lesson duration ${Math.round(script.lesson.duration / 60)} minutes`,
-    });
-
-    // 2. Learning objectives segments
-    script.lesson.learningObjectives.forEach((objective, index) => {
-      segments.push({
-        id: `learning_objective_${index + 1}`,
-        text: `Learning objective ${index + 1}: ${objective.statement}`,
-        textTh: objective.statementTh,
-        screenElement: 'learning_objective_card',
-        visualDescription: `Learning objective card displaying the main goal and Thai translation with cultural context examples`,
-      });
-
-      // Add step-by-step explanation
-      if (objective.stepByStepExplanation && objective.stepByStepExplanation.length > 0) {
-        segments.push({
-          id: `explanation_${index + 1}`,
-          text: `Here's how we'll achieve this: ${objective.stepByStepExplanation.join('. ')}`,
-          screenElement: 'step_by_step_card',
-          visualDescription: 'Step-by-step explanation with numbered points and visual progress indicators',
-        });
-      }
-    });
-
-    // 3. Key vocabulary segments
-    script.lesson.keyVocabulary.slice(0, 10).forEach((vocab, index) => {
-      segments.push({
-        id: `vocab_word${index + 1}`,
-        text: `Let's learn the word "${vocab.word}". For example: ${vocab.contextExample}`,
-        screenElement: 'vocabulary_card',
-        vocabWord: vocab.word,
-        visualDescription: `Vocabulary card showing "${vocab.word}" with Thai translation "${vocab.thaiTranslation}", memory hook, and context example in a visually appealing format`,
-        metadata: {
-          thaiTranslation: vocab.thaiTranslation,
-          memoryHook: vocab.memoryHook,
-          contextExample: vocab.contextExample,
-        },
-      });
-    });
-
-    // 4. Grammar points segments
-    script.lesson.grammarPoints.forEach((grammar, index) => {
-      segments.push({
-        id: `grammar_${index + 1}`,
-        text: `Grammar focus: ${grammar.structure}. ${grammar.explanation}. Examples: ${grammar.examples.slice(0, 2).join('. ')}`,
-        screenElement: 'grammar_card',
-        visualDescription: `Grammar explanation card with structure pattern, examples in both English and Thai context`,
-        metadata: {
-          thaiTranslation: grammar.thaiExplanation,
-        },
-      });
-    });
-
-    // 5. Practice segments from comprehension questions
-    script.lesson.comprehensionQuestions.forEach((question, index) => {
-      segments.push({
-        id: `practice_${index + 1}`,
-        text: `Practice question: ${question.question}. Think about this in the context of: ${question.context}`,
-        textTh: question.questionTh,
-        screenElement: 'practice_card',
-        visualDescription: `Interactive practice card with question in both languages and context scenario for real-world application`,
-      });
-    });
-
-    // 6. Review segments from original segments
-    if (script.lesson.originalSegments && script.lesson.originalSegments.length > 0) {
-      segments.push({
-        id: 'lesson_review',
-        text: `Let's review what we covered: ${script.lesson.originalSegments.slice(0, 3).join(', ')}. These topics will help you in everyday English conversations.`,
-        screenElement: 'review_card',
-        visualDescription: 'Lesson review summary with key topics and takeaways highlighted in an organized layout',
-      });
+  /**
+   * Generate audio segments using LLM for more natural and engaging content
+   */
+  private async generateAudioSegmentsWithLLM(script: MicrolessonScript): Promise<AudioSegment[]> {
+    // LLM should always be available at this point due to constructor check
+    if (!this.llm || !this.llmConfigService.isLLMAvailable()) {
+      throw new Error('❌ LLM is required for audio segments generation but is not available');
     }
 
-    // 7. Conclusion segment
-    segments.push({
-      id: 'conclusion',
-      text: `Congratulations! You've completed this English lesson. Remember to practice these phrases in real situations. Keep learning and improving your English skills every day.`,
-      screenElement: 'conclusion_card',
-      visualDescription: 'Motivational conclusion card with completion badge and encouragement for continued learning',
-    });
+    try {
+      const prompt = `
+You are an expert English language instructor creating an engaging audio lesson script. 
+Based on the provided microlesson script, generate natural, conversational audio segments that will be used for text-to-speech generation.
 
-    return segments;
+MICROLESSON SCRIPT DATA:
+Title: ${script.lesson.title}
+Title (Thai): ${script.lesson.titleTh}
+Duration: ${Math.round(script.lesson.duration / 60)} minutes
+
+Learning Objectives:
+${script.lesson.learningObjectives.map((obj, i) => `${i + 1}. ${obj.statement}`).join('\n')}
+
+Key Vocabulary:
+${script.lesson.keyVocabulary
+  .slice(0, 10)
+  .map((vocab) => `- ${vocab.word}: ${vocab.contextExample}`)
+  .join('\n')}
+
+Grammar Points:
+${script.lesson.grammarPoints.map((grammar, i) => `${i + 1}. ${grammar.structure}: ${grammar.explanation}`).join('\n')}
+
+Practice Questions:
+${script.lesson.comprehensionQuestions.map((q, i) => `${i + 1}. ${q.question}`).join('\n')}
+
+INSTRUCTIONS:
+Create engaging audio segments with natural, conversational text suitable for English language learners. Each segment should:
+1. Use clear, simple English appropriate for the learning level
+2. Sound natural when spoken by a text-to-speech system
+3. Include smooth transitions and engaging introductions
+4. Be concise but informative
+5. Encourage learner participation
+
+Generate the following types of segments:
+- 1 intro segment welcoming learners
+- 1-2 learning objective segments explaining what they'll learn
+- 6-8 vocabulary segments introducing key words with examples
+- 2-3 grammar segments explaining important structures
+- 2-3 practice segments with interactive questions
+- 1 conclusion segment encouraging continued learning
+
+For vocabulary segments, include the target word clearly and use it in a natural example sentence.
+
+Return ONLY a valid JSON object in this exact format:
+{{
+  "audioSegments": [
+    {{
+      "id": "intro",
+      "text": "Welcome to today's lesson...",
+      "screenElement": "title_card",
+      "visualDescription": "..."
+    }},
+    {{
+      "id": "vocab_word1", 
+      "text": "First word: ...",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "target word"
+    }}
+  ]
+}}`;
+
+      const promptTemplate = PromptTemplate.fromTemplate(prompt);
+      const chain = RunnableSequence.from([promptTemplate, this.llm, new StringOutputParser()]);
+
+      const result = await chain.invoke(
+        {},
+        {
+          tags: ['audio-segments-generation', 'llm-content-creation'],
+          metadata: {
+            step: 'generate_audio_segments_with_llm',
+            lesson_title: script.lesson.title,
+            vocabulary_count: script.lesson.keyVocabulary.length,
+            grammar_points_count: script.lesson.grammarPoints.length,
+            questions_count: script.lesson.comprehensionQuestions.length,
+          },
+        },
+      );
+
+      // Extract JSON from the LLM response
+      const jsonContent = this.extractJSONFromResponse(result);
+      const parsedResult = JSON.parse(jsonContent);
+
+      if (parsedResult.audioSegments && Array.isArray(parsedResult.audioSegments)) {
+        console.log(`✅ Generated ${parsedResult.audioSegments.length} audio segments using LLM`);
+        return parsedResult.audioSegments;
+      } else {
+        throw new Error('Invalid LLM response format');
+      }
+    } catch (error) {
+      console.error('❌ LLM audio generation failed:', error.message);
+      throw new Error(`Failed to generate audio segments with LLM: ${error.message}`);
+    }
+  }
+
+  /**
+   * Extract JSON from LLM response (handles markdown code blocks and extra text)
+   */
+  private extractJSONFromResponse(response: string): string {
+    // Remove markdown code blocks
+    let cleaned = response.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+
+    // Find JSON object boundaries
+    const start = cleaned.indexOf('{');
+    const end = cleaned.lastIndexOf('}');
+
+    if (start !== -1 && end !== -1 && end > start) {
+      return cleaned.substring(start, end + 1);
+    }
+
+    return cleaned.trim();
   }
 }
