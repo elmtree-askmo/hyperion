@@ -16,6 +16,8 @@ interface SegmentBasedTiming {
   endTime: number;
   screenElement: string;
   duration: number;
+  audioUrl: string;
+  text: string;
   vocabWord?: string;
 }
 
@@ -49,10 +51,14 @@ export class SynchronizedLessonService {
       const videoDir = path.join(this.videosDir, videoId);
 
       // Load required data files
-      const [microlessonScript, timingMetadata] = await Promise.all([this.loadMicrolessonScript(videoDir), this.loadTimingMetadata(videoDir)]);
+      const [microlessonScript, timingMetadata, audioSegments] = await Promise.all([
+        this.loadMicrolessonScript(videoDir),
+        this.loadTimingMetadata(videoDir),
+        this.loadAudioSegments(videoDir),
+      ]);
 
       // Generate synchronized lesson structure
-      const synchronizedLesson = this.createSynchronizedLesson(microlessonScript, timingMetadata);
+      const synchronizedLesson = this.createSynchronizedLesson(microlessonScript, timingMetadata, audioSegments, videoDir);
 
       // Save the synchronized lesson
       await this.saveSynchronizedLesson(videoDir, synchronizedLesson);
@@ -76,17 +82,34 @@ export class SynchronizedLessonService {
     return JSON.parse(timingContent);
   }
 
-  private createSynchronizedLesson(microlessonScript: MicrolessonScript, timingMetadata: { segments: TimingSegment[] }): SynchronizedLesson {
+  private async loadAudioSegments(videoDir: string): Promise<{ audioSegments: Array<{ id: string; screenElement: string }> }> {
+    const audioSegmentsPath = path.join(videoDir, 'audio_segments.json');
+    const audioSegmentsContent = await fs.readFile(audioSegmentsPath, 'utf-8');
+    return JSON.parse(audioSegmentsContent);
+  }
+
+  private createSynchronizedLesson(
+    microlessonScript: MicrolessonScript,
+    timingMetadata: { segments: TimingSegment[] },
+    audioSegments: { audioSegments: Array<{ id: string; screenElement: string }> },
+    videoDir: string,
+  ): SynchronizedLesson {
     const segmentBasedTiming: SegmentBasedTiming[] = [];
     const vocabularyWords = microlessonScript.lesson.keyVocabulary || [];
 
     // Create timing segments based on the timing metadata
     for (const segment of timingMetadata.segments) {
+      // Find corresponding audio segment for correct screenElement
+      const audioSegment = audioSegments.audioSegments.find((as) => as.id === segment.segmentId);
+      const screenElement = audioSegment ? audioSegment.screenElement : this.mapSegmentToScreenElement(segment.segmentId);
+
       const timingSegment: SegmentBasedTiming = {
         startTime: segment.startTime,
         endTime: segment.endTime,
         duration: segment.duration,
-        screenElement: this.mapSegmentToScreenElement(segment.segmentId),
+        screenElement: screenElement,
+        audioUrl: `/video/${this.getVideoIdFromPath(videoDir)}/lesson_segments/${segment.fileName}`,
+        text: segment.text,
       };
 
       // Map vocabulary words to appropriate segments
@@ -142,6 +165,10 @@ export class SynchronizedLessonService {
     const regex = /vocab_word(\d+)/;
     const match = regex.exec(segmentId);
     return match ? parseInt(match[1], 10) : null;
+  }
+
+  private getVideoIdFromPath(videoDir: string): string {
+    return path.basename(videoDir);
   }
 
   private async saveSynchronizedLesson(videoDir: string, synchronizedLesson: SynchronizedLesson): Promise<void> {
