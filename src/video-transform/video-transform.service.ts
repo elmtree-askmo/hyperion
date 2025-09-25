@@ -8,6 +8,9 @@ import { YouTubeService } from './services/youtube.service';
 import { ContentAnalysisService } from './services/content-analysis.service';
 import { LangChainContentAnalysisService } from './services/langchain-content-analysis.service';
 import { MicrolessonScriptService } from './services/microlesson-script.service';
+import { AudioSegmentsService } from './services/audio-segments.service';
+import { TtsAudioSegmentsService } from './services/tts-audio-segments.service';
+import { SynchronizedLessonService } from './services/synchronized-lesson.service';
 
 @Injectable()
 export class VideoTransformService {
@@ -18,6 +21,9 @@ export class VideoTransformService {
     private readonly contentAnalysisService: ContentAnalysisService,
     private readonly langChainContentAnalysisService: LangChainContentAnalysisService,
     private readonly microlessonScriptService: MicrolessonScriptService,
+    private readonly audioSegmentsService: AudioSegmentsService,
+    private readonly ttsAudioSegmentsService: TtsAudioSegmentsService,
+    private readonly synchronizedLessonService: SynchronizedLessonService,
   ) {}
 
   async createVideoJob(createVideoJobDto: CreateVideoJobDto, userId: string): Promise<VideoJob> {
@@ -117,7 +123,7 @@ export class VideoTransformService {
       // Step 2: Download video transcript/subtitles
       const transcript = await this.youtubeService.getVideoTranscript(videoJob.youtubeUrl);
 
-      // Step 3: Use LangChain with OpenAI GPT for comprehensive content analysis
+      // Step 3.1: Comprehensive content analysis
       const lessonAnalysis = await this.langChainContentAnalysisService.analyzeVideoContent(
         videoMetadata,
         transcript,
@@ -148,14 +154,17 @@ export class VideoTransformService {
         },
       }));
 
-      // Step 4: Generate microlesson script for Thai context
-      try {
-        const microlessonScript = await this.microlessonScriptService.generateMicrolessonScript(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
-        console.log('Microlesson script generated successfully:', microlessonScript.lesson.title);
-      } catch (scriptError) {
-        console.warn('Failed to generate microlesson script:', scriptError.message);
-        // Continue without failing the entire job
-      }
+      // Step 3.2: Generate microlesson script for Thai context
+      await this.microlessonScriptService.generateMicrolessonScript(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
+
+      // Step 4.1: Create Audio Segments Structure
+      await this.audioSegmentsService.generateAudioSegments(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
+
+      // Step 4.2: Generate Individual TTS Audio Segments
+      await this.ttsAudioSegmentsService.generateTtsAudioSegments(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
+
+      // Step 4.3: Create Synchronized Lesson with segmentBasedTiming
+      await this.synchronizedLessonService.generateSynchronizedLesson(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
 
       // Update job with results
       videoJob.status = JobStatus.COMPLETED;
@@ -186,7 +195,7 @@ export class VideoTransformService {
   private extractVideoIdFromUrl(youtubeUrl: string): string {
     // Extract video ID from YouTube URL
     const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
-    const match = youtubeUrl.match(regex);
+    const match = regex.exec(youtubeUrl);
     return match ? match[1] : youtubeUrl;
   }
 }

@@ -72,13 +72,13 @@ interface MicrolessonScript {
 
 @Injectable()
 export class MicrolessonScriptService {
-  private readonly videosPath = '/Users/cpuser/Cherrypicks/Source/elmtree-askmo/hyperion/videos';
+  private readonly videosDir = path.join(process.cwd(), 'videos');
 
   constructor(private readonly thaiContextEnhancer: ThaiContextEnhancerService) {}
 
   async generateMicrolessonScript(videoId: string): Promise<MicrolessonScript> {
     try {
-      const scriptPath = path.join(this.videosPath, videoId, 'microlesson_script.json');
+      const scriptPath = path.join(this.videosDir, videoId, 'microlesson_script.json');
 
       // Check if microlesson script already exists
       if (fs.existsSync(scriptPath)) {
@@ -88,7 +88,7 @@ export class MicrolessonScriptService {
       }
 
       // Read the lesson analysis file
-      const analysisPath = path.join(this.videosPath, videoId, 'lesson_analysis.json');
+      const analysisPath = path.join(this.videosDir, videoId, 'lesson_analysis.json');
       if (!fs.existsSync(analysisPath)) {
         throw new Error(`Lesson analysis not found for video: ${videoId}`);
       }
@@ -103,6 +103,7 @@ export class MicrolessonScriptService {
 
       return microlessonScript;
     } catch (error) {
+      console.error('Failed to generate microlesson script:', error);
       throw new Error(`Failed to generate microlesson script: ${error.message}`);
     }
   }
@@ -502,7 +503,7 @@ export class MicrolessonScriptService {
 
     try {
       const videoDirectories = fs
-        .readdirSync(this.videosPath, { withFileTypes: true })
+        .readdirSync(this.videosDir, { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name);
 

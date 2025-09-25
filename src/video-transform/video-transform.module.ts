@@ -9,6 +9,9 @@ import { LangChainContentAnalysisService } from './services/langchain-content-an
 import { MicrolessonScriptService } from './services/microlesson-script.service';
 import { ThaiContextEnhancerService } from './services/thai-context-enhancer.service';
 import { DynamicSceneAnalyzerService } from './services/dynamic-scene-analyzer.service';
+import { AudioSegmentsService } from './services/audio-segments.service';
+import { TtsAudioSegmentsService } from './services/tts-audio-segments.service';
+import { SynchronizedLessonService } from './services/synchronized-lesson.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([VideoJob])],
@@ -21,6 +24,9 @@ import { DynamicSceneAnalyzerService } from './services/dynamic-scene-analyzer.s
     MicrolessonScriptService,
     ThaiContextEnhancerService,
     DynamicSceneAnalyzerService,
+    AudioSegmentsService,
+    TtsAudioSegmentsService,
+    SynchronizedLessonService,
   ],
   exports: [VideoTransformService],
 })
