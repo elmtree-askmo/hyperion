@@ -82,6 +82,47 @@ export class AudioSegmentsService {
     }
   }
 
+  async generateAudioSegmentsForEpisode(videoId: string, episodeNumber: number): Promise<AudioSegmentsResponse> {
+    try {
+      const episodeDir = path.join(this.videosDir, videoId, `episode_${episodeNumber.toString()}`);
+      const audioSegmentsPath = path.join(episodeDir, 'audio_segments.json');
+
+      // Check if audio segments already exist
+      if (fs.existsSync(audioSegmentsPath)) {
+        const existingSegments: AudioSegmentsResponse = JSON.parse(fs.readFileSync(audioSegmentsPath, 'utf8'));
+        return existingSegments;
+      }
+
+      // Read the microlesson script file for this episode
+      const scriptPath = path.join(episodeDir, 'microlesson_script.json');
+      if (!fs.existsSync(scriptPath)) {
+        throw new Error(`Microlesson script not found for video: ${videoId}, episode: ${episodeNumber}`);
+      }
+
+      const microlessonScript: MicrolessonScript = JSON.parse(fs.readFileSync(scriptPath, 'utf8'));
+
+      // Generate audio segments from microlesson script using LLM
+      const audioSegments = await this.generateAudioSegmentsWithLLM(microlessonScript);
+
+      const result: AudioSegmentsResponse = {
+        audioSegments,
+      };
+
+      // Ensure episode directory exists
+      if (!fs.existsSync(episodeDir)) {
+        fs.mkdirSync(episodeDir, { recursive: true });
+      }
+
+      // Save the generated audio segments
+      fs.writeFileSync(audioSegmentsPath, JSON.stringify(result, null, 2));
+
+      return result;
+    } catch (error) {
+      console.error(`Failed to generate audio segments for episode ${episodeNumber}:`, error);
+      throw new Error(`Failed to generate audio segments for episode ${episodeNumber}: ${error.message}`);
+    }
+  }
+
   async generateAudioSegments(videoId: string): Promise<AudioSegmentsResponse> {
     try {
       const audioSegmentsPath = path.join(this.videosDir, videoId, 'audio_segments.json');

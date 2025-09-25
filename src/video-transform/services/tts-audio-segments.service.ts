@@ -49,6 +49,78 @@ export class TtsAudioSegmentsService {
     });
   }
 
+  async generateTtsAudioSegmentsForEpisode(videoId: string, episodeNumber: number): Promise<TtsTimingMetadata> {
+    try {
+      const episodeDir = path.join(this.videosDir, videoId, `episode_${episodeNumber.toString()}`);
+      const segmentsPath = path.join(episodeDir, 'lesson_segments');
+      const audioSegmentsPath = path.join(episodeDir, 'audio_segments.json');
+      const timingMetadataPath = path.join(segmentsPath, 'timing-metadata.json');
+
+      // Create lesson_segments directory if it doesn't exist
+      if (!fs.existsSync(segmentsPath)) {
+        fs.mkdirSync(segmentsPath, { recursive: true });
+      }
+
+      // Check if timing metadata already exists
+      if (fs.existsSync(timingMetadataPath)) {
+        const existingMetadata: TtsTimingMetadata = JSON.parse(fs.readFileSync(timingMetadataPath, 'utf8'));
+        return existingMetadata;
+      }
+
+      // Read audio segments data
+      if (!fs.existsSync(audioSegmentsPath)) {
+        throw new Error(`Audio segments not found for video: ${videoId}, episode: ${episodeNumber}`);
+      }
+
+      const audioSegmentsData: AudioSegmentsResponse = JSON.parse(fs.readFileSync(audioSegmentsPath, 'utf8'));
+      const segments = audioSegmentsData.audioSegments;
+
+      const timingMetadata: TimingMetadata[] = [];
+      let currentTime = 0;
+
+      // Process each segment
+      for (const segment of segments) {
+        const fileName = `${segment.id}.wav`;
+        const audioFilePath = path.join(segmentsPath, fileName);
+
+        // Generate TTS audio for this segment
+        const duration = await this.generateTtsAudio(segment.text, audioFilePath);
+
+        // Create timing metadata entry
+        const timingEntry: TimingMetadata = {
+          segmentId: segment.id,
+          fileName: fileName,
+          duration: duration,
+          startTime: currentTime,
+          endTime: currentTime + duration,
+          text: segment.text,
+        };
+
+        timingMetadata.push(timingEntry);
+        currentTime += duration;
+
+        console.log(`Generated TTS audio for Episode ${episodeNumber}, segment ${segment.id}: ${fileName} (${duration.toFixed(2)}s)`);
+      }
+
+      // Create final timing metadata
+      const result: TtsTimingMetadata = {
+        segments: timingMetadata,
+        totalDuration: currentTime,
+        generatedAt: new Date().toISOString(),
+      };
+
+      // Save timing metadata
+      fs.writeFileSync(timingMetadataPath, JSON.stringify(result, null, 2));
+
+      console.log(`✅ Generated ${segments.length} TTS audio files for Episode ${episodeNumber} with total duration: ${currentTime.toFixed(2)}s`);
+
+      return result;
+    } catch (error) {
+      console.error(`Failed to generate TTS audio segments for episode ${episodeNumber}:`, error);
+      throw new Error(`Failed to generate TTS audio segments for episode ${episodeNumber}: ${error.message}`);
+    }
+  }
+
   async generateTtsAudioSegments(videoId: string): Promise<TtsTimingMetadata> {
     try {
       const videoPath = path.join(this.videosDir, videoId);

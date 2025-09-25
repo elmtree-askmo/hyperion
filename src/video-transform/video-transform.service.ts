@@ -152,17 +152,40 @@ export class VideoTransformService {
         },
       }));
 
-      // Step 3.2: Generate microlesson script for Thai context
-      await this.microlessonScriptService.generateMicrolessonScript(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
+      const videoId = this.extractVideoIdFromUrl(videoJob.youtubeUrl);
 
-      // Step 4.1: Create Audio Segments Structure
-      await this.audioSegmentsService.generateAudioSegments(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
+      // Step 3.2: Generate microlesson scripts for Thai context (multiple episodes)
+      const microlessonScripts = await this.microlessonScriptService.generateMicrolessonScript(videoId);
+      console.log(`✅ Generated ${microlessonScripts.length} microlesson scripts for series`);
 
-      // Step 4.2: Generate Individual TTS Audio Segments
-      await this.ttsAudioSegmentsService.generateTtsAudioSegments(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
+      // Step 4: Generate audio content for each episode in the series
+      // Get the series structure to process each episode
+      if (lessonAnalysis.seriesStructure?.episodes) {
+        for (const episode of lessonAnalysis.seriesStructure.episodes) {
+          console.log(`🎵 Processing audio for Episode ${episode.episodeNumber}: ${episode.title}`);
 
-      // Step 4.3: Create Synchronized Lesson with segmentBasedTiming
-      await this.synchronizedLessonService.generateSynchronizedLesson(this.extractVideoIdFromUrl(videoJob.youtubeUrl));
+          // Step 4.1: Create Audio Segments Structure for this episode
+          await this.audioSegmentsService.generateAudioSegmentsForEpisode(videoId, episode.episodeNumber);
+
+          // Step 4.2: Generate Individual TTS Audio Segments for this episode
+          await this.ttsAudioSegmentsService.generateTtsAudioSegmentsForEpisode(videoId, episode.episodeNumber);
+
+          // Step 4.3: Create Synchronized Lesson for this episode
+          await this.synchronizedLessonService.generateSynchronizedLessonForEpisode(videoId, episode.episodeNumber);
+        }
+      } else {
+        // Fallback to old behavior for single microlesson
+        console.log('🎵 Processing audio for single microlesson (fallback mode)');
+
+        // Step 4.1: Create Audio Segments Structure
+        await this.audioSegmentsService.generateAudioSegments(videoId);
+
+        // Step 4.2: Generate Individual TTS Audio Segments
+        await this.ttsAudioSegmentsService.generateTtsAudioSegments(videoId);
+
+        // Step 4.3: Create Synchronized Lesson with segmentBasedTiming
+        await this.synchronizedLessonService.generateSynchronizedLesson(videoId);
+      }
 
       // Update job with results
       videoJob.status = JobStatus.COMPLETED;

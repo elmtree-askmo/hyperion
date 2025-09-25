@@ -44,6 +44,32 @@ export class SynchronizedLessonService {
   private readonly logger = new Logger(SynchronizedLessonService.name);
   private readonly videosDir = path.join(process.cwd(), 'videos');
 
+  async generateSynchronizedLessonForEpisode(videoId: string, episodeNumber: number): Promise<void> {
+    try {
+      this.logger.log(`Starting synchronized lesson generation for video: ${videoId}, episode: ${episodeNumber}`);
+
+      const episodeDir = path.join(this.videosDir, videoId, `episode_${episodeNumber.toString()}`);
+
+      // Load required data files for this episode
+      const [microlessonScript, timingMetadata, audioSegments] = await Promise.all([
+        this.loadMicrolessonScriptForEpisode(episodeDir),
+        this.loadTimingMetadataForEpisode(episodeDir),
+        this.loadAudioSegmentsForEpisode(episodeDir),
+      ]);
+
+      // Generate synchronized lesson structure
+      const synchronizedLesson = this.createSynchronizedLesson(microlessonScript, timingMetadata, audioSegments, episodeDir);
+
+      // Save the synchronized lesson
+      await this.saveSynchronizedLesson(episodeDir, synchronizedLesson);
+
+      this.logger.log(`Successfully generated synchronized lesson for video: ${videoId}, episode: ${episodeNumber}`);
+    } catch (error) {
+      this.logger.error(`Failed to generate synchronized lesson for video: ${videoId}, episode: ${episodeNumber}`, error.stack);
+      throw error;
+    }
+  }
+
   async generateSynchronizedLesson(videoId: string): Promise<void> {
     try {
       this.logger.log(`Starting synchronized lesson generation for video: ${videoId}`);
@@ -68,6 +94,24 @@ export class SynchronizedLessonService {
       this.logger.error(`Failed to generate synchronized lesson for video: ${videoId}`, error.stack);
       throw error;
     }
+  }
+
+  private async loadMicrolessonScriptForEpisode(episodeDir: string): Promise<MicrolessonScript> {
+    const scriptPath = path.join(episodeDir, 'microlesson_script.json');
+    const scriptContent = await fs.readFile(scriptPath, 'utf-8');
+    return JSON.parse(scriptContent);
+  }
+
+  private async loadTimingMetadataForEpisode(episodeDir: string): Promise<{ segments: TimingSegment[] }> {
+    const timingPath = path.join(episodeDir, 'lesson_segments', 'timing-metadata.json');
+    const timingContent = await fs.readFile(timingPath, 'utf-8');
+    return JSON.parse(timingContent);
+  }
+
+  private async loadAudioSegmentsForEpisode(episodeDir: string): Promise<{ audioSegments: Array<{ id: string; screenElement: string }> }> {
+    const audioSegmentsPath = path.join(episodeDir, 'audio_segments.json');
+    const audioSegmentsContent = await fs.readFile(audioSegmentsPath, 'utf-8');
+    return JSON.parse(audioSegmentsContent);
   }
 
   private async loadMicrolessonScript(videoDir: string): Promise<MicrolessonScript> {
@@ -108,7 +152,7 @@ export class SynchronizedLessonService {
         endTime: segment.endTime,
         duration: segment.duration,
         screenElement: screenElement,
-        audioUrl: `/video/${this.getVideoIdFromPath(videoDir)}/lesson_segments/${segment.fileName}`,
+        audioUrl: this.generateAudioUrl(videoDir, segment.fileName),
         text: segment.text,
       };
 
@@ -167,8 +211,33 @@ export class SynchronizedLessonService {
     return match ? parseInt(match[1], 10) : null;
   }
 
+  private generateAudioUrl(videoDir: string, fileName: string): string {
+    // Check if this is an episode directory (contains episode number)
+    const videoId = this.getVideoIdFromPath(videoDir);
+    const pathParts = videoDir.split(path.sep);
+    const lastPart = pathParts[pathParts.length - 1];
+
+    // If the last part is a number, it's an episode directory
+    if (/^\d+$/.test(lastPart)) {
+      const episodeNumber = lastPart;
+      return `/video/${videoId}/${episodeNumber}/lesson_segments/${fileName}`;
+    } else {
+      // Legacy single microlesson structure
+      return `/video/${videoId}/lesson_segments/${fileName}`;
+    }
+  }
+
   private getVideoIdFromPath(videoDir: string): string {
-    return path.basename(videoDir);
+    const pathParts = videoDir.split(path.sep);
+    const lastPart = pathParts[pathParts.length - 1];
+
+    // If the last part is a number, it's an episode directory, so get the parent
+    if (/^\d+$/.test(lastPart)) {
+      return pathParts[pathParts.length - 2];
+    } else {
+      // Single microlesson structure
+      return lastPart;
+    }
   }
 
   private async saveSynchronizedLesson(videoDir: string, synchronizedLesson: SynchronizedLesson): Promise<void> {
