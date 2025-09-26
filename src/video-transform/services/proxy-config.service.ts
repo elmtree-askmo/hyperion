@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 @Injectable()
 export class ProxyConfigService {
+  private readonly logger = new Logger(ProxyConfigService.name);
   private static isProxyConfigured = false;
 
   constructor() {
@@ -17,7 +18,7 @@ export class ProxyConfigService {
     const proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
 
     if (proxyUrl) {
-      console.log(`🌐 Setting up optimized proxy (Node.js ${process.version}): ${proxyUrl}`);
+      this.logger.log(`🌐 Setting up optimized proxy (Node.js ${process.version}): ${proxyUrl}`);
 
       try {
         // Use undici for Node.js 20+ (optimal for fetch API)
@@ -26,7 +27,7 @@ export class ProxyConfigService {
           uri: proxyUrl,
         });
         setGlobalDispatcher(proxyAgent);
-        console.log(`✅ Undici proxy agent configured with enhanced options for Node.js 20+`);
+        this.logger.log(`✅ Undici proxy agent configured with enhanced options for Node.js 20+`);
       } catch (error) {
         console.warn(`⚠️  Failed to configure proxy: ${error.message}`);
         // Fallback to basic proxy setup
@@ -43,7 +44,7 @@ export class ProxyConfigService {
 
       https.globalAgent = agent;
       http.globalAgent = agent;
-      console.log(`✅ Basic proxy fallback configured`);
+      this.logger.log(`✅ Basic proxy fallback configured`);
     } catch (error) {
       console.warn(`⚠️  Even basic proxy setup failed: ${error.message}`);
     }

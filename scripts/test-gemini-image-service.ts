@@ -85,9 +85,9 @@ async function testGeminiNode20() {
     console.log(`📂 Saved to: ${imagePath}`);
     console.log('\n✨ Gemini Image Service is working optimally with Node.js 20+!');
   } catch (error) {
-    console.error('\n❌ Error during Gemini test:');
-    console.error(`   Type: ${error.constructor.name}`);
-    console.error(`   Message: ${error.message}`);
+    this.logger.error('\n❌ Error during Gemini test:');
+    this.logger.error(`   Type: ${error.constructor.name}`);
+    this.logger.error(`   Message: ${error.message}`);
 
     if (error.message.includes('fetch failed')) {
       console.log('\n💡 Network Error Solutions:');

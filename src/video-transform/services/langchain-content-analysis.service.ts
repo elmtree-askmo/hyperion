@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { RunnableSequence } from '@langchain/core/runnables';
@@ -116,6 +116,7 @@ export interface LessonAnalysis {
 
 @Injectable()
 export class LangChainContentAnalysisService {
+  private readonly logger = new Logger(LangChainContentAnalysisService.name);
   private readonly llm;
 
   constructor(private readonly llmConfigService: LLMConfigService) {
@@ -124,9 +125,9 @@ export class LangChainContentAnalysisService {
 
     // LangSmith is automatically enabled when environment variables are set
     if (process.env.LANGCHAIN_TRACING_V2 === 'true' && process.env.LANGCHAIN_API_KEY) {
-      console.log(`🔍 LangSmith tracing enabled for project: ${process.env.LANGCHAIN_PROJECT || 'hyperion'}`);
+      this.logger.log(`🔍 LangSmith tracing enabled for project: ${process.env.LANGCHAIN_PROJECT || 'hyperion'}`);
     } else {
-      console.log('⚠️  LangSmith not configured (optional for debugging)');
+      this.logger.log('⚠️  LangSmith not configured (optional for debugging)');
     }
   }
 
@@ -145,11 +146,11 @@ export class LangChainContentAnalysisService {
     // Check if lesson analysis already exists
     const existingAnalysis = await this.loadExistingLessonAnalysis(videoId);
     if (existingAnalysis) {
-      console.log(`Found existing lesson analysis for video ${videoId}, returning cached result`);
+      this.logger.log(`Found existing lesson analysis for video ${videoId}, returning cached result`);
       return existingAnalysis;
     }
 
-    console.log('Starting comprehensive video content analysis...');
+    this.logger.log('Starting comprehensive video content analysis...');
 
     // Extract core learning objectives
     const learningObjectives = await this.extractLearningObjectives(transcript, metadata, targetAudience);
@@ -164,7 +165,7 @@ export class LangChainContentAnalysisService {
     const seriesStructure = await this.generateSeriesStructure(segments, learningObjectives, metadata);
 
     // Extract vocabulary, grammar points, and cultural context
-    console.log('Extracting vocabulary, grammar points, and cultural context...');
+    this.logger.log('Extracting vocabulary, grammar points, and cultural context...');
     const [vocabulary, grammarPoints, culturalContexts] = await Promise.all([
       this.extractVocabulary(transcript, targetAudience),
       this.extractGrammarPoints(transcript, targetAudience),
@@ -200,7 +201,7 @@ export class LangChainContentAnalysisService {
     // Save analysis to lesson_analysis.json in videos/{videoId}/ directory
     await this.saveLessonAnalysis(analysis);
 
-    console.log('Content analysis completed successfully');
+    this.logger.log('Content analysis completed successfully');
     return analysis;
   }
 
@@ -265,7 +266,7 @@ Respond in JSON format:
 
       return JSON.parse(this.extractJSONFromResponse(result));
     } catch (error) {
-      console.error('Error extracting learning objectives:', error);
+      this.logger.error('Error extracting learning objectives:', error);
       return this.getFallbackLearningObjectives();
     }
   }
@@ -331,7 +332,7 @@ Respond in JSON format:
 
       return JSON.parse(this.extractJSONFromResponse(result));
     } catch (error) {
-      console.error('Error extracting prerequisites:', error);
+      this.logger.error('Error extracting prerequisites:', error);
       return this.getFallbackPrerequisites();
     }
   }
@@ -417,7 +418,7 @@ Respond in JSON format:
 
       return JSON.parse(this.extractJSONFromResponse(result));
     } catch (error) {
-      console.error('Error extracting segments:', error);
+      this.logger.error('Error extracting segments:', error);
       return this.getFallbackSegments(totalDuration, targetDuration);
     }
   }
@@ -494,7 +495,7 @@ Respond in JSON format:
 
       return JSON.parse(this.extractJSONFromResponse(result));
     } catch (error) {
-      console.error('Error extracting series structure:', error);
+      this.logger.error('Error extracting series structure:', error);
       return this.getFallbackSeriesStructure(segments, learningObjectives, metadata);
     }
   }
@@ -512,9 +513,9 @@ Respond in JSON format:
 
       const filePath = join(videosDir, 'lesson_analysis.json');
       await writeFile(filePath, JSON.stringify(analysis, null, 2), 'utf8');
-      console.log(`Lesson analysis saved to: ${filePath}`);
+      this.logger.log(`Lesson analysis saved to: ${filePath}`);
     } catch (error) {
-      console.error('Error saving lesson analysis:', error);
+      this.logger.error('Error saving lesson analysis:', error);
       throw error;
     }
   }
@@ -540,7 +541,7 @@ Respond in JSON format:
 
       // Validate that it's a proper LessonAnalysis object
       if (analysis.videoId && analysis.title && analysis.learningObjectives && analysis.segments) {
-        console.log(`Successfully loaded existing lesson analysis for video ${videoId}`);
+        this.logger.log(`Successfully loaded existing lesson analysis for video ${videoId}`);
         return analysis;
       } else {
         console.warn(`Invalid lesson analysis file format for video ${videoId}, will regenerate`);
@@ -548,7 +549,7 @@ Respond in JSON format:
       }
     } catch (error) {
       // File doesn't exist or is not readable, return null to trigger new analysis
-      console.log(`No existing lesson analysis found for video ${videoId}, will generate new analysis`);
+      this.logger.log(`No existing lesson analysis found for video ${videoId}, will generate new analysis`);
       if (error && typeof error === 'object' && 'code' in error && error.code !== 'ENOENT') {
         // Log non-file-not-found errors for debugging
         console.debug(`Error loading existing analysis for ${videoId}:`, error.message || error);
@@ -716,7 +717,7 @@ Respond in JSON format:
 
       return JSON.parse(this.extractJSONFromResponse(result));
     } catch (error) {
-      console.error('Error extracting vocabulary:', error);
+      this.logger.error('Error extracting vocabulary:', error);
       return this.getFallbackVocabulary();
     }
   }
@@ -781,7 +782,7 @@ Respond in JSON format:
 
       return JSON.parse(this.extractJSONFromResponse(result));
     } catch (error) {
-      console.error('Error extracting grammar points:', error);
+      this.logger.error('Error extracting grammar points:', error);
       return this.getFallbackGrammarPoints();
     }
   }
@@ -848,7 +849,7 @@ Respond in JSON format:
 
       return JSON.parse(this.extractJSONFromResponse(result));
     } catch (error) {
-      console.error('Error extracting cultural context:', error);
+      this.logger.error('Error extracting cultural context:', error);
       return this.getFallbackCulturalContext();
     }
   }

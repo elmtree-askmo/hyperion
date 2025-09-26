@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { GoogleGenAI } from '@google/genai';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -6,6 +6,7 @@ import { ProxyConfigService } from './proxy-config.service';
 
 @Injectable()
 export class GeminiImageService {
+  private readonly logger = new Logger(GeminiImageService.name);
   private readonly genAI: GoogleGenAI;
 
   constructor(private readonly proxyConfigService: ProxyConfigService) {
@@ -41,21 +42,21 @@ export class GeminiImageService {
 
       for (const part of response.candidates[0].content.parts) {
         if (part.text) {
-          console.log(part.text);
+          this.logger.log(part.text);
         } else if (part.inlineData) {
           const imageData = part.inlineData.data;
           const buffer = Buffer.from(imageData, 'base64');
 
           fs.writeFileSync(filePath, buffer);
           const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-          console.log(`Image saved as ${filePath} (elapsed: ${duration}s)`);
+          this.logger.log(`Image saved as ${filePath} (elapsed: ${duration}s)`);
           return filePath;
         }
       }
 
       throw new Error('Image data not found in response.');
     } catch (error) {
-      console.error('Error generating image with @google/genai:', error);
+      this.logger.error('Error generating image with @google/genai:', error);
       throw new Error('Failed to generate image using @google/genai. The model might not be available or the API has changed.');
     }
   }
@@ -67,12 +68,12 @@ export class GeminiImageService {
     const lessonSegmentsDir = path.join(lessonDir, 'lesson_segments');
     const finalSynchronizedPath = path.join(lessonDir, 'final_synchronized_lesson.json');
 
-    console.log(`🖼️ Generating images for video ${videoId}, episode ${episodeNumber}`);
+    this.logger.log(`🖼️ Generating images for video ${videoId}, episode ${episodeNumber}`);
 
     try {
       // Read audio segments file
       if (!fs.existsSync(audioSegmentsPath)) {
-        console.error(`Audio segments file not found: ${audioSegmentsPath}`);
+        this.logger.error(`Audio segments file not found: ${audioSegmentsPath}`);
         return;
       }
 
@@ -88,19 +89,19 @@ export class GeminiImageService {
       for (const segment of audioSegments) {
         if (segment.backgroundImageDescription) {
           try {
-            console.log(`🖼️ Generating image for segment: ${segment.id}`);
+            this.logger.log(`🖼️ Generating image for segment: ${segment.id}`);
 
             // Generate image using the background description
             const filePath = path.join(lessonSegmentsDir, `${segment.id}.png`);
             // Only generate the image if the file does not already exist
             if (!fs.existsSync(filePath)) {
               const imagePath = await this.generateImage(segment.backgroundImageDescription, filePath);
-              console.log(`✅ Generated and saved image for segment ${segment.id}: ${imagePath}`);
+              this.logger.log(`✅ Generated and saved image for segment ${segment.id}: ${imagePath}`);
             } else {
-              console.log(`Image for segment ${segment.id} already exists at ${filePath}, skipping generation.`);
+              this.logger.log(`Image for segment ${segment.id} already exists at ${filePath}, skipping generation.`);
             }
           } catch (error) {
-            console.error(`Failed to generate image for segment ${segment.id}:`, error);
+            this.logger.error(`Failed to generate image for segment ${segment.id}:`, error);
           }
         }
       }
@@ -110,9 +111,9 @@ export class GeminiImageService {
         await this.updateSynchronizedLessonWithBackgrounds(finalSynchronizedPath, audioSegments, videoId, episodeNumber);
       }
 
-      console.log(`🖼️ Completed image generation for video ${videoId}, episode ${episodeNumber}`);
+      this.logger.log(`🖼️ Completed image generation for video ${videoId}, episode ${episodeNumber}`);
     } catch (error) {
-      console.error(`Failed to generate episode images for video ${videoId}, episode ${episodeNumber}:`, error);
+      this.logger.error(`Failed to generate episode images for video ${videoId}, episode ${episodeNumber}:`, error);
       throw error;
     }
   }
@@ -137,9 +138,9 @@ export class GeminiImageService {
 
       // Save the updated synchronized lesson
       fs.writeFileSync(finalSynchronizedPath, JSON.stringify(synchronizedData, null, 2));
-      console.log(`✅ Updated final_synchronized_lesson.json with background URLs`);
+      this.logger.log(`✅ Updated final_synchronized_lesson.json with background URLs`);
     } catch (error) {
-      console.error('Failed to update synchronized lesson with backgrounds:', error);
+      this.logger.error('Failed to update synchronized lesson with backgrounds:', error);
     }
   }
 

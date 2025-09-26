@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { LLMConfigService } from './llm-config.service';
@@ -11,6 +11,7 @@ interface LLMEnhancedMicrolessonConfig {
 
 @Injectable()
 export class LLMEnhancedMicrolessonService {
+  private readonly logger = new Logger(LLMEnhancedMicrolessonService.name);
   private readonly llm;
   private config: LLMEnhancedMicrolessonConfig;
 
@@ -31,7 +32,7 @@ export class LLMEnhancedMicrolessonService {
       throw new Error('LLM enhancement is disabled');
     }
 
-    console.log('🤖 Generating LLM-enhanced microlesson script...');
+    this.logger.log('🤖 Generating LLM-enhanced microlesson script...');
 
     try {
       // 并行生成所有部分 - 纯LLM方案，包括标题
@@ -53,13 +54,13 @@ export class LLMEnhancedMicrolessonService {
         errors: [],
       };
     } catch (error) {
-      console.error('❌ LLM enhancement failed:', error);
+      this.logger.error('❌ LLM enhancement failed:', error);
       throw new Error(`LLM microlesson generation failed: ${error.message}`);
     }
   }
 
   private async generateEnhancedTitles(lessonAnalysis: any): Promise<{ title: string; titleTh: string }> {
-    console.log('📝 Generating LLM-enhanced microlesson titles...');
+    this.logger.log('📝 Generating LLM-enhanced microlesson titles...');
 
     const prompt = PromptTemplate.fromTemplate(`
 You are creating focused, engaging titles for 5-minute English microlessons for Thai college students.
@@ -130,7 +131,7 @@ Return ONLY valid JSON:
   }
 
   private async generateEnhancedObjectives(lessonAnalysis: any): Promise<any[]> {
-    console.log('🎯 Generating LLM-enhanced learning objectives...');
+    this.logger.log('🎯 Generating LLM-enhanced learning objectives...');
 
     const prompt = PromptTemplate.fromTemplate(`
 You are an expert English teacher creating learning objectives for Thai college students.
@@ -203,7 +204,7 @@ Return ONLY valid JSON in this format:
   }
 
   private async generateEnhancedVocabulary(lessonAnalysis: any): Promise<any[]> {
-    console.log('📚 Generating LLM-enhanced vocabulary...');
+    this.logger.log('📚 Generating LLM-enhanced vocabulary...');
 
     const vocabularyList = lessonAnalysis.vocabulary?.slice(0, 12) || [];
     if (vocabularyList.length === 0) return [];
@@ -253,7 +254,7 @@ Return ONLY valid JSON array:
   }
 
   private async generateEnhancedQuestions(lessonAnalysis: any): Promise<any[]> {
-    console.log('❓ Generating LLM-enhanced comprehension questions...');
+    this.logger.log('❓ Generating LLM-enhanced comprehension questions...');
 
     const prompt = PromptTemplate.fromTemplate(`
 Create 4-5 comprehension questions for Thai students about this lesson:
@@ -306,7 +307,7 @@ Return ONLY valid JSON:
   }
 
   private async generateEnhancedMemoryHooks(lessonAnalysis: any): Promise<string[]> {
-    console.log('🧠 Generating LLM-enhanced memory hooks...');
+    this.logger.log('🧠 Generating LLM-enhanced memory hooks...');
 
     const keyWords = lessonAnalysis.vocabulary?.slice(0, 8).map((v) => v.word) || [];
     if (keyWords.length === 0) return [];

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import { LLMEnhancedMicrolessonService } from './llm-enhanced-microlesson.service';
@@ -72,6 +72,7 @@ interface MicrolessonScript {
 
 @Injectable()
 export class MicrolessonScriptService {
+  private readonly logger = new Logger(MicrolessonScriptService.name);
   private readonly videosDir = path.join(process.cwd(), 'videos');
 
   constructor(private readonly llmEnhancedService: LLMEnhancedMicrolessonService) {}
@@ -91,7 +92,7 @@ export class MicrolessonScriptService {
 
       if (analysisData.seriesStructure?.episodes) {
         for (const episode of analysisData.seriesStructure.episodes) {
-          console.log(`🚀 Generating microlesson script for Episode ${episode.episodeNumber}: ${episode.title}`);
+          this.logger.log(`🚀 Generating microlesson script for Episode ${episode.episodeNumber}: ${episode.title}`);
 
           // Create episode directory path
           const lessonDir = path.join(this.videosDir, videoId, `lesson_${episode.episodeNumber.toString()}`);
@@ -99,7 +100,7 @@ export class MicrolessonScriptService {
 
           // Check if episode script already exists
           if (fs.existsSync(scriptPath)) {
-            console.log(`📖 Loading existing script for Episode ${episode.episodeNumber}`);
+            this.logger.log(`📖 Loading existing script for Episode ${episode.episodeNumber}`);
             const existingScript: MicrolessonScript = JSON.parse(fs.readFileSync(scriptPath, 'utf8'));
             microlessonScripts.push(existingScript);
             continue;
@@ -120,14 +121,14 @@ export class MicrolessonScriptService {
         }
       } else {
         // Fallback to old behavior if no series structure
-        console.log('⚠️ No series structure found, generating single microlesson script');
+        this.logger.log('⚠️ No series structure found, generating single microlesson script');
         const singleScript = await this.generateSingleMicrolessonScript(videoId, analysisData);
         microlessonScripts.push(singleScript);
       }
 
       return microlessonScripts;
     } catch (error) {
-      console.error('Failed to generate microlesson scripts:', error);
+      this.logger.error('Failed to generate microlesson scripts:', error);
       throw new Error(`Failed to generate microlesson scripts: ${error.message}`);
     }
   }
@@ -160,7 +161,7 @@ export class MicrolessonScriptService {
 
       return microlessonScript;
     } catch (error) {
-      console.error('Failed to generate single microlesson script:', error);
+      this.logger.error('Failed to generate single microlesson script:', error);
       throw new Error(`Failed to generate single microlesson script: ${error.message}`);
     }
   }
@@ -173,7 +174,7 @@ export class MicrolessonScriptService {
     const episodeSegments = analysis.segments.filter((segment) => episode.segments.includes(segment.id));
 
     // Use LLM approach for content generation including title
-    console.log(`🚀 Using LLM approach for Episode ${episode.episodeNumber} microlesson generation...`);
+    this.logger.log(`🚀 Using LLM approach for Episode ${episode.episodeNumber} microlesson generation...`);
 
     // Create focused analysis for this episode
     const episodeAnalysis = {
@@ -230,7 +231,7 @@ export class MicrolessonScriptService {
     const targetDuration = 300; // 5 minutes in seconds
 
     // Use LLM approach for content generation including title
-    console.log('🚀 Using LLM approach for microlesson generation...');
+    this.logger.log('🚀 Using LLM approach for microlesson generation...');
 
     const llmResults = await this.llmEnhancedService.generateEnhancedMicrolessonScript(analysis.videoId || 'unknown', analysis);
 

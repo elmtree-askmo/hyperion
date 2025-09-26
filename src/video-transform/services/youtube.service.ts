@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 const youtubedl = require('youtube-dl-exec');
@@ -31,6 +31,7 @@ interface YoutubeVideoInfo {
 
 @Injectable()
 export class YouTubeService {
+  private readonly logger = new Logger(YouTubeService.name);
   // Define the directory to save JSON files
   private readonly videosDir = path.join(process.cwd(), 'videos');
 
@@ -40,7 +41,7 @@ export class YouTubeService {
     try {
       await fs.mkdir(dir, { recursive: true });
     } catch (error) {
-      console.error('Failed to create videos directory:', error);
+      this.logger.error('Failed to create videos directory:', error);
     }
   }
 
@@ -59,12 +60,12 @@ export class YouTubeService {
       // Check if metadata file already exists
       const existingMetadata = await this.loadExistingMetadata(videoId);
       if (existingMetadata) {
-        console.log(`Using cached metadata for video ${videoId}`);
+        this.logger.log(`Using cached metadata for video ${videoId}`);
         return this.formatVideoMetadata(existingMetadata, videoId);
       }
 
       // If no cached metadata, fetch from API
-      console.log(`Fetching new metadata for video ${videoId}`);
+      this.logger.log(`Fetching new metadata for video ${videoId}`);
       const videoInfo = (await youtubedl(youtubeUrl, {
         'dump-single-json': true,
         'no-check-certificates': true,
@@ -79,7 +80,7 @@ export class YouTubeService {
       // Return formatted metadata
       return this.formatVideoMetadata(videoInfo, videoId);
     } catch (error) {
-      console.error('YouTube metadata extraction error:', error);
+      this.logger.error('YouTube metadata extraction error:', error);
       throw new BadRequestException(`Failed to fetch video metadata: ${error.message}`);
     }
   }
@@ -164,9 +165,9 @@ export class YouTubeService {
       const jsonContent = JSON.stringify(videoInfo, null, 2);
 
       await fs.writeFile(filepath, jsonContent, 'utf8');
-      console.log(`Video metadata saved to: ${filepath}`);
+      this.logger.log(`Video metadata saved to: ${filepath}`);
     } catch (error) {
-      console.error(`Failed to save video metadata to file: ${error.message}`);
+      this.logger.error(`Failed to save video metadata to file: ${error.message}`);
       // Don't throw error here to avoid breaking the main flow
     }
   }
@@ -182,12 +183,12 @@ export class YouTubeService {
       const subtitlePath = path.join(`${this.videosDir}/${videoId}`, 'subtitles.en.vtt');
       const existingTranscript = await this.loadExistingTranscript(subtitlePath);
       if (existingTranscript) {
-        console.log(`Using cached transcript for video ${videoId}`);
+        this.logger.log(`Using cached transcript for video ${videoId}`);
         return existingTranscript;
       }
 
       // If no cached transcript, download from API
-      console.log(`Downloading new transcript for video ${videoId}`);
+      this.logger.log(`Downloading new transcript for video ${videoId}`);
       try {
         await this.ensureDir(`${this.videosDir}/${videoId}`);
         await youtubedl(youtubeUrl, {
@@ -196,7 +197,7 @@ export class YouTubeService {
           skipDownload: true,
           output: path.join(`${this.videosDir}/${videoId}`, 'subtitles'),
         });
-        console.log(`Video subtitles saved to: ${subtitlePath}`);
+        this.logger.log(`Video subtitles saved to: ${subtitlePath}`);
 
         // Read the subtitle file if it was created
         try {
@@ -344,7 +345,7 @@ export class YouTubeService {
 
       return result;
     } catch (error) {
-      console.error('Error parsing VTT subtitles:', error);
+      this.logger.error('Error parsing VTT subtitles:', error);
       return 'Failed to parse subtitle content';
     }
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -39,6 +39,7 @@ export interface TtsTimingMetadata {
 
 @Injectable()
 export class TtsAudioSegmentsService {
+  private readonly logger = new Logger(TtsAudioSegmentsService.name);
   private readonly videosDir = path.join(process.cwd(), 'videos');
   private readonly credentialsPath = path.join(process.cwd(), '.credentials/gcloud_key.json');
   private readonly ttsClient: TextToSpeechClient;
@@ -100,7 +101,7 @@ export class TtsAudioSegmentsService {
         timingMetadata.push(timingEntry);
         currentTime += duration;
 
-        console.log(`Generated TTS audio for Episode ${episodeNumber}, segment ${segment.id}: ${fileName} (${duration.toFixed(2)}s)`);
+        this.logger.log(`Generated TTS audio for Episode ${episodeNumber}, segment ${segment.id}: ${fileName} (${duration.toFixed(2)}s)`);
       }
 
       // Create final timing metadata
@@ -113,11 +114,11 @@ export class TtsAudioSegmentsService {
       // Save timing metadata
       fs.writeFileSync(timingMetadataPath, JSON.stringify(result, null, 2));
 
-      console.log(`✅ Generated ${segments.length} TTS audio files for Episode ${episodeNumber} with total duration: ${currentTime.toFixed(2)}s`);
+      this.logger.log(`✅ Generated ${segments.length} TTS audio files for Episode ${episodeNumber} with total duration: ${currentTime.toFixed(2)}s`);
 
       return result;
     } catch (error) {
-      console.error(`Failed to generate TTS audio segments for episode ${episodeNumber}:`, error);
+      this.logger.error(`Failed to generate TTS audio segments for episode ${episodeNumber}:`, error);
       throw new Error(`Failed to generate TTS audio segments for episode ${episodeNumber}: ${error.message}`);
     }
   }
@@ -153,7 +154,7 @@ export class TtsAudioSegmentsService {
 
       return duration;
     } catch (error) {
-      console.error(`Failed to generate TTS audio for text: "${text.substring(0, 50)}..."`, error);
+      this.logger.error(`Failed to generate TTS audio for text: "${text.substring(0, 50)}..."`, error);
       throw new Error(`Failed to generate TTS audio: ${error.message}`);
     }
   }
@@ -172,7 +173,7 @@ export class TtsAudioSegmentsService {
 
       return duration;
     } catch (error) {
-      console.error(`Failed to get audio duration for file: ${audioFilePath}`, error);
+      this.logger.error(`Failed to get audio duration for file: ${audioFilePath}`, error);
       // Fallback: estimate duration based on audio file size (rough approximation)
       try {
         const stats = fs.statSync(audioFilePath);
@@ -181,7 +182,7 @@ export class TtsAudioSegmentsService {
         console.warn(`Using estimated duration: ${estimatedDuration}s for ${audioFilePath}`);
         return Math.max(estimatedDuration, 1.0); // Minimum 1 second
       } catch (fallbackError) {
-        console.error(`Failed to get file stats for: ${audioFilePath}`, fallbackError);
+        this.logger.error(`Failed to get file stats for: ${audioFilePath}`, fallbackError);
         return 5.0; // Default fallback duration
       }
     }
@@ -198,7 +199,7 @@ export class TtsAudioSegmentsService {
       const metadata: TtsTimingMetadata = JSON.parse(fs.readFileSync(timingMetadataPath, 'utf8'));
       return metadata;
     } catch (error) {
-      console.error('Failed to read TTS timing metadata:', error);
+      this.logger.error('Failed to read TTS timing metadata:', error);
       return null;
     }
   }
@@ -213,7 +214,7 @@ export class TtsAudioSegmentsService {
 
       return fs.readFileSync(audioFilePath);
     } catch (error) {
-      console.error(`Failed to read segment audio file: ${segmentId}`, error);
+      this.logger.error(`Failed to read segment audio file: ${segmentId}`, error);
       return null;
     }
   }

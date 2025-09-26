@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PromptTemplate } from '@langchain/core/prompts';
@@ -59,6 +59,7 @@ interface MicrolessonScript {
 
 @Injectable()
 export class AudioSegmentsService {
+  private readonly logger = new Logger(AudioSegmentsService.name);
   private readonly videosDir = path.join(process.cwd(), 'videos');
   private readonly llm;
 
@@ -76,7 +77,7 @@ export class AudioSegmentsService {
     this.llm = this.llmConfigService.getLLMWithConfig(llmConfig);
 
     if (this.llm) {
-      console.log(`🎵 AudioSegments using ${this.llmConfigService.getLLMProvider()} LLM provider`);
+      this.logger.log(`🎵 AudioSegments using ${this.llmConfigService.getLLMProvider()} LLM provider`);
     } else {
       throw new Error('❌ LLM is required for audio segments generation. Please configure LLM_PROVIDER and corresponding API key.');
     }
@@ -118,7 +119,7 @@ export class AudioSegmentsService {
 
       return result;
     } catch (error) {
-      console.error(`Failed to generate audio segments for episode ${episodeNumber}:`, error);
+      this.logger.error(`Failed to generate audio segments for episode ${episodeNumber}:`, error);
       throw new Error(`Failed to generate audio segments for episode ${episodeNumber}: ${error.message}`);
     }
   }
@@ -232,13 +233,13 @@ Return ONLY a valid JSON object in this exact format:
       const parsedResult = JSON.parse(jsonContent);
 
       if (parsedResult.audioSegments && Array.isArray(parsedResult.audioSegments)) {
-        console.log(`✅ Generated ${parsedResult.audioSegments.length} audio segments using LLM`);
+        this.logger.log(`✅ Generated ${parsedResult.audioSegments.length} audio segments using LLM`);
         return parsedResult.audioSegments;
       } else {
         throw new Error('Invalid LLM response format');
       }
     } catch (error) {
-      console.error('❌ LLM audio generation failed:', error.message);
+      this.logger.error('❌ LLM audio generation failed:', error.message);
       throw new Error(`Failed to generate audio segments with LLM: ${error.message}`);
     }
   }

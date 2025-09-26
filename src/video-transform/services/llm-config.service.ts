@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ChatOpenAI } from '@langchain/openai';
 import { ChatGroq } from '@langchain/groq';
 import { ProxyConfigService } from './proxy-config.service';
@@ -16,6 +16,7 @@ export interface LLMConfig {
 
 @Injectable()
 export class LLMConfigService {
+  private readonly logger = new Logger(LLMConfigService.name);
   private openaiClient: ChatOpenAI;
   private openrouterClient: ChatOpenAI;
   private groqClient: ChatGroq;
@@ -61,14 +62,14 @@ export class LLMConfigService {
           if (!process.env.OPENAI_API_KEY) {
             throw new Error('OPENAI_API_KEY not found');
           }
-          console.log('🤖 Using OpenAI LLM provider');
+          this.logger.log('🤖 Using OpenAI LLM provider');
           return this.openaiClient;
 
         case 'groq':
           if (!process.env.GROQ_API_KEY) {
             throw new Error('GROQ_API_KEY not found');
           }
-          console.log('🤖 Using Groq LLM provider');
+          this.logger.log('🤖 Using Groq LLM provider');
           return this.groqClient;
 
         case 'openrouter':
@@ -77,7 +78,7 @@ export class LLMConfigService {
             console.warn('⚠️  OPENROUTER_API_KEY not found, LLM features will be disabled');
             return null;
           }
-          console.log('🤖 Using OpenRouter LLM provider');
+          this.logger.log('🤖 Using OpenRouter LLM provider');
           return this.openrouterClient;
       }
     } catch (error) {

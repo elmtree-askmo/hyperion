@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { VideoJob, JobStatus } from './entities/video-job.entity';
@@ -14,6 +14,7 @@ import { GeminiImageService } from './services/gemini-image.service';
 
 @Injectable()
 export class VideoTransformService {
+  private readonly logger = new Logger(VideoTransformService.name);
   constructor(
     @InjectRepository(VideoJob)
     private readonly videoJobRepository: Repository<VideoJob>,
@@ -158,13 +159,13 @@ export class VideoTransformService {
 
       // Step 3.2: Generate microlesson scripts for Thai context (multiple episodes)
       const microlessonScripts = await this.microlessonScriptService.generateMicrolessonScript(videoId);
-      console.log(`✅ Generated ${microlessonScripts.length} microlesson scripts for series`);
+      this.logger.log(`✅ Generated ${microlessonScripts.length} microlesson scripts for series`);
 
       // Step 4: Generate audio content for each episode in the series
       // Get the series structure to process each episode
       if (lessonAnalysis.seriesStructure?.episodes) {
         for (const episode of lessonAnalysis.seriesStructure.episodes) {
-          console.log(`🎵 Processing audio for Episode ${episode.episodeNumber}: ${episode.title}`);
+          this.logger.log(`🎵 Processing audio for Episode ${episode.episodeNumber}: ${episode.title}`);
 
           // Step 4.1: Create Audio Segments Structure for this episode
           await this.audioSegmentsService.generateAudioSegmentsForEpisode(videoId, episode.episodeNumber);
@@ -179,7 +180,7 @@ export class VideoTransformService {
           await this.geminiImageService.generateImagesForEpisode(videoId, episode.episodeNumber);
         }
       } else {
-        console.log('No episodes found in series structure');
+        this.logger.log('No episodes found in series structure');
         throw new BadRequestException('No episodes found in series structure');
       }
 
