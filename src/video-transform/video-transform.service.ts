@@ -10,6 +10,7 @@ import { MicrolessonScriptService } from './services/microlesson-script.service'
 import { AudioSegmentsService } from './services/audio-segments.service';
 import { TtsAudioSegmentsService } from './services/tts-audio-segments.service';
 import { SynchronizedLessonService } from './services/synchronized-lesson.service';
+import { GeminiImageService } from './services/gemini-image.service';
 
 @Injectable()
 export class VideoTransformService {
@@ -22,6 +23,7 @@ export class VideoTransformService {
     private readonly audioSegmentsService: AudioSegmentsService,
     private readonly ttsAudioSegmentsService: TtsAudioSegmentsService,
     private readonly synchronizedLessonService: SynchronizedLessonService,
+    private readonly geminiImageService: GeminiImageService,
   ) {}
 
   async createVideoJob(createVideoJobDto: CreateVideoJobDto, userId: string): Promise<VideoJob> {
@@ -172,19 +174,13 @@ export class VideoTransformService {
 
           // Step 4.3: Create Synchronized Lesson for this episode
           await this.synchronizedLessonService.generateSynchronizedLessonForEpisode(videoId, episode.episodeNumber);
+
+          // Step 4.5: AI Background Image Generation (NEW FEATURE)
+          await this.geminiImageService.generateImagesForEpisode(videoId, episode.episodeNumber);
         }
       } else {
-        // Fallback to old behavior for single microlesson
-        console.log('🎵 Processing audio for single microlesson (fallback mode)');
-
-        // Step 4.1: Create Audio Segments Structure
-        await this.audioSegmentsService.generateAudioSegments(videoId);
-
-        // Step 4.2: Generate Individual TTS Audio Segments
-        await this.ttsAudioSegmentsService.generateTtsAudioSegments(videoId);
-
-        // Step 4.3: Create Synchronized Lesson with segmentBasedTiming
-        await this.synchronizedLessonService.generateSynchronizedLesson(videoId);
+        console.log('No episodes found in series structure');
+        throw new BadRequestException('No episodes found in series structure');
       }
 
       // Update job with results

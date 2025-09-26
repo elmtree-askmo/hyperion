@@ -54,3 +54,6 @@ jest.config.js
 
 # Downloaded files
 videos/
+
+# Gemini
+GEMINI.md

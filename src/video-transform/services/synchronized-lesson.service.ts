@@ -70,32 +70,6 @@ export class SynchronizedLessonService {
     }
   }
 
-  async generateSynchronizedLesson(videoId: string): Promise<void> {
-    try {
-      this.logger.log(`Starting synchronized lesson generation for video: ${videoId}`);
-
-      const videoDir = path.join(this.videosDir, videoId);
-
-      // Load required data files
-      const [microlessonScript, timingMetadata, audioSegments] = await Promise.all([
-        this.loadMicrolessonScript(videoDir),
-        this.loadTimingMetadata(videoDir),
-        this.loadAudioSegments(videoDir),
-      ]);
-
-      // Generate synchronized lesson structure
-      const synchronizedLesson = this.createSynchronizedLesson(microlessonScript, timingMetadata, audioSegments, videoDir);
-
-      // Save the synchronized lesson
-      await this.saveSynchronizedLesson(videoDir, synchronizedLesson);
-
-      this.logger.log(`Successfully generated synchronized lesson for video: ${videoId}`);
-    } catch (error) {
-      this.logger.error(`Failed to generate synchronized lesson for video: ${videoId}`, error.stack);
-      throw error;
-    }
-  }
-
   private async loadMicrolessonScriptForEpisode(episodeDir: string): Promise<MicrolessonScript> {
     const scriptPath = path.join(episodeDir, 'microlesson_script.json');
     const scriptContent = await fs.readFile(scriptPath, 'utf-8');
@@ -220,10 +194,10 @@ export class SynchronizedLessonService {
     // If the last part is a number, it's an episode directory
     if (/^\d+$/.test(lastPart)) {
       const episodeNumber = lastPart;
-      return `/video/${videoId}/${episodeNumber}/lesson_segments/${fileName}`;
+      return `/videos/${videoId}/lesson_${episodeNumber}/lesson_segments/${fileName}`;
     } else {
       // Legacy single microlesson structure
-      return `/video/${videoId}/lesson_segments/${fileName}`;
+      return `/videos/${videoId}/lesson_segments/${fileName}`;
     }
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ChatOpenAI } from '@langchain/openai';
 import { ChatGroq } from '@langchain/groq';
+import { ProxyConfigService } from './proxy-config.service';
 
 export type LLMClient = ChatOpenAI | ChatGroq | null;
 
@@ -21,18 +22,25 @@ export class LLMConfigService {
   private readonly selectedLLM: LLMClient;
   private readonly llmProvider: string;
 
-  constructor() {
-    this.llmProvider = process.env.LLM_PROVIDER || 'openrouter';
+  constructor(private readonly proxyConfigService: ProxyConfigService) {
+    this.llmProvider = process.env.LLM_PROVIDER || 'openai';
+
     this.initializeClients();
     this.selectedLLM = this.selectLLMProvider();
   }
 
   private initializeClients(): void {
-    // Initialize OpenAI client
     this.openaiClient = new ChatOpenAI({
-      model: 'gpt-5',
-      temperature: 0,
+      model: 'gpt-5', // Updated to available model
+      temperature: 1,
       apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    // Initialize Groq client
+    this.groqClient = new ChatGroq({
+      model: 'openai/gpt-oss-120b',
+      temperature: 0,
+      apiKey: process.env.GROQ_API_KEY,
     });
 
     // Initialize OpenRouter client
@@ -43,13 +51,6 @@ export class LLMConfigService {
       configuration: {
         baseURL: 'https://openrouter.ai/api/v1',
       },
-    });
-
-    // Initialize Groq client
-    this.groqClient = new ChatGroq({
-      model: 'openai/gpt-oss-120b',
-      temperature: 0,
-      apiKey: process.env.GROQ_API_KEY,
     });
   }
 

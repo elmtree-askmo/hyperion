@@ -11,11 +11,14 @@ import { AudioSegmentsService } from './services/audio-segments.service';
 import { TtsAudioSegmentsService } from './services/tts-audio-segments.service';
 import { SynchronizedLessonService } from './services/synchronized-lesson.service';
 import { LLMConfigService } from './services/llm-config.service';
+import { GeminiImageService } from './services/gemini-image.service';
+import { ProxyConfigService } from './services/proxy-config.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([VideoJob])],
   controllers: [VideoTransformController],
   providers: [
+    ProxyConfigService,
     LLMConfigService,
     VideoTransformService,
     YouTubeService,
@@ -25,6 +28,7 @@ import { LLMConfigService } from './services/llm-config.service';
     AudioSegmentsService,
     TtsAudioSegmentsService,
     SynchronizedLessonService,
+    GeminiImageService,
   ],
   exports: [VideoTransformService],
 })

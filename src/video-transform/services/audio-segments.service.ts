@@ -123,41 +123,6 @@ export class AudioSegmentsService {
     }
   }
 
-  async generateAudioSegments(videoId: string): Promise<AudioSegmentsResponse> {
-    try {
-      const audioSegmentsPath = path.join(this.videosDir, videoId, 'audio_segments.json');
-
-      // Check if audio segments already exist
-      if (fs.existsSync(audioSegmentsPath)) {
-        const existingSegments: AudioSegmentsResponse = JSON.parse(fs.readFileSync(audioSegmentsPath, 'utf8'));
-        return existingSegments;
-      }
-
-      // Read the microlesson script file
-      const scriptPath = path.join(this.videosDir, videoId, 'microlesson_script.json');
-      if (!fs.existsSync(scriptPath)) {
-        throw new Error(`Microlesson script not found for video: ${videoId}`);
-      }
-
-      const microlessonScript: MicrolessonScript = JSON.parse(fs.readFileSync(scriptPath, 'utf8'));
-
-      // Generate audio segments from microlesson script using LLM
-      const audioSegments = await this.generateAudioSegmentsWithLLM(microlessonScript);
-
-      const result: AudioSegmentsResponse = {
-        audioSegments,
-      };
-
-      // Save the generated audio segments
-      fs.writeFileSync(audioSegmentsPath, JSON.stringify(result, null, 2));
-
-      return result;
-    } catch (error) {
-      console.error('Failed to generate audio segments:', error);
-      throw new Error(`Failed to generate audio segments: ${error.message}`);
-    }
-  }
-
   /**
    * Generate audio segments using LLM for more natural and engaging content
    */
