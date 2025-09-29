@@ -18,7 +18,32 @@ async function bootstrap() {
   const logger = WinstonModule.createLogger({
     transports: [
       new winston.transports.Console({
-        format: winston.format.combine(winston.format.timestamp(), winston.format.colorize(), winston.format.simple()),
+        format: winston.format.combine(
+          winston.format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss.SSS',
+          }),
+          winston.format.colorize(),
+          winston.format.printf(({ level, message, timestamp, context, ...meta }) => {
+            // Format: [timestamp] {context} level: message {additional metadata}
+            let formattedMessage = `[${timestamp}]`;
+
+            // Place context immediately after timestamp
+            if (context) {
+              formattedMessage += ` ${context}`;
+            }
+
+            formattedMessage += ` ${level}: ${message}`;
+
+            // Add any additional metadata
+            const metaKeys = Object.keys(meta);
+            if (metaKeys.length > 0) {
+              const metaString = JSON.stringify(meta);
+              formattedMessage += ` ${metaString}`;
+            }
+
+            return formattedMessage;
+          }),
+        ),
       }),
     ],
   });
