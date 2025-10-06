@@ -21,7 +21,8 @@
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/config/typeorm.config.ts",
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "test:llm": "ts-node scripts/test-llm-service.ts",
-    "test:gemini": "ts-node scripts/test-gemini-image-service.ts"
+    "test:gemini": "ts-node scripts/test-gemini-image-service.ts",
+    "test:tts": "ts-node scripts/test-tts-service.ts"
   },
   "dependencies": {
     "@google-cloud/speech": "^7.2.0",

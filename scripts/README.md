@@ -1,11 +1,156 @@
-# OpenAI API Connectivity Test
+# Test Scripts
 
-This TypeScript script tests the connectivity and functionality of the OpenAI API using the native OpenAI library.
+This directory contains various test scripts for different services used in the Hyperion backend application.
 
-## Prerequisites
+## Available Test Scripts
 
-1. **OpenAI API Key**: You need a valid OpenAI API key
-2. **Environment Variables**: Set up your `.env` file with the OpenAI API key
+### 1. LLM Service Test (`test-llm-service.ts`)
+
+Tests the LLM (Large Language Model) service connectivity and functionality.
+
+### 2. Gemini Image Service Test (`test-gemini-image-service.ts`)
+
+Tests the Google Gemini image processing service.
+
+### 3. TTS Service Test (`test-tts-service.ts`)
+
+Tests the Text-to-Speech (TTS) audio generation service using Google Cloud TTS API.
+
+## TTS Service Test
+
+This script tests the Text-to-Speech functionality including audio generation and timing metadata.
+
+### Prerequisites
+
+1. **Google Cloud Credentials**: You need a valid Google Cloud service account key
+2. **FFmpeg**: Required for audio duration measurement
+3. **Test Data**: Audio segments data in the videos directory
+
+### Setup
+
+1. **Google Cloud Setup**:
+
+   ```bash
+   # Create .credentials directory
+   mkdir -p .credentials
+
+   # Place your Google Cloud service account key
+   # Download from Google Cloud Console and save as:
+   # .credentials/gcloud_key.json
+   ```
+
+2. **Install FFmpeg**:
+
+   ```bash
+   # macOS
+   brew install ffmpeg
+
+   # Ubuntu/Debian
+   sudo apt install ffmpeg
+
+   # Windows
+   # Download from https://ffmpeg.org/
+   ```
+
+### Usage
+
+```bash
+# Using npm script (recommended)
+npm run test:tts
+
+# Or directly with ts-node
+npx ts-node scripts/test-tts-service.ts
+```
+
+### Tests Performed
+
+The TTS test script performs the following tests:
+
+1. **Service Initialization**
+   - Verifies TTS service can be initialized
+   - Checks Google Cloud credentials availability
+
+2. **Audio Generation Test**
+   - Tests TTS audio generation for existing lesson segments
+   - Measures audio duration and timing metadata
+
+3. **Metadata Retrieval Test**
+   - Tests retrieval of timing metadata
+   - Validates segment information
+
+4. **Audio File Access Test**
+   - Tests retrieval of generated audio files
+   - Verifies file integrity
+
+### Sample Output
+
+```
+🎤 Testing TTS Audio Segments Service...
+============================================================
+✅ TTS Service initialized successfully
+✅ Google Cloud credentials found
+📁 Found test data: henIVlCPVIY/lesson_1
+🚀 Generating TTS audio segments...
+✅ TTS Generation Results:
+   📊 Total segments: 15
+   ⏱️  Total duration: 45.32 seconds
+   📅 Generated at: 2025-09-30T10:15:30.123Z
+
+📋 First 3 segments:
+   1. segment-1: 3.21s - "Welcome to this English lesson. Today we will learn..."
+   2. segment-2: 2.87s - "Let's start with some basic vocabulary words..."
+   3. segment-3: 4.15s - "The first word we'll learn is 'hello'. This is a..."
+
+🔍 Testing timing metadata retrieval...
+✅ Successfully retrieved timing metadata
+   📊 Retrieved 15 segments
+
+🎵 Testing audio file retrieval for segment: segment-1
+✅ Successfully retrieved audio file (154832 bytes)
+
+🎉 TTS Service test completed successfully!
+============================================================
+🏁 Test completed successfully!
+```
+
+### Troubleshooting
+
+#### Common Issues:
+
+1. **Missing Google Cloud Credentials**
+
+   ```
+   ❌ Google Cloud credentials not found at .credentials/gcloud_key.json
+   ```
+
+   - Solution: Download service account key from Google Cloud Console
+   - Place the JSON file at `.credentials/gcloud_key.json`
+
+2. **FFmpeg Not Found**
+
+   ```
+   ❌ Failed to get audio duration: ffprobe command not found
+   ```
+
+   - Solution: Install FFmpeg using your system's package manager
+
+3. **No Test Data**
+
+   ```
+   ⚠️ No test data found, creating minimal test...
+   ```
+
+   - This is normal if you don't have existing lesson data
+   - The script will create a minimal test case
+
+4. **API Quota Exceeded**
+   ```
+   ❌ TTS Service test failed: Quota exceeded
+   ```
+
+   - Solution: Check your Google Cloud TTS API quota and billing
+
+## General Prerequisites
 
 ## Setup
 

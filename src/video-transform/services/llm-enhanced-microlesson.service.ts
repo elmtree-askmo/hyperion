@@ -70,8 +70,8 @@ Key topics: {keyTopics}
 Target vocabulary: {vocabulary}
 
 Create a microlesson title pair that includes:
-1. English title (5-8 words, specific and actionable)
-2. Thai translation (natural and engaging for university students)
+1. English title (5-8 words, specific and actionable) - for learning content only
+2. Thai title (primary title that students will see, natural and engaging)
 
 Requirements for English title:
 - Specific and actionable (not just "English Conversation")
@@ -80,15 +80,16 @@ Requirements for English title:
 - Indicates it's a quick, focused lesson
 
 Requirements for Thai title:
-- Natural, engaging Thai translation
+- Natural, engaging Thai as the PRIMARY title
 - Keep educational terminology accurate
 - Make it appealing to Thai university students
 - Use modern Thai language
-
+- This will be the main title students see
+npp
 Examples:
-- English: "Ordering Coffee in English Like a Pro" → Thai: "สั่งกาแฟเป็นภาษาอังกฤษแบบมืออาชีพ"
-- English: "Hotel Check-in Conversations Made Easy" → Thai: "การสนทนาเช็คอินโรงแรมแบบง่ายๆ"
-- English: "Restaurant English: From Menu to Payment" → Thai: "ภาษาอังกฤษร้านอาหาร: จากเมนูถึงการจ่ายเงิน"
+- Thai: "สั่งกาแฟเป็นภาษาอังกฤษแบบมืออาชีพ" → English: "Ordering Coffee in English Like a Pro"
+- Thai: "การสนทนาเช็คอินโรงแรมแบบง่ายๆ" → English: "Hotel Check-in Conversations Made Easy"
+- Thai: "ภาษาอังกฤษร้านอาหาร: จากเมนูถึงการจ่ายเงิน" → English: "Restaurant English: From Menu to Payment"
 
 Return ONLY valid JSON:
 {{
@@ -134,19 +135,21 @@ Return ONLY valid JSON:
     this.logger.log('🎯 Generating LLM-enhanced learning objectives...');
 
     const prompt = PromptTemplate.fromTemplate(`
-You are an expert English teacher creating learning objectives for Thai college students.
+You are an expert English teacher creating learning objectives for Thai college students. ALL explanations must be in Thai language, with English only for phrases students need to learn.
 
 Video Content: {title}
 Key Topics: {keyTopics}
 Vocabulary: {vocabulary}
-Target Audience: Thai college students
+Target Audience: Thai college students (early English learners)
 
 Create 1-2 enhanced learning objectives that include:
-1. Clear statement (English + Thai translation)
-2. 5 step-by-step explanations
+1. Clear statement in Thai with English phrase to learn
+2. 5 step-by-step explanations in Thai language
 3. 2-3 Thai context examples with REAL Thai locations and brands
-4. Thai pronunciation guides  
-5. 3-4 summary points
+4. Thai pronunciation guides for English phrases
+5. 3-4 summary points in Thai
+
+CRITICAL: All explanations, instructions, and descriptions must be in Thai. Only the English phrases students need to practice should be in English.
 
 MUST use authentic Thai locations/brands in examples:
 - Coffee shops: TRUE Coffee, Amazon Coffee, Café Amazon, Starbucks Siam
@@ -161,20 +164,20 @@ Focus on practical, real-world applications that Thai students actually encounte
 Return ONLY valid JSON in this format:
 [
   {{
-    "statement": "Master [topic] interactions in English for Thai cultural contexts",
-    "statementTh": "เรียนรู้การสื่อสาร[topic]เป็นภาษาอังกฤษในบริบทวัฒนธรรมไทย",
-    "stepByStepExplanation": ["1. ...", "2. ...", "3. ...", "4. ...", "5. ..."],
+    "statement": "เรียนรู้การใช้ [English phrase] ในสถานการณ์จริงในประเทศไทย",
+    "statementTh": "เรียนรู้การสื่อสารเป็นภาษาอังกฤษในบริบทวัฒนธรรมไทย",
+    "stepByStepExplanation": ["1. ขั้นตอนที่ 1 เป็นภาษาไทย...", "2. ขั้นตอนที่ 2 เป็นภาษาไทย...", "3. ขั้นตอนที่ 3 เป็นภาษาไทย...", "4. ขั้นตอนที่ 4 เป็นภาษาไทย...", "5. ขั้นตอนที่ 5 เป็นภาษาไทย..."],
     "thaiContextExamples": [
       {{
-        "englishPhrase": "...",
-        "thaiContext": "...",
-        "situation": "...",
-        "memoryHook": "...",
-        "pronunciation": "..."
+        "englishPhrase": "English phrase to learn",
+        "thaiContext": "คำอธิบายสถานการณ์เป็นภาษาไทย",
+        "situation": "สถานการณ์ที่ใช้เป็นภาษาไทย",
+        "memoryHook": "วิธีจำเป็นภาษาไทย",
+        "pronunciation": "การออกเสียงเป็นภาษาไทย"
       }}
     ],
-    "memoryHooks": ["...", "...", "..."],
-    "summaryPoints": ["...", "...", "...", "..."]
+    "memoryHooks": ["เทคนิคการจำที่ 1 เป็นภาษาไทย", "เทคนิคการจำที่ 2 เป็นภาษาไทย", "เทคนิคการจำที่ 3 เป็นภาษาไทย"],
+    "summaryPoints": ["สรุปประเด็นที่ 1 เป็นภาษาไทย", "สรุปประเด็นที่ 2 เป็นภาษาไทย", "สรุปประเด็นที่ 3 เป็นภาษาไทย", "สรุปประเด็นที่ 4 เป็นภาษาไทย"]
   }}
 ]
 `);
@@ -210,15 +213,17 @@ Return ONLY valid JSON in this format:
     if (vocabularyList.length === 0) return [];
 
     const prompt = PromptTemplate.fromTemplate(`
-You are creating enhanced vocabulary for Thai students learning English.
+You are creating enhanced vocabulary for Thai students learning English. ALL explanations must be in Thai language.
 
 Vocabulary words: {words}
 Context: {context}
 
 For each word, create an enhanced entry with:
 1. Thai translation (accurate and natural)
-2. Creative Thai memory hook/mnemonic using Thai phonetics or cultural references
-3. Practical context example using REAL Thai locations/situations
+2. Creative Thai memory hook/mnemonic using Thai phonetics or cultural references - IN THAI
+3. Practical context example using REAL Thai locations/situations - explanation in Thai
+
+CRITICAL: All explanations and memory hooks must be in Thai. Only the English word and example sentence should be in English.
 
 Use these authentic Thai contexts in examples:
 - Shopping: "I need this at Big C/Lotus/Central World"
@@ -230,10 +235,10 @@ Use these authentic Thai contexts in examples:
 Return ONLY valid JSON array:
 [
   {{
-    "word": "...",
-    "thaiTranslation": "...",
-    "memoryHook": "เสียงเหมือน... หรือ จำด้วย...",
-    "contextExample": "I use ... when [Thai situation]"
+    "word": "English word",
+    "thaiTranslation": "คำแปลภาษาไทย",
+    "memoryHook": "วิธีจำเป็นภาษาไทย เช่น เสียงเหมือน... หรือ จำด้วย...",
+    "contextExample": "English example sentence - คำอธิบายสถานการณ์เป็นภาษาไทย"
   }}
 ]
 `);
@@ -257,31 +262,33 @@ Return ONLY valid JSON array:
     this.logger.log('❓ Generating LLM-enhanced comprehension questions...');
 
     const prompt = PromptTemplate.fromTemplate(`
-Create 4-5 comprehension questions for Thai students about this lesson:
+Create 4-5 comprehension questions for Thai students about this lesson. ALL questions and explanations must be in Thai language.
 
 Title: {title}
 Key Topics: {keyTopics}
 
 Each question should:
 1. Be practical and applicable to Thailand
-2. Include Thai translation
-3. Have expected answer
+2. Question in Thai language with English phrase to practice
+3. Expected answer in English with Thai explanation
 4. Use REAL Thai locations and scenarios
 
+CRITICAL: Questions and context must be in Thai. Only the English phrases students need to practice should be in English.
+
 Include specific Thai contexts:
-- "How would you order at TRUE Coffee in English?"
-- "What would you say when shopping at Big C?"
-- "How do you ask for directions to BTS Siam?"
-- "What questions would you ask at Novotel reception?"
-- "How do you complain about food at Terminal 21?"
+- "คุณจะสั่งอาหารที่ TRUE Coffee เป็นภาษาอังกฤษอย่างไร?"
+- "คุณจะพูดอะไรเมื่อช้อปปิ้งที่ Big C?"
+- "คุณจะถามทางไป BTS สยามอย่างไร?"
+- "คุณจะถามอะไรที่แผนกต้อนรับโรงแรม Novotel?"
+- "คุณจะร้องเรียนเรื่องอาหารที่ Terminal 21 อย่างไร?"
 
 Return ONLY valid JSON:
 [
   {{
-    "question": "How would you...",
-    "questionTh": "คุณจะ...อย่างไร?",
-    "expectedAnswer": "I would...",
-    "context": "..."
+    "question": "คำถามเป็นภาษาไทย พร้อมวลี English phrase ที่ต้องฝึก",
+    "questionTh": "คำถามเป็นภาษาไทยเต็มรูปแบบ",
+    "expectedAnswer": "English answer - คำอธิบายเป็นภาษาไทย",
+    "context": "บริบทและคำอธิบายเป็นภาษาไทย"
   }}
 ]
 `);
@@ -315,17 +322,18 @@ Return ONLY valid JSON:
     const prompt = PromptTemplate.fromTemplate(`
 Create creative Thai memory hooks for these English words: {words}
 
-Use Thai phonetic similarities, visual associations, or cultural connections with Thai brands/places.
-Examples:
-- "coffee" = "คอฟฟี่ = เสียงเหมือน 'กบเฟี้ย' (กบที่ไปซื้อ TRUE Coffee)"
-- "hotel" = "โฮเทล = 'โห เทล' (โห! Novotel ใหญ่จัง)"
-- "shopping" = "ช็อปปิ้ง = 'ช้อป ปิง' (ช้อปที่ Central ปิงออกมา)"
-- "station" = "สเตชั่น = 'สแต่ ชั่น' (สแต่บให้รีบไป BTS Siam ชั่นโมง)"
+ALL memory hooks must be in Thai language. Use Thai phonetic similarities, visual associations, or cultural connections with Thai brands/places.
 
-Include Thai cultural references and real places Thais know.
+Examples (all in Thai):
+- "coffee" = "คอฟฟี่ เสียงเหมือน 'กบเฟี้ย' - จำได้ว่ากบที่ไปซื้อ TRUE Coffee"
+- "hotel" = "โฮเทล เสียงเหมือน 'โห เทล' - โห! Novotel ใหญ่จัง"
+- "shopping" = "ช็อปปิ้ง เสียงเหมือน 'ช้อป ปิง' - ช้อปที่ Central แล้วปิงออกมา"
+- "station" = "สเตชั่น เสียงเหมือน 'สแต่ ชั่น' - สแต่บให้รีบไป BTS Siam ทุกชั่วโมง"
 
-Return ONLY a JSON array of strings:
-["memory hook 1", "memory hook 2", ...]
+Include Thai cultural references and real places Thais know. All explanations in Thai.
+
+Return ONLY a JSON array of strings in Thai:
+["เทคนิคการจำที่ 1 เป็นภาษาไทย", "เทคนิคการจำที่ 2 เป็นภาษาไทย", ...]
 `);
 
     const chain = prompt.pipe(this.llm).pipe(new StringOutputParser());

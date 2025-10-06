@@ -135,8 +135,14 @@ export class AudioSegmentsService {
 
     try {
       const prompt = `
-You are an expert English language instructor creating an engaging audio lesson script. 
+You are an expert English language instructor creating an engaging audio lesson script for Thai college students (early English learners). 
 Based on the provided microlesson script, generate natural, conversational audio segments that will be used for text-to-speech generation.
+
+CRITICAL LANGUAGE REQUIREMENTS:
+- ALL explanations, instructions, and descriptions must be in Thai language
+- English should ONLY be used for the specific phrases/words students need to learn and practice
+- Remember: Most students are early English learners and need Thai explanations
+- Use natural, modern Thai that university students understand
 
 MICROLESSON SCRIPT DATA:
 Title: ${script.lesson.title}
@@ -144,19 +150,19 @@ Title (Thai): ${script.lesson.titleTh}
 Duration: ${Math.round(script.lesson.duration / 60)} minutes
 
 Learning Objectives:
-${script.lesson.learningObjectives.map((obj, i) => `${i + 1}. ${obj.statement}`).join('\n')}
+${script.lesson.learningObjectives.map((obj, i) => `${i + 1}. ${obj.statementTh || obj.statement}`).join('\n')}
 
 Key Vocabulary:
 ${script.lesson.keyVocabulary
   .slice(0, 10)
-  .map((vocab) => `- ${vocab.word}: ${vocab.contextExample}`)
+  .map((vocab) => `- ${vocab.word}: ${vocab.thaiTranslation} - ${vocab.contextExample}`)
   .join('\n')}
 
 Grammar Points:
-${script.lesson.grammarPoints.map((grammar, i) => `${i + 1}. ${grammar.structure}: ${grammar.explanation}`).join('\n')}
+${script.lesson.grammarPoints.map((grammar, i) => `${i + 1}. ${grammar.structure}: ${grammar.thaiExplanation || grammar.explanation}`).join('\n')}
 
 Practice Questions:
-${script.lesson.comprehensionQuestions.map((q, i) => `${i + 1}. ${q.question}`).join('\n')}
+${script.lesson.comprehensionQuestions.map((q, i) => `${i + 1}. ${q.questionTh || q.question}`).join('\n')}
 
 THAI CONTEXT EXAMPLES:
 ${script.lesson.learningObjectives
@@ -165,23 +171,24 @@ ${script.lesson.learningObjectives
   .join('\n')}
 
 INSTRUCTIONS:
-Create engaging audio segments with natural, conversational text suitable for English language learners. Each segment should:
-1. Use clear, simple English appropriate for the learning level
-2. Sound natural when spoken by a text-to-speech system
-3. Include smooth transitions and engaging introductions
-4. Be concise but informative
-5. Encourage learner participation
-6. Include contextual background image descriptions that reflect Thai cultural settings
+Create engaging audio segments with natural, conversational text suitable for Thai English language learners. Each segment should:
+1. Use Thai for ALL explanations and instructions
+2. Use English ONLY for the specific phrases students need to learn
+3. Sound natural when spoken by Thai TTS system (for Thai parts) and English TTS (for English phrases)
+4. Include smooth transitions and engaging introductions in Thai
+5. Be concise but informative
+6. Encourage learner participation in Thai
+7. Include contextual background image descriptions that reflect Thai cultural settings
 
 Generate the following types of segments:
-- 1 intro segment welcoming learners
-- 1-2 learning objective segments explaining what they'll learn
-- 6-8 vocabulary segments introducing key words with examples
-- 2-3 grammar segments explaining important structures
-- 2-3 practice segments with interactive questions
-- 1 conclusion segment encouraging continued learning
+- 1 intro segment welcoming learners (in Thai)
+- 1-2 learning objective segments explaining what they'll learn (in Thai with English phrases)
+- 6-8 vocabulary segments introducing key words (Thai explanations with English words/examples)
+- 2-3 grammar segments explaining important structures (Thai explanations with English examples)
+- 2-3 practice segments with interactive questions (Thai questions with English practice phrases)
+- 1 conclusion segment encouraging continued learning (in Thai)
 
-For vocabulary segments, include the target word clearly and use it in a natural example sentence.
+For vocabulary segments, include the target English word clearly but explain it in Thai with Thai examples.
 
 BACKGROUND IMAGE GUIDELINES:
 For each segment, create a backgroundImageDescription that:
@@ -196,16 +203,18 @@ Return ONLY a valid JSON object in this exact format:
   "audioSegments": [
     {{
       "id": "intro",
-      "text": "Welcome to today's lesson...",
+      "text": "สวัสดีค่ะ ยินดีต้อนรับสู่บทเรียนวันนี้...",
+      "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "title_card",
       "visualDescription": "...",
       "backgroundImageDescription": "Modern English language learning classroom in Bangkok with Thai and international students, bright natural lighting, Thai cultural elements visible through windows"
     }},
     {{
       "id": "vocab_word1", 
-      "text": "First word: ...",
+      "text": "คำศัพท์แรกคือ coffee - กาแฟ",
+      "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "vocabulary_card",
-      "vocabWord": "target word",
+      "vocabWord": "coffee",
       "backgroundImageDescription": "Relevant Thai cultural scene that supports the vocabulary learning, such as Terminal 21 Food Court or Café Amazon setting"
     }}
   ]

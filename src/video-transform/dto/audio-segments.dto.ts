@@ -1,7 +1,7 @@
 export interface AudioSegment {
   id: string;
-  text: string; // English-only text for audio generation
-  textTh?: string; // Thai text for display purposes
+  text: string;
+  description?: string;
   screenElement: string;
   visualDescription?: string;
   vocabWord?: string;

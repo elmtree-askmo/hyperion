@@ -10,7 +10,7 @@ const execAsync = promisify(exec);
 interface AudioSegment {
   id: string;
   text: string;
-  textTh?: string;
+  description?: string;
   screenElement: string;
   vocabWord?: string;
   visualDescription?: string;
@@ -86,7 +86,7 @@ export class TtsAudioSegmentsService {
         const audioFilePath = path.join(segmentsPath, fileName);
 
         // Generate TTS audio for this segment
-        const duration = await this.generateTtsAudio(segment.text, audioFilePath);
+        const duration = await this.generateTtsAudio(segment.text + ' ' + segment.description, audioFilePath);
 
         // Create timing metadata entry
         const timingEntry: TimingMetadata = {
@@ -123,18 +123,29 @@ export class TtsAudioSegmentsService {
     }
   }
 
-  private async generateTtsAudio(text: string, outputPath: string): Promise<number> {
+  async generateTtsAudio(text: string, outputPath: string, speed: number = 1, ssml: boolean = false): Promise<number> {
     try {
       // Configure TTS request
+      let input = null;
+      if (ssml) {
+        input = { ssml: text };
+      } else {
+        input = { text: text };
+      }
+
       const request = {
-        input: { text: text },
+        input: input,
         voice: {
-          name: 'en-US-Chirp3-HD-Achernar', // High-quality TTS voice
+          // name: 'en-US-Chirp3-HD-Achernar', // High-quality TTS voice
+          // languageCode: 'en-US',
+          // name: 'th-TH-Chirp3-HD-Achird',
+          // languageCode: 'th-TH',
+          name: 'en-US-Neural2-D',
           languageCode: 'en-US',
         },
         audioConfig: {
           audioEncoding: 'LINEAR16' as const, // WAV format
-          speakingRate: 1.0, // Normal speed
+          speakingRate: speed, // Normal speed
           sampleRateHertz: 24000, // High quality sample rate
         },
       };
