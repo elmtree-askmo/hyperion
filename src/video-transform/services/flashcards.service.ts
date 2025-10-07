@@ -51,11 +51,19 @@ export class FlashcardsService {
       throw new Error('Flashcard generation is disabled');
     }
 
+    // Check if flashcards already exist
+    const lessonDir = path.join(this.videosDir, videoId, `lesson_${lessonNumber}`);
+    const flashcardsPath = path.join(lessonDir, 'flashcards.json');
+    if (fs.existsSync(flashcardsPath)) {
+      const flashcards = JSON.parse(fs.readFileSync(flashcardsPath, 'utf8')).flashcards;
+      this.logger.log(`✅ Loaded ${flashcards.length} flashcards from file`);
+      return flashcards;
+    }
+
     this.logger.log(`🃏 Generating flashcards for video ${videoId}, lesson ${lessonNumber}...`);
 
     try {
       // Read the microlesson script file
-      const lessonDir = path.join(this.videosDir, videoId, `lesson_${lessonNumber}`);
       const scriptPath = path.join(lessonDir, 'microlesson_script.json');
 
       if (!fs.existsSync(scriptPath)) {
