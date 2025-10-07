@@ -16,6 +16,182 @@ Tests the Google Gemini image processing service.
 
 Tests the Text-to-Speech (TTS) audio generation service using Google Cloud TTS API.
 
+### 4. Flashcards Service Test (`test-flashcards-service.ts`)
+
+Tests the vocabulary flashcards generation service with LLM-powered content creation including Thai pronunciations and memory hooks.
+
+## Flashcards Service Test
+
+This script tests the Flashcards generation service that creates vocabulary flashcards with Thai pronunciations, translations, and memory hooks using LLM.
+
+### Prerequisites
+
+1. **LLM API Key**: OpenAI, Groq, or OpenRouter API key
+2. **Lesson Data**: Existing microlesson_script.json files in the videos directory
+3. **Node.js**: Version 18+ with TypeScript support
+
+### Setup
+
+1. **LLM Configuration**:
+
+   ```bash
+   # Add to your .env file
+   LLM_PROVIDER=openai  # or 'groq' or 'openrouter'
+   OPENAI_API_KEY=your-api-key-here
+   # or
+   GROQ_API_KEY=your-groq-api-key
+   # or
+   OPENROUTER_API_KEY=your-openrouter-api-key
+   ```
+
+2. **Test Data**:
+   - Ensure you have lesson data in `videos/{videoId}/lesson_{number}/microlesson_script.json`
+   - The script will use `henIVlCPVIY/lesson_1` by default
+
+### Usage
+
+```bash
+# Build the project first
+npm run build
+
+# Run the test script
+node dist/scripts/test-flashcards-service.js
+
+# Or using ts-node directly
+npx ts-node scripts/test-flashcards-service.ts
+```
+
+### Tests Performed
+
+1. **Generate Flashcards for Single Lesson**
+   - Reads vocabulary from microlesson_script.json
+   - Uses LLM to generate enhanced flashcards
+   - Saves flashcards to lesson directory
+
+2. **Retrieve Existing Flashcards**
+   - Tests reading flashcards from saved JSON file
+   - Verifies data integrity
+
+3. **Generate Flashcards for All Lessons**
+   - Processes all lessons in a video
+   - Creates flashcards for each lesson
+
+### Sample Output
+
+```
+🃏 Testing Flashcards Service...
+
+📹 Video ID: henIVlCPVIY
+📖 Lesson Number: 1
+
+Test 1: Generating flashcards for lesson 1...
+────────────────────────────────────────────────────────────
+✅ Generated 3 flashcards
+
+🃏 Flashcard 1:
+   Word: recommend
+   Thai: แนะนำ
+   Pronunciation: เรค-คอม-เมนด์
+   Phonetic: /ˌrekəˈmend/
+   Part of Speech: verb
+   Difficulty: medium
+   Memory Hook: จำด้วยเสียง เร-คอม-เมนด์ คล้ายคำที่คนไทยพูดว่า 'เรคอมเมนต์'
+   Example: Can you recommend a good phone? - ขอแนะนำโทรศัพท์ที่ Central World
+
+🃏 Flashcard 2:
+   Word: vegetarian
+   Thai: มังสวิรัติ
+   Pronunciation: เว-จิ-แท-เรียน
+   Phonetic: /ˌvedʒɪˈteəriən/
+   Part of Speech: adjective
+   Difficulty: medium
+   Memory Hook: แยกเสียง เวจ = ผัก แล้วนึกถึงเทศกาลกินเจ
+   Example: Do you have vegetarian options? - ถามที่ Terminal 21 Food Court
+
+────────────────────────────────────────────────────────────
+
+Test 2: Getting existing flashcards...
+────────────────────────────────────────────────────────────
+✅ Retrieved 3 flashcards from file
+
+Test 3: Generating flashcards for all lessons...
+────────────────────────────────────────────────────────────
+✅ Generated flashcards for 3 lessons:
+   lesson_1: 3 flashcards
+   lesson_2: 4 flashcards
+   lesson_3: 3 flashcards
+
+════════════════════════════════════════════════════════════
+✅ All tests completed successfully!
+════════════════════════════════════════════════════════════
+```
+
+### Output Files
+
+Generated flashcards are saved to:
+
+```
+videos/{videoId}/lesson_{number}/flashcards.json
+```
+
+Example structure:
+
+```json
+{
+  "flashcards": [
+    {
+      "word": "recommend",
+      "thaiTranslation": "แนะนำ",
+      "pronunciation": "เรค-คอม-เมนด์",
+      "phonetic": "/ˌrekəˈmend/",
+      "memoryHook": "จำด้วยเสียง...",
+      "contextExample": "Can you recommend...",
+      "partOfSpeech": "verb",
+      "difficulty": "medium"
+    }
+  ]
+}
+```
+
+### Troubleshooting
+
+#### Common Issues:
+
+1. **Missing LLM API Key**
+
+   ```
+   ❌ Test failed: LLM provider not configured
+   ```
+
+   - Solution: Add appropriate API key to `.env` file
+   - Set `LLM_PROVIDER` environment variable
+
+2. **No Lesson Data**
+
+   ```
+   ❌ Microlesson script not found for lesson 1
+   ```
+
+   - Solution: Ensure microlesson_script.json exists in lesson directory
+   - Run microlesson generation first
+
+3. **LLM API Rate Limit**
+
+   ```
+   ❌ Flashcard generation failed: Rate limit exceeded
+   ```
+
+   - Solution: Wait a few moments and retry
+   - Check your API usage quota
+
+4. **Invalid JSON Response**
+   ```
+   ❌ Failed to parse LLM flashcards response
+   ```
+
+   - Solution: Service will automatically fallback to basic flashcards
+   - Check LLM model compatibility
+
 ## TTS Service Test
 
 This script tests the Text-to-Speech functionality including audio generation and timing metadata.
@@ -144,6 +320,7 @@ The TTS test script performs the following tests:
    - The script will create a minimal test case
 
 4. **API Quota Exceeded**
+
    ```
    ❌ TTS Service test failed: Quota exceeded
    ```

@@ -13,6 +13,7 @@ import { SynchronizedLessonService } from './services/synchronized-lesson.servic
 import { LLMConfigService } from './services/llm-config.service';
 import { GeminiImageService } from './services/gemini-image.service';
 import { ProxyConfigService } from './services/proxy-config.service';
+import { FlashcardsService } from './services/flashcards.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([VideoJob])],
@@ -29,6 +30,7 @@ import { ProxyConfigService } from './services/proxy-config.service';
     TtsAudioSegmentsService,
     SynchronizedLessonService,
     GeminiImageService,
+    FlashcardsService,
   ],
   exports: [VideoTransformService],
 })

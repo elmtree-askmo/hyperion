@@ -11,6 +11,7 @@ import { AudioSegmentsService } from './services/audio-segments.service';
 import { TtsAudioSegmentsService } from './services/tts-audio-segments.service';
 import { SynchronizedLessonService } from './services/synchronized-lesson.service';
 import { GeminiImageService } from './services/gemini-image.service';
+import { FlashcardsService } from './services/flashcards.service';
 
 @Injectable()
 export class VideoTransformService {
@@ -25,6 +26,7 @@ export class VideoTransformService {
     private readonly ttsAudioSegmentsService: TtsAudioSegmentsService,
     private readonly synchronizedLessonService: SynchronizedLessonService,
     private readonly geminiImageService: GeminiImageService,
+    private readonly flashcardsService: FlashcardsService,
   ) {}
 
   async createVideoJob(createVideoJobDto: CreateVideoJobDto, userId: string): Promise<VideoJob> {
@@ -167,16 +169,19 @@ export class VideoTransformService {
         for (const episode of lessonAnalysis.seriesStructure.episodes) {
           this.logger.log(`🎵 Processing audio for Episode ${episode.episodeNumber}: ${episode.title}`);
 
-          // Step 4.1: Create Audio Segments Structure for this episode
+          // Step 4.1: Generate Vocabulary Flashcards for this episode
+          await this.flashcardsService.generateFlashcards(videoId, episode.episodeNumber);
+
+          // Step 4.2: Create Audio Segments Structure for this episode
           await this.audioSegmentsService.generateAudioSegmentsForEpisode(videoId, episode.episodeNumber);
 
-          // Step 4.2: Generate Individual TTS Audio Segments for this episode
+          // Step 4.3: Generate Individual TTS Audio Segments for this episode
           await this.ttsAudioSegmentsService.generateTtsAudioSegmentsForEpisode(videoId, episode.episodeNumber);
 
-          // Step 4.3: Create Synchronized Lesson for this episode
+          // Step 4.4: Create Synchronized Lesson for this episode
           await this.synchronizedLessonService.generateSynchronizedLessonForEpisode(videoId, episode.episodeNumber);
 
-          // Step 4.5: AI Background Image Generation (NEW FEATURE)
+          // Step 4.5: AI Background Image Generation
           await this.geminiImageService.generateImagesForEpisode(videoId, episode.episodeNumber);
         }
       } else {
