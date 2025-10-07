@@ -88,24 +88,6 @@ export class SynchronizedLessonService {
     return JSON.parse(audioSegmentsContent);
   }
 
-  private async loadMicrolessonScript(videoDir: string): Promise<MicrolessonScript> {
-    const scriptPath = path.join(videoDir, 'microlesson_script.json');
-    const scriptContent = await fs.readFile(scriptPath, 'utf-8');
-    return JSON.parse(scriptContent);
-  }
-
-  private async loadTimingMetadata(videoDir: string): Promise<{ segments: TimingSegment[] }> {
-    const timingPath = path.join(videoDir, 'lesson_segments', 'timing-metadata.json');
-    const timingContent = await fs.readFile(timingPath, 'utf-8');
-    return JSON.parse(timingContent);
-  }
-
-  private async loadAudioSegments(videoDir: string): Promise<{ audioSegments: Array<{ id: string; screenElement: string }> }> {
-    const audioSegmentsPath = path.join(videoDir, 'audio_segments.json');
-    const audioSegmentsContent = await fs.readFile(audioSegmentsPath, 'utf-8');
-    return JSON.parse(audioSegmentsContent);
-  }
-
   private createSynchronizedLesson(
     microlessonScript: MicrolessonScript,
     timingMetadata: { segments: TimingSegment[] },

@@ -86,7 +86,7 @@ export class TtsAudioSegmentsService {
         const audioFilePath = path.join(segmentsPath, fileName);
 
         // Generate TTS audio for this segment
-        const duration = await this.generateTtsAudio(segment.text + ' ' + segment.description, audioFilePath);
+        const duration = await this.generateTtsAudio(segment.text, audioFilePath);
 
         // Create timing metadata entry
         const timingEntry: TimingMetadata = {
@@ -138,10 +138,8 @@ export class TtsAudioSegmentsService {
         voice: {
           // name: 'en-US-Chirp3-HD-Achernar', // High-quality TTS voice
           // languageCode: 'en-US',
-          // name: 'th-TH-Chirp3-HD-Achird',
-          // languageCode: 'th-TH',
-          name: 'en-US-Neural2-D',
-          languageCode: 'en-US',
+          name: 'th-TH-Chirp3-HD-Achird',
+          languageCode: 'th-TH',
         },
         audioConfig: {
           audioEncoding: 'LINEAR16' as const, // WAV format

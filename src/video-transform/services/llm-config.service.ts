@@ -109,7 +109,7 @@ export class LLMConfigService {
       case 'openai':
         return new ChatOpenAI({
           model: config.model?.openai || 'gpt-5',
-          temperature,
+          temperature: config.model?.openai == 'gpt-5' ? 1 : temperature,
           apiKey: process.env.OPENAI_API_KEY,
         });
 

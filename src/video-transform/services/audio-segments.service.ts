@@ -68,7 +68,7 @@ export class AudioSegmentsService {
     const llmConfig: LLMConfig = {
       temperature: 0.7,
       model: {
-        openai: 'gpt-4o',
+        openai: 'gpt-5',
         openrouter: 'deepseek/deepseek-chat-v3.1:free',
         groq: 'openai/gpt-oss-120b',
       },
@@ -145,30 +145,7 @@ CRITICAL LANGUAGE REQUIREMENTS:
 - Use natural, modern Thai that university students understand
 
 MICROLESSON SCRIPT DATA:
-Title: ${script.lesson.title}
-Title (Thai): ${script.lesson.titleTh}
-Duration: ${Math.round(script.lesson.duration / 60)} minutes
-
-Learning Objectives:
-${script.lesson.learningObjectives.map((obj, i) => `${i + 1}. ${obj.statementTh || obj.statement}`).join('\n')}
-
-Key Vocabulary:
-${script.lesson.keyVocabulary
-  .slice(0, 10)
-  .map((vocab) => `- ${vocab.word}: ${vocab.thaiTranslation} - ${vocab.contextExample}`)
-  .join('\n')}
-
-Grammar Points:
-${script.lesson.grammarPoints.map((grammar, i) => `${i + 1}. ${grammar.structure}: ${grammar.thaiExplanation || grammar.explanation}`).join('\n')}
-
-Practice Questions:
-${script.lesson.comprehensionQuestions.map((q, i) => `${i + 1}. ${q.questionTh || q.question}`).join('\n')}
-
-THAI CONTEXT EXAMPLES:
-${script.lesson.learningObjectives
-  .flatMap((obj) => obj.thaiContextExamples || [])
-  .map((example) => `- Context: ${example.thaiContext} | Situation: ${example.situation}`)
-  .join('\n')}
+${JSON.stringify(script)}
 
 INSTRUCTIONS:
 Create engaging audio segments with natural, conversational text suitable for Thai English language learners. Each segment should:
@@ -190,8 +167,12 @@ Generate the following types of segments:
 
 For vocabulary segments, include the target English word clearly but explain it in Thai with Thai examples.
 
-BACKGROUND IMAGE GUIDELINES:
-For each segment, create a backgroundImageDescription that:
+VISUAL DESCRIPTION GUIDELINES:
+CRITICAL: Every single segment MUST include BOTH visualDescription and backgroundImageDescription fields.
+- visualDescription: A short, engaging description of what the learner will see/experience in this segment (1-2 sentences) (in English)
+- backgroundImageDescription: Detailed description of the Thai cultural setting/location for AI image generation (in English)
+
+For backgroundImageDescription:
 - Describes authentic Thai cultural settings and locations
 - Supports the learning content visually
 - Uses recognizable Bangkok/Thailand landmarks when appropriate
@@ -206,8 +187,16 @@ Return ONLY a valid JSON object in this exact format:
       "text": "สวัสดีค่ะ ยินดีต้อนรับสู่บทเรียนวันนี้...",
       "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "title_card",
-      "visualDescription": "...",
+      "visualDescription": "Bright and welcoming introduction to the lesson",
       "backgroundImageDescription": "Modern English language learning classroom in Bangkok with Thai and international students, bright natural lighting, Thai cultural elements visible through windows"
+    }},
+    {{
+      "id": "learning_objective1",
+      "text": "เป้าหมายแรกคือ...",
+      "description": "คำอธิบายเป็นภาษาไทย",
+      "screenElement": "objective_card",
+      "visualDescription": "Clear presentation of the first learning goal",
+      "backgroundImageDescription": "Relevant Thai setting that matches the learning objective"
     }},
     {{
       "id": "vocab_word1", 
@@ -215,10 +204,13 @@ Return ONLY a valid JSON object in this exact format:
       "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "vocabulary_card",
       "vocabWord": "coffee",
+      "visualDescription": "Introduction to the vocabulary word with visual context",
       "backgroundImageDescription": "Relevant Thai cultural scene that supports the vocabulary learning, such as Terminal 21 Food Court or Café Amazon setting"
     }}
   ]
-}}`;
+}}
+
+IMPORTANT: Do NOT omit the visualDescription field from ANY segment. Every segment must have both visualDescription and backgroundImageDescription.`;
 
       const promptTemplate = PromptTemplate.fromTemplate(prompt);
       const chain = RunnableSequence.from([promptTemplate, this.llm, new StringOutputParser()]);
