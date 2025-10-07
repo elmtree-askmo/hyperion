@@ -1,0 +1,369 @@
+{
+  "lessonData": {
+    "lesson": {
+      "title": "Service Industry Essentials: Hotels & Restaurants",
+      "titleTh": "พื้นฐานอุตสาหกรรมบริการ: Hotels & Restaurants",
+      "episodeNumber": 1,
+      "totalEpisodes": 3,
+      "segmentBasedTiming": [
+        {
+          "startTime": 0,
+          "endTime": 18.08,
+          "duration": 18.08,
+          "screenElement": "title_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/intro.wav",
+          "text": "สวัสดีค่ะ ยินดีต้อนรับสู่บทเรียน พื้นฐานอุตสาหกรรมบริการ: โรงแรมและร้านอาหาร วันนี้เราจะฝึกประโยคสั้นๆ ที่ใช้ได้จริงในไทย ทั้งตอนถามหามังสวิรัติ และขอคำแนะนำร้านใกล้ๆ เตรียมปาก พูดตามให้ชัด ช้า และสุภาพนะคะ",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/intro.png"
+        },
+        {
+          "startTime": 18.08,
+          "endTime": 35.4,
+          "duration": 17.32,
+          "screenElement": "objective_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/learning_objective1.wav",
+          "text": "เป้าหมายแรก: ใช้ประโยคเพื่อขอเมนูมังสวิรัติอย่างสุภาพในร้านอาหารหรือฟู้ดคอร์ต พูดตามนะคะ: Could you recommend a vegetarian dish? ใช้เมนูจริงช่วยชี้ และบอกข้อจำกัดเพิ่มได้ เช่น ไม่ใส่น้ำปลา",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/learning_objective1.png"
+        },
+        {
+          "startTime": 35.4,
+          "endTime": 51.12,
+          "duration": 15.72,
+          "screenElement": "objective_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/learning_objective2.wav",
+          "text": "เป้าหมายที่สอง: ขอคำแนะนำร้านอาหารใกล้ที่พักหรือจุดบริการข้อมูล พูดตาม: Do you have any restaurant recommendations nearby? จากนั้นขอเส้นทางต่อได้ เช่น ไปทางบีทีเอสหรือเรียกรถแอป",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/learning_objective2.png"
+        },
+        {
+          "startTime": 51.12,
+          "endTime": 65.03999999999999,
+          "duration": 13.92,
+          "screenElement": "vocabulary_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word1.wav",
+          "text": "คำศัพท์: recommend แปลว่า แนะนำ ใช้เมื่ออยากให้คนช่วยเลือกสิ่งที่เหมาะกับเรา ตัวอย่างพูดว่า: Can you recommend a restaurant? ใช้สถานการณ์จริงได้ที่ฟรอนต์โรงแรมหรือจุดข้อมูลในห้าง",
+          "vocabWord": "recommend",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word1.png"
+        },
+        {
+          "startTime": 65.03999999999999,
+          "endTime": 77.75999999999999,
+          "duration": 12.72,
+          "screenElement": "vocabulary_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word2.wav",
+          "text": "คำศัพท์: recommendation แปลว่า คำแนะนำ เป็นคำนามของ recommend เช่น พูดว่า: Do you have any restaurant recommendations nearby? ใช้เมื่ออยากได้รายชื่อหลายตัวเลือก",
+          "vocabWord": "vegetarian",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word2.png"
+        },
+        {
+          "startTime": 77.75999999999999,
+          "endTime": 89.39999999999999,
+          "duration": 11.64,
+          "screenElement": "vocabulary_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word3.wav",
+          "text": "คำศัพท์: vegetarian แปลว่า มังสวิรัติ เน้นอาหารที่ไม่มีเนื้อสัตว์ ตัวอย่างถาม: Do you have vegetarian options? เหมาะมากเวลาเดินเลือกอาหารในฟู้ดคอร์ต",
+          "vocabWord": "recommendation",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word3.png"
+        },
+        {
+          "startTime": 89.39999999999999,
+          "endTime": 100.03999999999999,
+          "duration": 10.64,
+          "screenElement": "vocabulary_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word4.wav",
+          "text": "คำศัพท์: dish แปลว่า จานอาหาร หรือ เมนูหนึ่งจาน ตัวอย่างในประโยคหลัก: Could you recommend a vegetarian dish? ใช้เมื่อต้องการให้พนักงานชี้จานที่เหมาะ",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word4.png"
+        },
+        {
+          "startTime": 100.03999999999999,
+          "endTime": 113.11999999999999,
+          "duration": 13.08,
+          "screenElement": "vocabulary_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word5.wav",
+          "text": "คำศัพท์: restaurant แปลว่า ร้านอาหาร ใช้ทั่วไปทั้งในห้างและข้างนอก เช่น: Can you recommend a restaurant? เหมาะเวลาถามทางเลือกมื้อเที่ยงหรือมื้อเย็น",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word5.png"
+        },
+        {
+          "startTime": 113.11999999999999,
+          "endTime": 125.6,
+          "duration": 12.48,
+          "screenElement": "vocabulary_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word6.wav",
+          "text": "คำศัพท์: nearby แปลว่า ใกล้ๆ หรือ ระยะเดินถึง ตัวอย่างในประโยค: Do you have any restaurant recommendations nearby? ใช้เน้นว่าขอพื้นที่ไม่ไกล",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word6.png"
+        },
+        {
+          "startTime": 125.6,
+          "endTime": 137.24,
+          "duration": 11.64,
+          "screenElement": "vocabulary_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word7.wav",
+          "text": "คำศัพท์: menu แปลว่า เมนูรายการอาหาร ใช้คู่กับการชี้จานเพื่อสื่อสารง่ายขึ้น เช่น พูดพร้อมชี้รูปในเมนู จะช่วยให้พนักงานเข้าใจเร็ว",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word7.png"
+        },
+        {
+          "startTime": 137.24,
+          "endTime": 148.44,
+          "duration": 11.2,
+          "screenElement": "vocabulary_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word8.wav",
+          "text": "คำศัพท์: option แปลว่า ตัวเลือก มักใช้เป็นพหูพจน์ options เช่น: Do you have vegetarian options? เหมาะเมื่ออยากได้มากกว่าหนึ่งทางเลือก",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/vocab_word8.png"
+        },
+        {
+          "startTime": 148.44,
+          "endTime": 166.8,
+          "duration": 18.36,
+          "screenElement": "grammar_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/grammar1.wav",
+          "text": "ไวยากรณ์: การขอร้องสุภาพด้วย Can you / Could you โครงสร้างง่าย ประธาน + กริยา ตัวอย่าง: Can you recommend a restaurant? / Could you arrange a taxi? / Can you help me with directions? ใช้เสียงสุภาพ ช้า ชัด ปิดท้ายด้วยน้ำเสียงนุ่มนวล",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/grammar1.png"
+        },
+        {
+          "startTime": 166.8,
+          "endTime": 187.52,
+          "duration": 20.72,
+          "screenElement": "grammar_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/grammar2.wav",
+          "text": "ไวยากรณ์: I would like ใช้สั่งอาหารและบอกความต้องการอย่างสุภาพ ตัวอย่าง: I would like the chicken curry. / I would like it not too spicy. / I would like to order drinks first. เคล็ดลับ: พูด I'd like ได้เพื่อให้สั้นและธรรมชาติ",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/grammar2.png"
+        },
+        {
+          "startTime": 187.52,
+          "endTime": 204.76000000000002,
+          "duration": 17.24,
+          "screenElement": "grammar_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/grammar3.wav",
+          "text": "ไวยากรณ์: Do you have…? ใช้ถามว่ามีสิ่งนั้นไหม ผูกกับสถานที่ด้วย nearby ได้ ตัวอย่าง: Do you have any vegetarian options? / Do you have any restaurant recommendations nearby? ใช้ดีมากตอนถามฟรอนต์โรงแรม",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/grammar3.png"
+        },
+        {
+          "startTime": 204.76000000000002,
+          "endTime": 223.12,
+          "duration": 18.36,
+          "screenElement": "practice_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/practice1.wav",
+          "text": "ฝึกพูดที่ฟู้ดคอร์ต เทอร์มินอล 21 สมมติคุณอยากกินมังสวิรัติ พูดตามช้าๆ 2 รอบนะคะ รอบที่ 1: Could you recommend a vegetarian dish? รอบที่ 2: Could you recommend a vegetarian dish? ถ้าต้องการรสอ่อน พูดต่อว่า: Not too spicy, please.",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/practice1.png"
+        },
+        {
+          "startTime": 223.12,
+          "endTime": 242.84,
+          "duration": 19.72,
+          "screenElement": "practice_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/practice2.wav",
+          "text": "ฝึกพูดที่ฟรอนต์โรงแรม สมมติคุณเพิ่งเช็กอินและอยากหาร้านใกล้ๆ พูดตาม 2 รอบนะคะ รอบที่ 1: Do you have any restaurant recommendations nearby? รอบที่ 2: Do you have any restaurant recommendations nearby? แล้วขอความช่วยเหลือเพิ่ม: Could you mark it on the map?",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/practice2.png"
+        },
+        {
+          "startTime": 242.84,
+          "endTime": 258.44,
+          "duration": 15.6,
+          "screenElement": "practice_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/practice3.wav",
+          "text": "ฝึกสั่งอาหารแบบสุภาพ สมมติอยู่ที่ร้านข้าวแกงใกล้บีทีเอส พูดตามนะคะ: I would like a vegetarian fried rice. ต่อด้วยการปรับส่วนผสม: Can you make it without fish sauce? ปิดท้ายด้วยคำสุภาพ: Thank you.",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/practice3.png"
+        },
+        {
+          "startTime": 258.44,
+          "endTime": 272.88,
+          "duration": 14.44,
+          "screenElement": "outro_card",
+          "audioUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/conclusion.wav",
+          "text": "เยี่ยมมากค่ะ วันนี้คุณได้ฝึกถามหามังสวิรัติ ขอคำแนะนำร้านใกล้ๆ และสั่งอาหารแบบสุภาพ ลองนำไปใช้จริงที่ฟู้ดคอร์ตหรือโรงแรม ยิ้ม พูดชัด และอย่าลืมขอบคุณ แล้วเจอกันบทถัดไปนะคะ",
+          "backgroundUrl": "/videos/henIVlCPVIY/lesson_1/lesson_segments/conclusion.png"
+        }
+      ]
+    },
+    "flashcards": [
+      {
+        "word": "recommend",
+        "definition": "to suggest that someone or something would be good or suitable for a particular purpose",
+        "thaiDefinition": "การเสนอให้ผู้อื่นลองใช้ เลือก หรือทำสิ่งใดเพราะเห็นว่าดี เหมาะสม หรือคุ้มค่า มักใช้ในงานบริการ เช่น พนักงานร้านอาหารแนะนำเมนูยอดนิยม หรือพนักงานโรงแรมแนะนำห้องพักและบริการที่เหมาะกับลูกค้า",
+        "thaiTranslation": "แนะนำ",
+        "pronunciation": "เรค-คอม-เมนด์",
+        "phonetic": "/ˌrek.əˈmend/",
+        "memoryHook": "เรค-คอม-เมนด์ ฟังเหมือน “เลขคอมเมนต์” นึกภาพบาริสต้าที่ TRUE Coffee เปิดดูคอมเมนต์ของลูกค้า แล้วหยิบ “เลขคอมเมนต์” มาบอกว่า เมนูไหนคนชมเยอะสุด เลยแนะนำเมนูนั้นให้คุณ",
+        "contextExample": "If you like spicy food, I recommend the Tom Yum pizza at The Pizza Company in CentralWorld. - ถ้าคุณชอบรสเผ็ด ฉันขอแนะนำพิซซ่าต้มยำที่เดอะพิซซ่าคอมปะนี สาขาเซ็นทรัลเวิลด์",
+        "partOfSpeech": "verb",
+        "difficulty": "medium"
+      },
+      {
+        "word": "vegetarian",
+        "definition": "a person who does not eat meat or fish, or a diet that does not include meat or fish",
+        "thaiDefinition": "บุคคลที่ไม่รับประทานเนื้อสัตว์และปลา (บางคนยังทานนม/ไข่ เรียกว่าแบบ lacto-ovo) และในบริบทเมนู หมายถึงอาหารที่ไม่มีเนื้อสัตว์และปลา เหมาะสำหรับผู้ที่กินเจหรือเน้นผักเป็นหลัก",
+        "thaiTranslation": "มังสวิรัติ",
+        "pronunciation": "เว-จิ-แท-เรียน",
+        "phonetic": "/ˌvɛdʒɪˈtɛriən/",
+        "memoryHook": "เว-จิ-แท-เรียน นึกถึง “เวจิ” = ผัก + “เจ” แบบไทย ช่วงเทศกาลกินเจที่เยาวราช ร้านติดธงเจเต็มไปหมด เห็นคำว่า veg ก็โยงทันทีว่าเป็นสายผัก ไม่กินเนื้อ",
+        "contextExample": "Do you have any vegetarian options at your restaurant near BTS Asok? - ร้านของคุณใกล้บีทีเอสอโศกมีเมนูมังสวิรัติไหม",
+        "partOfSpeech": "noun/adjective",
+        "difficulty": "medium"
+      },
+      {
+        "word": "recommendation",
+        "definition": "a suggestion or piece of advice about what is good or suitable",
+        "thaiDefinition": "คำเสนอแนะหรือคำปรึกษาว่าสิ่งใดดี เหมาะสม ควรเลือกหรือควรทำ เช่น คำแนะนำเมนูขายดีจากพนักงานเสิร์ฟ หรือคำแนะนำจากรีวิวของลูกค้าในแอป",
+        "thaiTranslation": "คำแนะนำ",
+        "pronunciation": "เรค-คอม-เม็น-เด-เชิน",
+        "phonetic": "/ˌrek.ə.mɛnˈdeɪ.ʃən/",
+        "memoryHook": "เรค-คอม-เม็น-เด-เชิน คล้ายคำว่า “คอมเมนต์” + “เชิญ” นึกภาพพนักงานที่ CentralWorld ยื่นการ์ดเชิญที่มีคอมเมนต์เด่นๆ ว่า “เมนูนี้ดี!” นั่นแหละคือคำแนะนำของร้าน",
+        "contextExample": "Based on the staff’s recommendation, we booked a river-view room at a hotel near ICONSIAM. - ตามคำแนะนำของพนักงาน เราจองห้องวิวแม่น้ำที่โรงแรมใกล้ไอคอนสยาม",
+        "partOfSpeech": "noun",
+        "difficulty": "medium"
+      }
+    ],
+    "audioSegments": [
+      {
+        "id": "intro",
+        "text": "สวัสดีค่ะ ยินดีต้อนรับสู่บทเรียน พื้นฐานอุตสาหกรรมบริการ: โรงแรมและร้านอาหาร วันนี้เราจะฝึกประโยคสั้นๆ ที่ใช้ได้จริงในไทย ทั้งตอนถามหามังสวิรัติ และขอคำแนะนำร้านใกล้ๆ เตรียมปาก พูดตามให้ชัด ช้า และสุภาพนะคะ",
+        "description": "เกริ่นนำบรรยากาศเป็นกันเอง บอกหัวข้อและการใช้จริงในไทย ชวนผู้เรียนเตรียมพูดตาม",
+        "screenElement": "title_card",
+        "visualDescription": "Bright and welcoming introduction with friendly instructor avatar and animated icons of a hotel bell and restaurant plate.",
+        "backgroundImageDescription": "Modern classroom view in Bangkok with skyline hints of Siam area; soft Thai motifs on walls and a small tuk-tuk model on the shelf."
+      },
+      {
+        "id": "learning_objective1",
+        "text": "เป้าหมายแรก: ใช้ประโยคเพื่อขอเมนูมังสวิรัติอย่างสุภาพในร้านอาหารหรือฟู้ดคอร์ต พูดตามนะคะ: Could you recommend a vegetarian dish? ใช้เมนูจริงช่วยชี้ และบอกข้อจำกัดเพิ่มได้ เช่น ไม่ใส่น้ำปลา",
+        "description": "อธิบายวัตถุประสงค์การถามหามังสวิรัติพร้อมบริบทไทย",
+        "screenElement": "objective_card",
+        "visualDescription": "Animated checklist showing the phrase highlighted and a plate with leafy greens.",
+        "backgroundImageDescription": "Food court scene at Terminal 21 Asok with colorful stalls, Thai menu boards, and a friendly vendor."
+      },
+      {
+        "id": "learning_objective2",
+        "text": "เป้าหมายที่สอง: ขอคำแนะนำร้านอาหารใกล้ที่พักหรือจุดบริการข้อมูล พูดตาม: Do you have any restaurant recommendations nearby? จากนั้นขอเส้นทางต่อได้ เช่น ไปทางบีทีเอสหรือเรียกรถแอป",
+        "description": "อธิบายวัตถุประสงค์การถามหาร้านใกล้ๆ ที่ฟรอนต์โรงแรมหรือเคาน์เตอร์ข้อมูล",
+        "screenElement": "objective_card",
+        "visualDescription": "Simple map animation with a hotel icon and nearby restaurant pins appearing.",
+        "backgroundImageDescription": "Hotel lobby resembling Novotel Siam Square with reception desk, Thai decor patterns, and city map on a stand."
+      },
+      {
+        "id": "vocab_word1",
+        "text": "คำศัพท์: recommend แปลว่า แนะนำ ใช้เมื่ออยากให้คนช่วยเลือกสิ่งที่เหมาะกับเรา ตัวอย่างพูดว่า: Can you recommend a restaurant? ใช้สถานการณ์จริงได้ที่ฟรอนต์โรงแรมหรือจุดข้อมูลในห้าง",
+        "description": "สอนคำว่า recommend พร้อมตัวอย่างประโยคง่าย",
+        "screenElement": "vocabulary_card",
+        "vocabWord": "recommend",
+        "visualDescription": "The word appears with a thumbs-up icon and a speech bubble suggesting options.",
+        "backgroundImageDescription": "Front desk area at a Bangkok hotel with staff in neat uniforms and a small garland near the counter."
+      },
+      {
+        "id": "vocab_word2",
+        "text": "คำศัพท์: recommendation แปลว่า คำแนะนำ เป็นคำนามของ recommend เช่น พูดว่า: Do you have any restaurant recommendations nearby? ใช้เมื่ออยากได้รายชื่อหลายตัวเลือก",
+        "description": "สอนคำนาม recommendation และโยงกับประโยคเป้าหมาย",
+        "screenElement": "vocabulary_card",
+        "vocabWord": "recommendation",
+        "visualDescription": "The word appears with a small list icon and checkmarks.",
+        "backgroundImageDescription": "Information counter inside a Bangkok mall like MBK, with directory boards and friendly staff."
+      },
+      {
+        "id": "vocab_word3",
+        "text": "คำศัพท์: vegetarian แปลว่า มังสวิรัติ เน้นอาหารที่ไม่มีเนื้อสัตว์ ตัวอย่างถาม: Do you have vegetarian options? เหมาะมากเวลาเดินเลือกอาหารในฟู้ดคอร์ต",
+        "description": "สอนคำว่า vegetarian พร้อมการใช้ถามตัวเลือก",
+        "screenElement": "vocabulary_card",
+        "vocabWord": "vegetarian",
+        "visualDescription": "The word shows with green leaf icons and a veggie bowl illustration.",
+        "backgroundImageDescription": "Fresh produce market scene like Or Tor Kor Market with colorful vegetables and tofu stalls."
+      },
+      {
+        "id": "vocab_word4",
+        "text": "คำศัพท์: dish แปลว่า จานอาหาร หรือ เมนูหนึ่งจาน ตัวอย่างในประโยคหลัก: Could you recommend a vegetarian dish? ใช้เมื่อต้องการให้พนักงานชี้จานที่เหมาะ",
+        "description": "อธิบายคำว่า dish เชื่อมกับสถานการณ์สั่งอาหาร",
+        "screenElement": "vocabulary_card",
+        "vocabWord": "dish",
+        "visualDescription": "The word overlays an image of a single plated meal with steam lines.",
+        "backgroundImageDescription": "Close-up of a clean white plate with a Thai vegetarian stir-fry in a bright restaurant setting."
+      },
+      {
+        "id": "vocab_word5",
+        "text": "คำศัพท์: restaurant แปลว่า ร้านอาหาร ใช้ทั่วไปทั้งในห้างและข้างนอก เช่น: Can you recommend a restaurant? เหมาะเวลาถามทางเลือกมื้อเที่ยงหรือมื้อเย็น",
+        "description": "สอนคำว่า restaurant พร้อมตัวอย่างการใช้ทั่วไป",
+        "screenElement": "vocabulary_card",
+        "vocabWord": "restaurant",
+        "visualDescription": "The word appears alongside a fork-and-knife icon and a shopfront sign.",
+        "backgroundImageDescription": "Street in Sukhumvit with a mix of Thai eateries and modern restaurants, evening lights and signs."
+      },
+      {
+        "id": "vocab_word6",
+        "text": "คำศัพท์: nearby แปลว่า ใกล้ๆ หรือ ระยะเดินถึง ตัวอย่างในประโยค: Do you have any restaurant recommendations nearby? ใช้เน้นว่าขอพื้นที่ไม่ไกล",
+        "description": "อธิบายคำว่า nearby เพื่อเจาะจงระยะทาง",
+        "screenElement": "vocabulary_card",
+        "vocabWord": "nearby",
+        "visualDescription": "The word sits beside a small map with a short walking route highlighted.",
+        "backgroundImageDescription": "Pedestrian path near BTS Chit Lom with skywalk, mall entrances, and clear signage."
+      },
+      {
+        "id": "vocab_word7",
+        "text": "คำศัพท์: menu แปลว่า เมนูรายการอาหาร ใช้คู่กับการชี้จานเพื่อสื่อสารง่ายขึ้น เช่น พูดพร้อมชี้รูปในเมนู จะช่วยให้พนักงานเข้าใจเร็ว",
+        "description": "สอนคำว่า menu และเทคนิคชี้ประกอบการพูด",
+        "screenElement": "vocabulary_card",
+        "vocabWord": "menu",
+        "visualDescription": "The word with an open menu booklet and photo thumbnails of dishes.",
+        "backgroundImageDescription": "Casual Thai restaurant table with laminated menu featuring photos and Thai-English dish names."
+      },
+      {
+        "id": "vocab_word8",
+        "text": "คำศัพท์: option แปลว่า ตัวเลือก มักใช้เป็นพหูพจน์ options เช่น: Do you have vegetarian options? เหมาะเมื่ออยากได้มากกว่าหนึ่งทางเลือก",
+        "description": "สอนคำว่า option/ options สำหรับการขอตัวเลือก",
+        "screenElement": "vocabulary_card",
+        "vocabWord": "option",
+        "visualDescription": "The word with multiple checkboxes indicating choices.",
+        "backgroundImageDescription": "Food court counter with several vegetarian labels on dishes and price tags in Thai baht."
+      },
+      {
+        "id": "grammar1",
+        "text": "ไวยากรณ์: การขอร้องสุภาพด้วย Can you / Could you โครงสร้างง่าย ประธาน + กริยา ตัวอย่าง: Can you recommend a restaurant? / Could you arrange a taxi? / Can you help me with directions? ใช้เสียงสุภาพ ช้า ชัด ปิดท้ายด้วยน้ำเสียงนุ่มนวล",
+        "description": "สรุปการใช้ Can you / Could you ในบริการและการขอความช่วยเหลือ",
+        "screenElement": "grammar_card",
+        "visualDescription": "Side-by-side cards showing “Can you…?” and “Could you…?” with polite gesture icons.",
+        "backgroundImageDescription": "Hotel concierge desk in Bangkok with a service bell, small elephant statue, and city brochures."
+      },
+      {
+        "id": "grammar2",
+        "text": "ไวยากรณ์: I would like ใช้สั่งอาหารและบอกความต้องการอย่างสุภาพ ตัวอย่าง: I would like the chicken curry. / I would like it not too spicy. / I would like to order drinks first. เคล็ดลับ: พูด I’d like ได้เพื่อให้สั้นและธรรมชาติ",
+        "description": "สอนรูปแบบ I would like สำหรับการสั่งอาหารแบบสุภาพ",
+        "screenElement": "grammar_card",
+        "visualDescription": "Highlighted sentence pattern with examples appearing one by one.",
+        "backgroundImageDescription": "Table setting at a Thai restaurant with condiments set (fish sauce, chili flakes, sugar, vinegar) and a notepad for ordering."
+      },
+      {
+        "id": "grammar3",
+        "text": "ไวยากรณ์: Do you have…? ใช้ถามว่ามีสิ่งนั้นไหม ผูกกับสถานที่ด้วย nearby ได้ ตัวอย่าง: Do you have any vegetarian options? / Do you have any restaurant recommendations nearby? ใช้ดีมากตอนถามฟรอนต์โรงแรม",
+        "description": "สรุปการใช้ Do you have…? และการเติม nearby เพื่อระบุความใกล้",
+        "screenElement": "grammar_card",
+        "visualDescription": "Question pattern spotlighted with a location pin icon for ‘nearby’.",
+        "backgroundImageDescription": "Reception area with a wall map of Bangkok, BTS lines highlighted, and a pen ready to mark locations."
+      },
+      {
+        "id": "practice1",
+        "text": "ฝึกพูดที่ฟู้ดคอร์ต เทอร์มินอล 21 สมมติคุณอยากกินมังสวิรัติ พูดตามช้าๆ 2 รอบนะคะ รอบที่ 1: Could you recommend a vegetarian dish? รอบที่ 2: Could you recommend a vegetarian dish? ถ้าต้องการรสอ่อน พูดต่อว่า: Not too spicy, please.",
+        "description": "บทฝึกพูดถามหามังสวิรัติ และต่อยอดขอรสไม่เผ็ดมาก",
+        "screenElement": "practice_card",
+        "visualDescription": "Role-play prompt on screen with a friendly vendor character nodding and pointing to dishes.",
+        "backgroundImageDescription": "Terminal 21 Pier 21 food court counter with clear dish labels, queue lines, and a cashier using a stored-value card system."
+      },
+      {
+        "id": "practice2",
+        "text": "ฝึกพูดที่ฟรอนต์โรงแรม สมมติคุณเพิ่งเช็กอินและอยากหาร้านใกล้ๆ พูดตาม 2 รอบนะคะ รอบที่ 1: Do you have any restaurant recommendations nearby? รอบที่ 2: Do you have any restaurant recommendations nearby? แล้วขอความช่วยเหลือเพิ่ม: Could you mark it on the map?",
+        "description": "บทฝึกพูดขอคำแนะนำร้านใกล้ๆ และให้พนักงานวงบนแผนที่",
+        "screenElement": "practice_card",
+        "visualDescription": "Guest speaking to receptionist while a map appears with a circled location.",
+        "backgroundImageDescription": "Novotel Siam Square lobby with a city map spread on the counter and a pen ready for marking routes to nearby eateries."
+      },
+      {
+        "id": "practice3",
+        "text": "ฝึกสั่งอาหารแบบสุภาพ สมมติอยู่ที่ร้านข้าวแกงใกล้บีทีเอส พูดตามนะคะ: I would like a vegetarian fried rice. ต่อด้วยการปรับส่วนผสม: Can you make it without fish sauce? ปิดท้ายด้วยคำสุภาพ: Thank you.",
+        "description": "บทฝึกสั่งข้าวผัดมังสวิรัติและขอไม่ใส่น้ำปลา",
+        "screenElement": "practice_card",
+        "visualDescription": "Order scene with a cook at a wok station nodding in understanding.",
+        "backgroundImageDescription": "Street-side Thai eatery under BTS tracks with stainless-steel wok station, fresh vegetables on display, and seating with metal tables."
+      },
+      {
+        "id": "conclusion",
+        "text": "เยี่ยมมากค่ะ วันนี้คุณได้ฝึกถามหามังสวิรัติ ขอคำแนะนำร้านใกล้ๆ และสั่งอาหารแบบสุภาพ ลองนำไปใช้จริงที่ฟู้ดคอร์ตหรือโรงแรม ยิ้ม พูดชัด และอย่าลืมขอบคุณ แล้วเจอกันบทถัดไปนะคะ",
+        "description": "สรุปและสร้างแรงใจให้นำไปใช้จริงในชีวิตประจำวัน",
+        "screenElement": "outro_card",
+        "visualDescription": "Friendly wrap-up with animated confetti and a checklist marked complete.",
+        "backgroundImageDescription": "Evening Bangkok cityscape near Siam with warm lights from restaurants and people walking on the skywalk."
+      }
+    ]
+  }
+}

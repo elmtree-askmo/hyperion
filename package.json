@@ -22,7 +22,10 @@
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "test:llm": "ts-node scripts/test-llm-service.ts",
     "test:gemini": "ts-node scripts/test-gemini-image-service.ts",
-    "test:tts": "ts-node scripts/test-tts-service.ts"
+    "test:tts": "ts-node scripts/test-tts-service.ts",
+    "remotion:preview": "cd remotion && npx remotion preview src/index.ts",
+    "remotion:render": "cd remotion && npx remotion render",
+    "test:video": "ts-node scripts/test-video-generation.ts"
   },
   "dependencies": {
     "@google-cloud/speech": "^7.2.0",
@@ -42,6 +45,8 @@
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/throttler": "^5.2.0",
     "@nestjs/typeorm": "^11.0.0",
+    "@remotion/cli": "^4.0.356",
+    "@remotion/lambda": "^4.0.356",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -58,7 +63,10 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.16.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "reflect-metadata": "^0.2.2",
+    "remotion": "^4.0.356",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.27",
     "undici": "^7.16.0",

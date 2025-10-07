@@ -14,6 +14,7 @@ import { LLMConfigService } from './services/llm-config.service';
 import { GeminiImageService } from './services/gemini-image.service';
 import { ProxyConfigService } from './services/proxy-config.service';
 import { FlashcardsService } from './services/flashcards.service';
+import { RemotionVideoService } from './services/remotion-video.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([VideoJob])],
@@ -31,6 +32,7 @@ import { FlashcardsService } from './services/flashcards.service';
     SynchronizedLessonService,
     GeminiImageService,
     FlashcardsService,
+    RemotionVideoService,
   ],
   exports: [VideoTransformService],
 })

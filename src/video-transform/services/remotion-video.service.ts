@@ -1,0 +1,185 @@
+/**
+ * Remotion Video Generation Service
+ * Handles video rendering using Remotion
+ */
+import { Injectable, Logger } from '@nestjs/common';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { FinalSynchronizedLesson, FlashcardsData, AudioSegmentsData, MicrolessonScript } from '../types/lesson-data.types';
+
+const execAsync = promisify(exec);
+
+@Injectable()
+export class RemotionVideoService {
+  private readonly logger = new Logger(RemotionVideoService.name);
+  private readonly remotionDir = path.join(process.cwd(), 'remotion');
+  private readonly videosDir = path.join(process.cwd(), 'videos');
+
+  /**
+   * Generate video from lesson data
+   */
+  async generateVideo(lessonPath: string, outputPath: string): Promise<{ success: boolean; outputPath: string; error?: string }> {
+    try {
+      this.logger.log(`Starting video generation for lesson: ${lessonPath}`);
+
+      // Load all required data files
+      const lessonData = await this.loadLessonData(lessonPath);
+
+      // Create temporary input props file
+      const propsPath = await this.createPropsFile(lessonData);
+
+      // Run Remotion render
+      const videoPath = await this.renderVideo(propsPath, outputPath);
+
+      // Clean up temporary files
+      await fs.unlink(propsPath);
+
+      this.logger.log(`Video generated successfully: ${videoPath}`);
+
+      return {
+        success: true,
+        outputPath: videoPath,
+      };
+    } catch (error) {
+      this.logger.error(`Video generation failed: ${error.message}`, error.stack);
+      return {
+        success: false,
+        outputPath: '',
+        error: error.message,
+      };
+    }
+  }
+
+  /**
+   * Load and combine all lesson data
+   */
+  private async loadLessonData(lessonPath: string): Promise<any> {
+    try {
+      const basePath = path.join(this.videosDir, lessonPath);
+
+      // Load final synchronized lesson
+      const finalLessonPath = path.join(basePath, 'final_synchronized_lesson.json');
+      const finalLessonData: FinalSynchronizedLesson = JSON.parse(await fs.readFile(finalLessonPath, 'utf-8'));
+
+      // Load microlesson script
+      const scriptPath = path.join(basePath, 'microlesson_script.json');
+      const scriptData: MicrolessonScript = JSON.parse(await fs.readFile(scriptPath, 'utf-8'));
+
+      // Load flashcards
+      const flashcardsPath = path.join(basePath, 'flashcards.json');
+      const flashcardsData: FlashcardsData = JSON.parse(await fs.readFile(flashcardsPath, 'utf-8'));
+
+      // Load audio segments
+      const audioSegmentsPath = path.join(basePath, 'audio_segments.json');
+      const audioSegmentsData: AudioSegmentsData = JSON.parse(await fs.readFile(audioSegmentsPath, 'utf-8'));
+
+      // Combine all data
+      // Wrap in lessonData to match the component's expected props structure
+      return {
+        lessonData: {
+          lesson: {
+            title: scriptData.lesson.title,
+            titleTh: scriptData.lesson.titleTh,
+            episodeNumber: scriptData.seriesInfo.episodeNumber,
+            totalEpisodes: scriptData.seriesInfo.totalEpisodes,
+            segmentBasedTiming: finalLessonData.lesson.segmentBasedTiming,
+          },
+          flashcards: flashcardsData.flashcards,
+          audioSegments: audioSegmentsData.audioSegments,
+        },
+      };
+    } catch (error) {
+      this.logger.error(`Failed to load lesson data: ${error.message}`);
+      throw new Error(`Failed to load lesson data: ${error.message}`);
+    }
+  }
+
+  /**
+   * Create temporary props file for Remotion
+   */
+  private async createPropsFile(lessonData: any): Promise<string> {
+    const propsPath = path.join(this.remotionDir, 'temp-props.json');
+    await fs.writeFile(propsPath, JSON.stringify(lessonData, null, 2));
+    return propsPath;
+  }
+
+  /**
+   * Render video using Remotion CLI
+   */
+  private async renderVideo(propsPath: string, outputPath: string): Promise<string> {
+    try {
+      // Ensure output directory exists
+      const outputDir = path.dirname(outputPath);
+      await fs.mkdir(outputDir, { recursive: true });
+
+      // Build Remotion command
+      // Note: Use CRF for quality control (lower = better quality, 18-28 is good range)
+      // Cannot use both CRF and video-bitrate together
+      // Audio bitrate must be string with K or M suffix (e.g., "128K" or "0.128M")
+      // IMPORTANT: Props must be passed with correct format for Remotion to read
+      const command = [
+        'npx',
+        'remotion',
+        'render',
+        'src/index.ts',
+        'Lesson',
+        outputPath,
+        '--props',
+        propsPath,
+        '--overwrite',
+        '--codec',
+        'h264',
+        '--audio-bitrate',
+        '128K',
+        '--crf',
+        '23',
+      ].join(' ');
+
+      this.logger.log(`Executing Remotion render: ${command}`);
+
+      // Execute render command
+      const { stdout, stderr } = await execAsync(command, {
+        cwd: this.remotionDir,
+        maxBuffer: 10 * 1024 * 1024, // 10MB buffer
+      });
+
+      if (stderr) {
+        this.logger.warn(`Remotion stderr: ${stderr}`);
+      }
+
+      this.logger.log(`Remotion stdout: ${stdout}`);
+
+      // Verify output file exists
+      const stats = await fs.stat(outputPath);
+      if (!stats.isFile()) {
+        throw new Error('Output file was not created');
+      }
+
+      return outputPath;
+    } catch (error) {
+      this.logger.error(`Remotion render failed: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Get video generation progress (placeholder for future implementation)
+   */
+  async getProgress(jobId: string): Promise<{ progress: number; status: string }> {
+    // TODO: Implement progress tracking
+    return {
+      progress: 0,
+      status: 'pending',
+    };
+  }
+
+  /**
+   * Cancel video generation (placeholder for future implementation)
+   */
+  async cancelGeneration(jobId: string): Promise<boolean> {
+    // TODO: Implement cancellation
+    return false;
+  }
+}

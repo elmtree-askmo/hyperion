@@ -6,6 +6,8 @@ import { CreateVideoJobDto } from './dto/create-video-job.dto';
 import { VideoJobQueryDto } from './dto/video-job-query.dto';
 import { TtsAudioSegmentsService, TtsTimingMetadata } from './services/tts-audio-segments.service';
 import { TtsTimingMetadataResponse } from './dto/tts-timing-metadata.dto';
+import { RemotionVideoService } from './services/remotion-video.service';
+import { GenerateVideoDto, VideoGenerationResponseDto } from './dto/generate-video.dto';
 
 @ApiTags('video-transform')
 @ApiBearerAuth()
@@ -15,6 +17,7 @@ export class VideoTransformController {
   constructor(
     private readonly videoTransformService: VideoTransformService,
     private readonly ttsAudioSegmentsService: TtsAudioSegmentsService,
+    private readonly remotionVideoService: RemotionVideoService,
   ) {}
 
   @Post()
@@ -122,6 +125,32 @@ export class VideoTransformController {
     });
 
     return res.send(audioBuffer);
+  }
+
+  @Post('generate-video')
+  @ApiOperation({ summary: 'Generate final MP4 video using Remotion' })
+  @ApiResponse({
+    status: 200,
+    description: 'Video generation started successfully.',
+    type: VideoGenerationResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
+  @ApiResponse({ status: 404, description: 'Lesson data not found.' })
+  async generateVideo(@Body() generateVideoDto: GenerateVideoDto, @Request() req: any): Promise<VideoGenerationResponseDto> {
+    const { lessonPath, outputFileName } = generateVideoDto;
+
+    // Default output file name
+    const fileName = outputFileName || 'final_video.mp4';
+    const outputPath = `videos/${lessonPath}/${fileName}`;
+
+    // Generate video
+    const result = await this.remotionVideoService.generateVideo(lessonPath, outputPath);
+
+    return {
+      success: result.success,
+      outputPath: result.outputPath,
+      error: result.error,
+    };
   }
 
   private extractVideoIdFromUrl(youtubeUrl: string): string {
