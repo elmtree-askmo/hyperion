@@ -145,7 +145,7 @@ CRITICAL LANGUAGE REQUIREMENTS:
 - Use natural, modern Thai that university students understand
 
 MICROLESSON SCRIPT DATA:
-${JSON.stringify(script)}
+{scriptData}
 
 INSTRUCTIONS:
 Create engaging audio segments with natural, conversational text suitable for Thai English language learners. Each segment should:
@@ -216,7 +216,9 @@ IMPORTANT: Do NOT omit the visualDescription field from ANY segment. Every segme
       const chain = RunnableSequence.from([promptTemplate, this.llm, new StringOutputParser()]);
 
       const result = await chain.invoke(
-        {},
+        {
+          scriptData: JSON.stringify(script, null, 2),
+        },
         {
           tags: ['audio-segments-generation', 'llm-content-creation'],
           metadata: {
