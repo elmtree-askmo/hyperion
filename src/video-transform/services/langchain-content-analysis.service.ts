@@ -3,8 +3,8 @@ import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { VideoMetadata } from './youtube.service';
-import { writeFile, mkdir, access, readFile } from 'fs/promises';
-import { join } from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { LLMConfigService } from './llm-config.service';
 
 // Core types and interfaces for lesson analysis
@@ -506,13 +506,13 @@ Respond in JSON format:
   private async saveLessonAnalysis(analysis: LessonAnalysis): Promise<void> {
     try {
       const videoId = analysis.videoId || 'unknown';
-      const videosDir = join(process.cwd(), 'videos', videoId);
+      const videosDir = path.join(process.cwd(), 'videos', videoId);
 
       // Ensure the videos/{videoId} directory exists
-      await mkdir(videosDir, { recursive: true });
+      fs.mkdirSync(videosDir, { recursive: true });
 
-      const filePath = join(videosDir, 'lesson_analysis.json');
-      await writeFile(filePath, JSON.stringify(analysis, null, 2), 'utf8');
+      const filePath = path.join(videosDir, 'lesson_analysis.json');
+      fs.writeFileSync(filePath, JSON.stringify(analysis, null, 2), 'utf8');
       this.logger.log(`Lesson analysis saved to: ${filePath}`);
     } catch (error) {
       this.logger.error('Error saving lesson analysis:', error);
@@ -529,14 +529,14 @@ Respond in JSON format:
         return null;
       }
 
-      const videosDir = join(process.cwd(), 'videos', videoId);
-      const filePath = join(videosDir, 'lesson_analysis.json');
+      const videosDir = path.join(process.cwd(), 'videos', videoId);
+      const filePath = path.join(videosDir, 'lesson_analysis.json');
 
       // Check if file exists
-      await access(filePath);
+      fs.accessSync(filePath);
 
       // Read and parse the existing analysis
-      const fileContent = await readFile(filePath, 'utf8');
+      const fileContent = fs.readFileSync(filePath, 'utf8');
       const analysis: LessonAnalysis = JSON.parse(fileContent);
 
       // Validate that it's a proper LessonAnalysis object

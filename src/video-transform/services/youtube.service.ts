@@ -1,5 +1,5 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
-import * as fs from 'fs/promises';
+import * as fs from 'fs';
 import * as path from 'path';
 const youtubedl = require('youtube-dl-exec');
 
@@ -39,7 +39,7 @@ export class YouTubeService {
 
   private async ensureDir(dir: string): Promise<void> {
     try {
-      await fs.mkdir(dir, { recursive: true });
+      fs.mkdirSync(dir, { recursive: true });
     } catch (error) {
       this.logger.error('Failed to create videos directory:', error);
     }
@@ -94,10 +94,10 @@ export class YouTubeService {
       const filepath = path.join(`${this.videosDir}/${videoId}`, filename);
 
       // Check if file exists
-      await fs.access(filepath);
+      fs.accessSync(filepath);
 
       // Read and parse the file
-      const fileContent = await fs.readFile(filepath, 'utf8');
+      const fileContent = fs.readFileSync(filepath, 'utf8');
       const metadata = JSON.parse(fileContent) as YoutubeVideoInfo;
 
       return metadata;
@@ -113,10 +113,10 @@ export class YouTubeService {
   private async loadExistingTranscript(subtitlePath: string): Promise<string | null> {
     try {
       // Check if file exists
-      await fs.access(subtitlePath);
+      fs.accessSync(subtitlePath);
 
       // Read and parse the VTT file
-      const vttContent = await fs.readFile(subtitlePath, 'utf8');
+      const vttContent = fs.readFileSync(subtitlePath, 'utf8');
       return this.parseVTTSubtitles(vttContent);
     } catch (error) {
       // File doesn't exist or can't be read
@@ -164,7 +164,7 @@ export class YouTubeService {
       // Convert videoInfo to JSON string with proper formatting
       const jsonContent = JSON.stringify(videoInfo, null, 2);
 
-      await fs.writeFile(filepath, jsonContent, 'utf8');
+      fs.writeFileSync(filepath, jsonContent, 'utf8');
       this.logger.log(`Video metadata saved to: ${filepath}`);
     } catch (error) {
       this.logger.error(`Failed to save video metadata to file: ${error.message}`);
@@ -201,7 +201,7 @@ export class YouTubeService {
 
         // Read the subtitle file if it was created
         try {
-          const subtitleContent = await fs.readFile(subtitlePath, 'utf8');
+          const subtitleContent = fs.readFileSync(subtitlePath, 'utf8');
           return this.parseVTTSubtitles(subtitleContent);
         } catch (readError) {
           console.warn('Could not read subtitle file:', readError.message);

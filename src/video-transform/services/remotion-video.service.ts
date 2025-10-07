@@ -5,7 +5,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import * as fs from 'fs/promises';
+import * as fs from 'fs';
 import * as path from 'path';
 import { FinalSynchronizedLesson, FlashcardsData, AudioSegmentsData, MicrolessonScript } from '../types/lesson-data.types';
 
@@ -34,7 +34,7 @@ export class RemotionVideoService {
       const videoPath = await this.renderVideo(propsPath, outputPath);
 
       // Clean up temporary files
-      await fs.unlink(propsPath);
+      fs.unlinkSync(propsPath);
 
       this.logger.log(`Video generated successfully: ${videoPath}`);
 
@@ -61,19 +61,19 @@ export class RemotionVideoService {
 
       // Load final synchronized lesson
       const finalLessonPath = path.join(basePath, 'final_synchronized_lesson.json');
-      const finalLessonData: FinalSynchronizedLesson = JSON.parse(await fs.readFile(finalLessonPath, 'utf-8'));
+      const finalLessonData: FinalSynchronizedLesson = JSON.parse(fs.readFileSync(finalLessonPath, 'utf-8'));
 
       // Load microlesson script
       const scriptPath = path.join(basePath, 'microlesson_script.json');
-      const scriptData: MicrolessonScript = JSON.parse(await fs.readFile(scriptPath, 'utf-8'));
+      const scriptData: MicrolessonScript = JSON.parse(fs.readFileSync(scriptPath, 'utf-8'));
 
       // Load flashcards
       const flashcardsPath = path.join(basePath, 'flashcards.json');
-      const flashcardsData: FlashcardsData = JSON.parse(await fs.readFile(flashcardsPath, 'utf-8'));
+      const flashcardsData: FlashcardsData = JSON.parse(fs.readFileSync(flashcardsPath, 'utf-8'));
 
       // Load audio segments
       const audioSegmentsPath = path.join(basePath, 'audio_segments.json');
-      const audioSegmentsData: AudioSegmentsData = JSON.parse(await fs.readFile(audioSegmentsPath, 'utf-8'));
+      const audioSegmentsData: AudioSegmentsData = JSON.parse(fs.readFileSync(audioSegmentsPath, 'utf-8'));
 
       // Combine all data
       // Wrap in lessonData to match the component's expected props structure
@@ -101,7 +101,7 @@ export class RemotionVideoService {
    */
   private async createPropsFile(lessonData: any): Promise<string> {
     const propsPath = path.join(this.remotionDir, 'temp-props.json');
-    await fs.writeFile(propsPath, JSON.stringify(lessonData, null, 2));
+    fs.writeFileSync(propsPath, JSON.stringify(lessonData, null, 2));
     return propsPath;
   }
 
@@ -112,7 +112,7 @@ export class RemotionVideoService {
     try {
       // Ensure output directory exists
       const outputDir = path.dirname(outputPath);
-      await fs.mkdir(outputDir, { recursive: true });
+      fs.mkdirSync(outputDir, { recursive: true });
 
       // Build Remotion command
       // Note: Use CRF for quality control (lower = better quality, 18-28 is good range)
@@ -152,7 +152,7 @@ export class RemotionVideoService {
       this.logger.log(`Remotion stdout: ${stdout}`);
 
       // Verify output file exists
-      const stats = await fs.stat(outputPath);
+      const stats = fs.statSync(outputPath);
       if (!stats.isFile()) {
         throw new Error('Output file was not created');
       }
