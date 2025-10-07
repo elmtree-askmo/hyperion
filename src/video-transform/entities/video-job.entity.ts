@@ -8,6 +8,13 @@ export enum JobStatus {
   FAILED = 'failed',
 }
 
+export enum VideoGenerationStatus {
+  NOT_STARTED = 'not_started',
+  GENERATING = 'generating',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+}
+
 export enum TargetAudience {
   THAI_COLLEGE_STUDENTS = 'thai_college_students',
   GENERAL = 'general',
@@ -81,6 +88,30 @@ export class VideoJob {
   @ApiProperty({ description: 'When the job processing was completed' })
   @Column({ name: 'processed_at', nullable: true })
   processedAt?: Date;
+
+  @ApiProperty({ description: 'Video generation status for each lesson' })
+  @Column({
+    type: 'enum',
+    enum: VideoGenerationStatus,
+    default: VideoGenerationStatus.NOT_STARTED,
+    name: 'video_generation_status',
+  })
+  videoGenerationStatus: VideoGenerationStatus;
+
+  @ApiProperty({ description: 'Video generation progress and metadata' })
+  @Column({ type: 'jsonb', name: 'video_generation_data', nullable: true })
+  videoGenerationData?: {
+    currentLesson?: string;
+    generatedVideos?: Array<{
+      lessonPath: string;
+      outputPath: string;
+      generatedAt: Date;
+      success: boolean;
+      error?: string;
+    }>;
+    totalLessons?: number;
+    completedLessons?: number;
+  };
 
   @ApiProperty({ description: 'Additional processing preferences' })
   @Column({ type: 'jsonb', nullable: true })

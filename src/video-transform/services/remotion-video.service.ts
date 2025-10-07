@@ -20,9 +20,18 @@ export class RemotionVideoService {
   /**
    * Generate video from lesson data
    */
-  async generateVideo(lessonPath: string, outputPath: string): Promise<{ success: boolean; outputPath: string; error?: string }> {
+  async generateVideo(
+    lessonPath: string,
+    outputPath: string,
+    onStatusUpdate?: (status: 'generating' | 'completed' | 'failed', data?: any) => Promise<void>,
+  ): Promise<{ success: boolean; outputPath: string; error?: string }> {
     try {
       this.logger.log(`Starting video generation for lesson: ${lessonPath}`);
+
+      // Notify status update: generating
+      if (onStatusUpdate) {
+        await onStatusUpdate('generating', { lessonPath });
+      }
 
       // Load all required data files
       const lessonData = await this.loadLessonData(lessonPath);
@@ -38,12 +47,23 @@ export class RemotionVideoService {
 
       this.logger.log(`Video generated successfully: ${videoPath}`);
 
+      // Notify status update: completed
+      if (onStatusUpdate) {
+        await onStatusUpdate('completed', { lessonPath, outputPath: videoPath });
+      }
+
       return {
         success: true,
         outputPath: videoPath,
       };
     } catch (error) {
       this.logger.error(`Video generation failed: ${error.message}`, error.stack);
+
+      // Notify status update: failed
+      if (onStatusUpdate) {
+        await onStatusUpdate('failed', { lessonPath, error: error.message });
+      }
+
       return {
         success: false,
         outputPath: '',
@@ -110,8 +130,11 @@ export class RemotionVideoService {
    */
   private async renderVideo(propsPath: string, outputPath: string): Promise<string> {
     try {
+      // Convert to absolute path if relative
+      const absoluteOutputPath = path.isAbsolute(outputPath) ? outputPath : path.join(process.cwd(), outputPath);
+
       // Ensure output directory exists
-      const outputDir = path.dirname(outputPath);
+      const outputDir = path.dirname(absoluteOutputPath);
       fs.mkdirSync(outputDir, { recursive: true });
 
       // Build Remotion command
@@ -125,7 +148,7 @@ export class RemotionVideoService {
         'render',
         'src/index.ts',
         'Lesson',
-        outputPath,
+        absoluteOutputPath,
         '--props',
         propsPath,
         '--overwrite',
@@ -151,13 +174,13 @@ export class RemotionVideoService {
 
       this.logger.log(`Remotion stdout: ${stdout}`);
 
-      // Verify output file exists
-      const stats = fs.statSync(outputPath);
+      // Verify output file exists using absolute path
+      const stats = fs.statSync(absoluteOutputPath);
       if (!stats.isFile()) {
         throw new Error('Output file was not created');
       }
 
-      return outputPath;
+      return absoluteOutputPath;
     } catch (error) {
       this.logger.error(`Remotion render failed: ${error.message}`);
       throw error;

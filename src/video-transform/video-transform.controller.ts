@@ -98,26 +98,36 @@ export class VideoTransformController {
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
   @ApiResponse({ status: 404, description: 'Lesson data not found.' })
   async generateVideo(@Body() generateVideoDto: GenerateVideoDto, @Request() req: any): Promise<VideoGenerationResponseDto> {
-    const { lessonPath, outputFileName } = generateVideoDto;
+    const { jobId, lessonPath, outputFileName } = generateVideoDto;
+
+    // Verify job ownership
+    await this.videoTransformService.getVideoJob(jobId, req.user.id);
 
     // Default output file name
     const fileName = outputFileName || 'final_video.mp4';
     const outputPath = `videos/${lessonPath}/${fileName}`;
 
-    // Generate video
-    const result = await this.remotionVideoService.generateVideo(lessonPath, outputPath);
+    // Generate video with status updates
+    const result = await this.videoTransformService.generateVideoWithStatusUpdate(jobId, lessonPath, outputPath);
 
     return {
       success: result.success,
       outputPath: result.outputPath,
       error: result.error,
+      jobId: jobId,
+      videoGenerationStatus: result.videoGenerationStatus,
+      currentLesson: result.currentLesson,
     };
   }
 
-  private extractVideoIdFromUrl(youtubeUrl: string): string {
-    // Extract video ID from YouTube URL
-    const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
-    const match = regex.exec(youtubeUrl);
-    return match ? match[1] : youtubeUrl;
+  @Get(':id/video-generation-status')
+  @ApiOperation({ summary: 'Get video generation status for a job' })
+  @ApiResponse({
+    status: 200,
+    description: 'Video generation status retrieved successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Video job not found.' })
+  async getVideoGenerationStatus(@Param('id') id: string, @Request() req: any) {
+    return this.videoTransformService.getVideoGenerationStatus(id, req.user.id);
   }
 }

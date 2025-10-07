@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VideoJob, JobStatus } from './entities/video-job.entity';
+import { VideoJob, JobStatus, VideoGenerationStatus } from './entities/video-job.entity';
 import { CreateVideoJobDto } from './dto/create-video-job.dto';
 import { VideoJobQueryDto } from './dto/video-job-query.dto';
 import { YouTubeService } from './services/youtube.service';
@@ -12,6 +12,7 @@ import { TtsAudioSegmentsService } from './services/tts-audio-segments.service';
 import { SynchronizedLessonService } from './services/synchronized-lesson.service';
 import { GeminiImageService } from './services/gemini-image.service';
 import { FlashcardsService } from './services/flashcards.service';
+import { RemotionVideoService } from './services/remotion-video.service';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -29,6 +30,7 @@ export class VideoTransformService {
     private readonly synchronizedLessonService: SynchronizedLessonService,
     private readonly geminiImageService: GeminiImageService,
     private readonly flashcardsService: FlashcardsService,
+    private readonly remotionVideoService: RemotionVideoService,
   ) {}
 
   async createVideoJob(createVideoJobDto: CreateVideoJobDto, userId: string): Promise<VideoJob> {
@@ -253,5 +255,107 @@ export class VideoTransformService {
     const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
     const match = regex.exec(youtubeUrl);
     return match ? match[1] : youtubeUrl;
+  }
+
+  /**
+   * Generate video with status tracking
+   */
+  async generateVideoWithStatusUpdate(
+    jobId: string,
+    lessonPath: string,
+    outputPath: string,
+  ): Promise<{
+    success: boolean;
+    outputPath: string;
+    error?: string;
+    videoGenerationStatus: string;
+    currentLesson?: string;
+  }> {
+    // Get the video job
+    const videoJob = await this.videoJobRepository.findOne({
+      where: { id: jobId },
+    });
+
+    if (!videoJob) {
+      throw new NotFoundException('Video job not found');
+    }
+
+    // Define status update callback
+    const onStatusUpdate = async (status: 'generating' | 'completed' | 'failed', data?: any) => {
+      this.logger.log(`Video generation status update: ${status} for lesson: ${data?.lessonPath}`);
+
+      // Update video generation status
+      if (status === 'generating') {
+        videoJob.videoGenerationStatus = VideoGenerationStatus.GENERATING;
+        videoJob.videoGenerationData = {
+          ...videoJob.videoGenerationData,
+          currentLesson: data?.lessonPath,
+        };
+      } else if (status === 'completed') {
+        videoJob.videoGenerationStatus = VideoGenerationStatus.COMPLETED;
+
+        // Add to generated videos list
+        const generatedVideos = videoJob.videoGenerationData?.generatedVideos || [];
+        generatedVideos.push({
+          lessonPath: data?.lessonPath,
+          outputPath: data?.outputPath,
+          generatedAt: new Date(),
+          success: true,
+        });
+
+        videoJob.videoGenerationData = {
+          ...videoJob.videoGenerationData,
+          generatedVideos,
+          completedLessons: generatedVideos.length,
+        };
+      } else if (status === 'failed') {
+        videoJob.videoGenerationStatus = VideoGenerationStatus.FAILED;
+
+        // Add to generated videos list with error
+        const generatedVideos = videoJob.videoGenerationData?.generatedVideos || [];
+        generatedVideos.push({
+          lessonPath: data?.lessonPath,
+          outputPath: '',
+          generatedAt: new Date(),
+          success: false,
+          error: data?.error,
+        });
+
+        videoJob.videoGenerationData = {
+          ...videoJob.videoGenerationData,
+          generatedVideos,
+        };
+      }
+
+      // Save the updated job
+      await this.videoJobRepository.save(videoJob);
+    };
+
+    // Generate video with status tracking
+    const result = await this.remotionVideoService.generateVideo(lessonPath, outputPath, onStatusUpdate);
+
+    return {
+      success: result.success,
+      outputPath: result.outputPath,
+      error: result.error,
+      videoGenerationStatus: videoJob.videoGenerationStatus,
+      currentLesson: videoJob.videoGenerationData?.currentLesson,
+    };
+  }
+
+  /**
+   * Get video generation status for a job
+   */
+  async getVideoGenerationStatus(id: string, userId: string): Promise<any> {
+    const videoJob = await this.getVideoJob(id, userId);
+
+    return {
+      videoJobId: videoJob.id,
+      videoGenerationStatus: videoJob.videoGenerationStatus,
+      currentLesson: videoJob.videoGenerationData?.currentLesson,
+      generatedVideos: videoJob.videoGenerationData?.generatedVideos || [],
+      totalLessons: videoJob.videoGenerationData?.totalLessons,
+      completedLessons: videoJob.videoGenerationData?.completedLessons,
+    };
   }
 }
