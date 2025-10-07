@@ -12,6 +12,8 @@ import { TtsAudioSegmentsService } from './services/tts-audio-segments.service';
 import { SynchronizedLessonService } from './services/synchronized-lesson.service';
 import { GeminiImageService } from './services/gemini-image.service';
 import { FlashcardsService } from './services/flashcards.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class VideoTransformService {
@@ -108,6 +110,37 @@ export class VideoTransformService {
       totalSegments: videoJob.outputSegments?.length || 0,
       originalDuration: videoJob.originalDuration,
       targetSegmentDuration: videoJob.targetSegmentDuration,
+    };
+  }
+
+  async getJobLessons(id: string, userId: string): Promise<any> {
+    const videoJob = await this.getVideoJob(id, userId);
+
+    // Extract video ID from YouTube URL
+    const videoId = this.extractVideoIdFromUrl(videoJob.youtubeUrl);
+
+    // Build the path to the video folder
+    const videoFolderPath = path.join(process.cwd(), 'videos', videoId);
+
+    // Check if the folder exists
+    if (!fs.existsSync(videoFolderPath)) {
+      throw new NotFoundException(`Video folder not found for job ${id}`);
+    }
+
+    // Read all directories in the video folder
+    const items = fs.readdirSync(videoFolderPath, { withFileTypes: true });
+
+    // Filter lesson folders (lesson_1, lesson_2, etc.)
+    const lessons = items
+      .filter((item) => item.isDirectory() && item.name.startsWith('lesson_'))
+      .map((item) => `${videoId}/${item.name}`)
+      .sort(); // Sort to ensure consistent order
+
+    return {
+      videoJobId: videoJob.id,
+      videoId: videoId,
+      lessons: lessons,
+      totalLessons: lessons.length,
     };
   }
 

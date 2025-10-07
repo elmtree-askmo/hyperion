@@ -4,8 +4,6 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { VideoTransformService } from './video-transform.service';
 import { CreateVideoJobDto } from './dto/create-video-job.dto';
 import { VideoJobQueryDto } from './dto/video-job-query.dto';
-import { TtsAudioSegmentsService, TtsTimingMetadata } from './services/tts-audio-segments.service';
-import { TtsTimingMetadataResponse } from './dto/tts-timing-metadata.dto';
 import { RemotionVideoService } from './services/remotion-video.service';
 import { GenerateVideoDto, VideoGenerationResponseDto } from './dto/generate-video.dto';
 
@@ -16,7 +14,6 @@ import { GenerateVideoDto, VideoGenerationResponseDto } from './dto/generate-vid
 export class VideoTransformController {
   constructor(
     private readonly videoTransformService: VideoTransformService,
-    private readonly ttsAudioSegmentsService: TtsAudioSegmentsService,
     private readonly remotionVideoService: RemotionVideoService,
   ) {}
 
@@ -80,51 +77,15 @@ export class VideoTransformController {
     return this.videoTransformService.getVideoSegments(id, req.user.id);
   }
 
-  @Get(':id/tts-timing')
-  @ApiOperation({ summary: 'Get TTS timing metadata for a video job' })
+  @Get(':id/lessons')
+  @ApiOperation({ summary: 'Get all lessons for a video job' })
   @ApiResponse({
     status: 200,
-    description: 'TTS timing metadata retrieved successfully.',
-    type: TtsTimingMetadataResponse,
+    description: 'Lessons list retrieved successfully.',
   })
-  @ApiResponse({ status: 404, description: 'Video job or TTS data not found.' })
-  async getTtsTimingMetadata(@Param('id') id: string, @Request() req: any): Promise<TtsTimingMetadata> {
-    // Verify user owns the video job
-    const videoJob = await this.videoTransformService.getVideoJob(id, req.user.id);
-    const videoId = this.extractVideoIdFromUrl(videoJob.youtubeUrl);
-
-    const timingMetadata = await this.ttsAudioSegmentsService.getTtsTimingMetadata(videoId);
-    if (!timingMetadata) {
-      throw new Error('TTS timing metadata not found');
-    }
-
-    return timingMetadata;
-  }
-
-  @Get(':id/tts-audio/:segmentId')
-  @ApiOperation({ summary: 'Download TTS audio file for a specific segment' })
-  @ApiResponse({
-    status: 200,
-    description: 'Audio file retrieved successfully.',
-  })
-  @ApiResponse({ status: 404, description: 'Audio file not found.' })
-  async getTtsAudioSegment(@Param('id') id: string, @Param('segmentId') segmentId: string, @Request() req: any, @Response() res: any) {
-    // Verify user owns the video job
-    const videoJob = await this.videoTransformService.getVideoJob(id, req.user.id);
-    const videoId = this.extractVideoIdFromUrl(videoJob.youtubeUrl);
-
-    const audioBuffer = await this.ttsAudioSegmentsService.getSegmentAudioFile(videoId, segmentId);
-    if (!audioBuffer) {
-      return res.status(404).json({ message: 'Audio file not found' });
-    }
-
-    res.set({
-      'Content-Type': 'audio/wav',
-      'Content-Length': audioBuffer.length,
-      'Content-Disposition': `attachment; filename="${segmentId}.wav"`,
-    });
-
-    return res.send(audioBuffer);
+  @ApiResponse({ status: 404, description: 'Video job not found.' })
+  async getJobLessons(@Param('id') id: string, @Request() req: any) {
+    return this.videoTransformService.getJobLessons(id, req.user.id);
   }
 
   @Post('generate-video')
