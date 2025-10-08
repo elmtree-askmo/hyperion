@@ -1,0 +1,47 @@
+.app {
+  min-height: 100vh;
+  background: #0f172a;
+}
+
+.app-loading,
+.app-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+  padding: 40px;
+  text-align: center;
+}
+
+.app-loading h2,
+.app-error h2 {
+  font-size: 32px;
+  color: #e2e8f0;
+}
+
+.app-loading p,
+.app-error p {
+  font-size: 18px;
+  color: #94a3b8;
+}
+
+.app-error button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.app-error button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+

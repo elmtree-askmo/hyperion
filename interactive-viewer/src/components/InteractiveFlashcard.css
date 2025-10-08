@@ -1,0 +1,220 @@
+.flashcard-container {
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.flashcard {
+  width: 100%;
+  height: 400px;
+  cursor: pointer;
+  position: relative;
+}
+
+.flashcard-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.flashcard-front {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.flashcard-back {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.click-hint {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.word-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.word {
+  font-size: 64px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pronunciation {
+  font-size: 28px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.phonetic {
+  font-size: 20px;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.blur-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.blur-overlay span {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.translation-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.thai-word {
+  font-size: 56px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.part-of-speech {
+  font-size: 18px;
+  margin-bottom: 20px;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.definition {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.definition-text {
+  font-size: 18px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.details-toggle {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.details-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.details-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.flashcard-details {
+  background: #1e293b;
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 20px;
+  border: 2px solid #334155;
+}
+
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.detail-section h4 {
+  color: #94a3b8;
+  font-size: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-section p {
+  color: #e2e8f0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.context-example {
+  background: #0f172a;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.difficulty-badge {
+  text-align: center;
+  padding: 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 8px;
+  color: #94a3b8;
+}
+
+.difficulty-badge strong {
+  color: #667eea;
+  text-transform: uppercase;
+}
+

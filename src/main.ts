@@ -12,6 +12,8 @@ import * as winston from 'winston';
 import helmet from 'helmet';
 import * as compression from 'compression';
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
   // Create Winston logger instance
@@ -48,8 +50,14 @@ async function bootstrap() {
     ],
   });
 
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger,
+  });
+
+  // Serve static files from videos directory
+  // __dirname in compiled code is dist/src, so we need to go up twice to reach project root
+  app.useStaticAssets(join(__dirname, '..', '..', 'videos'), {
+    prefix: '/videos/',
   });
 
   // Security middleware

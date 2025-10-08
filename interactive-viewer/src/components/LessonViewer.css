@@ -1,0 +1,324 @@
+.lesson-viewer {
+  min-height: 100vh;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.lesson-viewer-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #334155;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lesson-header {
+  background: #1e293b;
+  padding: 32px;
+  border-bottom: 2px solid #334155;
+}
+
+.lesson-title-section h1 {
+  font-size: 36px;
+  margin-bottom: 8px;
+  color: #e2e8f0;
+}
+
+.lesson-title-th {
+  font-size: 24px;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+.lesson-meta {
+  display: flex;
+  gap: 12px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.lesson-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.mode-button {
+  background: #334155;
+  color: #e2e8f0;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.mode-button:hover {
+  transform: translateY(-2px);
+}
+
+.lesson-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.player-container {
+  position: relative;
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.interactive-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.interactive-overlay-content {
+  max-width: 600px;
+  width: 100%;
+}
+
+.overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.overlay-header h3 {
+  font-size: 24px;
+  color: #e2e8f0;
+}
+
+.close-button {
+  background: #475569;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  background: #64748b;
+  transform: rotate(90deg);
+}
+
+.continue-button {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.continue-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.flashcards-sidebar {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.flashcards-sidebar h3 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #e2e8f0;
+}
+
+.flashcards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flashcard-item {
+  background: #0f172a;
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.flashcard-item:hover {
+  border-color: #667eea;
+  transform: translateX(4px);
+}
+
+.flashcard-item.completed {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #10b98110 0%, #059669 10 100%);
+}
+
+.flashcard-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.flashcard-word {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.flashcard-translation {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.check-icon {
+  color: #10b981;
+  font-size: 18px;
+}
+
+.practice-mode {
+  grid-column: 1 / -1;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.practice-intro {
+  background: #1e293b;
+  padding: 32px;
+  border-radius: 12px;
+  margin-bottom: 32px;
+  text-align: center;
+  border: 2px solid #334155;
+}
+
+.practice-intro h2 {
+  font-size: 32px;
+  margin-bottom: 12px;
+  color: #e2e8f0;
+}
+
+.practice-intro p {
+  font-size: 18px;
+  color: #94a3b8;
+}
+
+.practices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.practice-flashcards {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.practice-flashcards h2 {
+  font-size: 28px;
+  margin-bottom: 16px;
+  color: #e2e8f0;
+  text-align: center;
+}
+
+.lesson-progress {
+  background: #1e293b;
+  padding: 20px 32px;
+  border-top: 2px solid #334155;
+  position: sticky;
+  bottom: 0;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 12px;
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #0f172a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.5s ease;
+  border-radius: 4px;
+}
+
+@media (max-width: 1024px) {
+  .lesson-content {
+    grid-template-columns: 1fr;
+  }
+
+  .flashcards-sidebar {
+    position: relative;
+    top: 0;
+  }
+}
+
