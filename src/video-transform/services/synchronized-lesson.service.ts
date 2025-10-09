@@ -89,7 +89,7 @@ export class SynchronizedLessonService {
     return JSON.parse(timingContent);
   }
 
-  private async loadAudioSegmentsForEpisode(episodeDir: string): Promise<{ audioSegments: Array<{ id: string; screenElement: string }> }> {
+  private async loadAudioSegmentsForEpisode(episodeDir: string): Promise<{ audioSegments: Array<{ id: string; screenElement: string; vocabWord?: string }> }> {
     const audioSegmentsPath = path.join(episodeDir, 'audio_segments.json');
     const audioSegmentsContent = fs.readFileSync(audioSegmentsPath, 'utf-8');
     return JSON.parse(audioSegmentsContent);
@@ -98,15 +98,14 @@ export class SynchronizedLessonService {
   private createSynchronizedLesson(
     microlessonScript: MicrolessonScript,
     timingMetadata: { segments: TimingSegment[] },
-    audioSegments: { audioSegments: Array<{ id: string; screenElement: string }> },
+    audioSegments: { audioSegments: Array<{ id: string; screenElement: string; vocabWord?: string }> },
     lessonDir: string,
   ): SynchronizedLesson {
     const segmentBasedTiming: SegmentBasedTiming[] = [];
-    const vocabularyWords = microlessonScript.lesson.keyVocabulary || [];
 
     // Create timing segments based on the timing metadata
     for (const segment of timingMetadata.segments) {
-      // Find corresponding audio segment for correct screenElement
+      // Find corresponding audio segment for correct screenElement and vocabWord
       const audioSegment = audioSegments.audioSegments.find((as) => as.id === segment.segmentId);
       const screenElement = audioSegment ? audioSegment.screenElement : this.mapSegmentToScreenElement(segment.segmentId);
 
@@ -119,13 +118,11 @@ export class SynchronizedLessonService {
         text: segment.text,
       };
 
-      // Map vocabulary words to appropriate segments
-      if (segment.segmentId.startsWith('vocab_word')) {
-        const vocabIndex = this.extractVocabIndex(segment.segmentId);
-        if (vocabIndex !== null && vocabularyWords[vocabIndex - 1]) {
-          timingSegment.vocabWord = vocabularyWords[vocabIndex - 1].word;
-          timingSegment.screenElement = 'vocabulary_card';
-        }
+      // Use vocabWord from audio_segments.json if available for vocabulary cards
+      // Support both 'vocab_word' and 'vocab_' prefixes
+      if (segment.segmentId.startsWith('vocab') && audioSegment?.vocabWord) {
+        timingSegment.vocabWord = audioSegment.vocabWord;
+        timingSegment.screenElement = 'vocabulary_card';
       }
 
       segmentBasedTiming.push(timingSegment);
@@ -166,12 +163,6 @@ export class SynchronizedLessonService {
 
     // Return mapped element or default
     return elementMap[segmentId] || 'content_card';
-  }
-
-  private extractVocabIndex(segmentId: string): number | null {
-    const regex = /vocab_word(\d+)/;
-    const match = regex.exec(segmentId);
-    return match ? parseInt(match[1], 10) : null;
   }
 
   private generateAudioUrl(lessonDir: string, fileName: string): string {
