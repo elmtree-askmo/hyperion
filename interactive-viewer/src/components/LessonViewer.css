@@ -232,14 +232,15 @@
   font-size: 18px;
 }
 
-.practice-mode {
+.flashcard-mode {
   grid-column: 1 / -1;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  padding: 20px;
 }
 
-.practice-intro {
+.flashcard-mode-intro {
   background: #1e293b;
   padding: 32px;
   border-radius: 12px;
@@ -248,38 +249,167 @@
   border: 2px solid #334155;
 }
 
-.practice-intro h2 {
+.flashcard-mode-intro h2 {
   font-size: 32px;
   margin-bottom: 12px;
   color: #e2e8f0;
 }
 
-.practice-intro p {
+.flashcard-mode-intro p {
   font-size: 18px;
   color: #94a3b8;
+  margin-bottom: 16px;
 }
 
-.practices-list {
+.flashcard-stats {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.flashcard-stats span {
+  display: flex;
+  align-items: center;
+}
+
+.flashcard-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 32px;
   margin-bottom: 48px;
 }
 
-.practice-flashcards {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 100%;
-  max-width: 800px;
+.practice-mode {
+  grid-column: 1 / -1;
+  max-width: 900px;
   margin: 0 auto;
+  width: 100%;
+  padding: 20px;
 }
 
-.practice-flashcards h2 {
-  font-size: 28px;
-  margin-bottom: 16px;
+.practice-header {
+  background: #1e293b;
+  padding: 24px 32px;
+  border-radius: 12px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid #334155;
+}
+
+.practice-header h2 {
+  font-size: 32px;
   color: #e2e8f0;
-  text-align: center;
+  margin: 0;
+}
+
+.practice-progress-indicator {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.current-question {
+  color: #667eea;
+  font-size: 28px;
+}
+
+.question-separator {
+  color: #64748b;
+  font-size: 20px;
+}
+
+.total-questions {
+  color: #94a3b8;
+  font-size: 20px;
+}
+
+.practice-question-container {
+  margin-bottom: 32px;
+  min-height: 400px;
+}
+
+.practice-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+  background: #1e293b;
+  border-radius: 12px;
+  border: 2px solid #334155;
+}
+
+.nav-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  min-width: 140px;
+}
+
+.nav-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.nav-button:disabled {
+  background: #334155;
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.practice-dots {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.practice-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #334155;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.practice-dot:hover {
+  transform: scale(1.3);
+  background: #475569;
+}
+
+.practice-dot.active {
+  background: #667eea;
+  width: 16px;
+  height: 16px;
+  border-color: #8b9eff;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.6);
+}
+
+.practice-dot.completed {
+  background: #10b981;
+  border-color: #34d399;
+}
+
+.practice-dot.completed.active {
+  background: #10b981;
+  border-color: #34d399;
 }
 
 .lesson-progress {
@@ -322,6 +452,44 @@
   .flashcards-sidebar {
     position: relative;
     top: 0;
+  }
+
+  .flashcard-mode-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .lesson-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mode-button {
+    width: 100%;
+  }
+
+  .practice-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .practice-progress-indicator {
+    align-self: flex-end;
+  }
+
+  .practice-navigation {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .nav-button {
+    width: 100%;
+  }
+
+  .practice-dots {
+    order: -1;
   }
 }
 

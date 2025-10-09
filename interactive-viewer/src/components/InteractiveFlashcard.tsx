@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flashcard } from '../types/lesson';
 import './InteractiveFlashcard.css';
@@ -17,10 +17,15 @@ export const InteractiveFlashcard: React.FC<InteractiveFlashcardProps> = ({
   const [isFlipped, setIsFlipped] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
+  // Reset flip state when card changes or when revealed state changes
+  useEffect(() => {
+    setIsFlipped(false);
+    setShowDetails(false);
+  }, [flashcard.word, revealed]);
+
   const handleClick = () => {
     if (!revealed) {
       onReveal();
-      setIsFlipped(true);
     } else {
       setIsFlipped(!isFlipped);
     }

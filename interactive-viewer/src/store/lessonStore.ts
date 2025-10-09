@@ -40,7 +40,7 @@ export const useLessonStore = create<LessonState>((set, get) => ({
     // Create interactive segments from lesson data
     const segments: InteractiveSegment[] = [];
 
-    // Add flashcards as interactive segments
+    // Add flashcards as interactive segments, sorted by appearance time in video
     data.flashcards.forEach((flashcard, index) => {
       const timing = data.lesson.segmentBasedTiming.find((seg) => seg.vocabWord === flashcard.word);
       if (timing) {
@@ -54,9 +54,13 @@ export const useLessonStore = create<LessonState>((set, get) => ({
       }
     });
 
+    // Sort flashcard segments by startTime to match video appearance order
+    const flashcardSegments = segments.filter((seg) => seg.type === 'flashcard').sort((a, b) => a.startTime - b.startTime);
+
     // Add practices as interactive segments
+    const practiceSegments: InteractiveSegment[] = [];
     data.lesson.comprehensionQuestions.forEach((question, index) => {
-      segments.push({
+      practiceSegments.push({
         type: 'practice',
         startTime: 0, // Will be triggered manually
         endTime: 0,
@@ -65,7 +69,10 @@ export const useLessonStore = create<LessonState>((set, get) => ({
       });
     });
 
-    set({ lessonData: data, interactiveSegments: segments });
+    // Combine sorted flashcards with practices
+    const allSegments = [...flashcardSegments, ...practiceSegments];
+
+    set({ lessonData: data, interactiveSegments: allSegments });
   },
 
   setCurrentTime: (time) => {

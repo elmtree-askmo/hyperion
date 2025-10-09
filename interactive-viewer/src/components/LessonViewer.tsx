@@ -11,15 +11,13 @@ interface LessonViewerProps {
   lessonId: string;
 }
 
-export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
+export const LessonViewer: React.FC<LessonViewerProps> = () => {
   const {
     lessonData,
-    currentTime,
     isPlaying,
     interactiveSegments,
     activeSegment,
     userProgress,
-    setCurrentTime,
     setIsPlaying,
     revealFlashcard,
     completePractice,
@@ -27,8 +25,8 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
 
   const [playerRef, setPlayerRef] = useState<any>(null);
   const [showInteractivePanel, setShowInteractivePanel] = useState(false);
-  const [selectedFlashcard, setSelectedFlashcard] = useState<any>(null);
-  const [showPracticeMode, setShowPracticeMode] = useState(false);
+  const [currentMode, setCurrentMode] = useState<'video' | 'flashcard' | 'practice'>('video');
+  const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
 
   // Auto-pause when encountering interactive segment
   useEffect(() => {
@@ -39,25 +37,13 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
         setIsPlaying(false);
       }
     }
-  }, [activeSegment, showInteractivePanel, playerRef, isPlaying]);
-
-  const handleTimeUpdate = (time: number) => {
-    setCurrentTime(time);
-  };
-
-  const handlePlay = () => {
-    setIsPlaying(true);
-  };
-
-  const handlePause = () => {
-    setIsPlaying(false);
-  };
+  }, [activeSegment, showInteractivePanel, playerRef, isPlaying, setIsPlaying]);
 
   const handleFlashcardReveal = (word: string) => {
     revealFlashcard(word);
   };
 
-  const handlePracticeComplete = (practiceId: string, answer: string) => {
+  const handlePracticeComplete = (practiceId: string) => {
     completePractice(practiceId);
   };
 
@@ -66,6 +52,18 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
     if (playerRef) {
       playerRef.play();
       setIsPlaying(true);
+    }
+  };
+
+  const handleNextPractice = () => {
+    if (currentPracticeIndex < practiceSegments.length - 1) {
+      setCurrentPracticeIndex(currentPracticeIndex + 1);
+    }
+  };
+
+  const handlePreviousPractice = () => {
+    if (currentPracticeIndex > 0) {
+      setCurrentPracticeIndex(currentPracticeIndex - 1);
     }
   };
 
@@ -108,14 +106,20 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
         </div>
         <div className="lesson-actions">
           <button
-            className={`mode-button ${!showPracticeMode ? 'active' : ''}`}
-            onClick={() => setShowPracticeMode(false)}
+            className={`mode-button ${currentMode === 'video' ? 'active' : ''}`}
+            onClick={() => setCurrentMode('video')}
           >
             📺 Video Mode
           </button>
           <button
-            className={`mode-button ${showPracticeMode ? 'active' : ''}`}
-            onClick={() => setShowPracticeMode(true)}
+            className={`mode-button ${currentMode === 'flashcard' ? 'active' : ''}`}
+            onClick={() => setCurrentMode('flashcard')}
+          >
+            📚 Flashcard Mode
+          </button>
+          <button
+            className={`mode-button ${currentMode === 'practice' ? 'active' : ''}`}
+            onClick={() => setCurrentMode('practice')}
           >
             ✍️ Practice Mode
           </button>
@@ -124,7 +128,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
 
       {/* Main Content */}
       <div className="lesson-content">
-        {!showPracticeMode ? (
+        {currentMode === 'video' ? (
           <>
             {/* Video Player */}
             <div className="player-container">
@@ -147,9 +151,6 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
                 clickToPlay
                 doubleClickToFullscreen
                 spaceKeyToPlayOrPause
-                onTimeUpdate={(e) => handleTimeUpdate(e.currentTime)}
-                onPlay={handlePlay}
-                onPause={handlePause}
               />
 
               {/* Interactive Overlay */}
@@ -204,7 +205,6 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
                         : ''
                     }`}
                     onClick={() => {
-                      setSelectedFlashcard(segment);
                       if (playerRef) {
                         playerRef.seekTo(
                           Math.round(segment.startTime * VIDEO_CONFIG.fps)
@@ -228,35 +228,22 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
               </div>
             </div>
           </>
-        ) : (
-          /* Practice Mode */
-          <div className="practice-mode">
-            <div className="practice-intro">
-              <h2>✍️ Practice Exercises</h2>
+        ) : currentMode === 'flashcard' ? (
+          /* Flashcard Mode */
+          <div className="flashcard-mode">
+            <div className="flashcard-mode-intro">
+              <h2>📚 Vocabulary Review</h2>
               <p>
-                Complete these exercises to reinforce what you've learned in
-                this lesson.
+                Review and memorize all vocabulary from this lesson. Click each card to reveal the word and flip to see the translation.
               </p>
+              <div className="flashcard-stats">
+                <span>Total Cards: {flashcardSegments.length}</span>
+                <span>•</span>
+                <span>Mastered: {userProgress.completedFlashcards.length}</span>
+              </div>
             </div>
 
-            <div className="practices-list">
-              {practiceSegments.map((segment, index) => (
-                <InteractivePractice
-                  key={index}
-                  question={segment.data}
-                  onComplete={(answer) =>
-                    handlePracticeComplete(segment.data.question, answer)
-                  }
-                  completed={userProgress.completedPractices.includes(
-                    segment.data.question
-                  )}
-                />
-              ))}
-            </div>
-
-            {/* All Flashcards in Practice Mode */}
-            <div className="practice-flashcards">
-              <h2>📚 Review Vocabulary</h2>
+            <div className="flashcard-mode-grid">
               {flashcardSegments.map((segment, index) => (
                 <InteractiveFlashcard
                   key={index}
@@ -269,17 +256,102 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
               ))}
             </div>
           </div>
+        ) : (
+          /* Practice Mode */
+          <div className="practice-mode">
+            <div className="practice-header">
+              <h2>✍️ Practice Exercises</h2>
+              <div className="practice-progress-indicator">
+                <span className="current-question">
+                  Question {currentPracticeIndex + 1}
+                </span>
+                <span className="question-separator">/</span>
+                <span className="total-questions">{practiceSegments.length}</span>
+              </div>
+            </div>
+
+            {practiceSegments.length > 0 && (
+              <>
+                <div className="practice-question-container">
+                  <InteractivePractice
+                    key={currentPracticeIndex}
+                    question={practiceSegments[currentPracticeIndex].data}
+                    onComplete={() =>
+                      handlePracticeComplete(
+                        practiceSegments[currentPracticeIndex].data.question
+                      )
+                    }
+                    completed={userProgress.completedPractices.includes(
+                      practiceSegments[currentPracticeIndex].data.question
+                    )}
+                  />
+                </div>
+
+                <div className="practice-navigation">
+                  <button
+                    className="nav-button prev-button"
+                    onClick={handlePreviousPractice}
+                    disabled={currentPracticeIndex === 0}
+                  >
+                    ← Previous
+                  </button>
+                  <div className="practice-dots">
+                    {practiceSegments.map((_, index) => (
+                      <span
+                        key={index}
+                        className={`practice-dot ${
+                          index === currentPracticeIndex ? 'active' : ''
+                        } ${
+                          userProgress.completedPractices.includes(
+                            practiceSegments[index].data.question
+                          )
+                            ? 'completed'
+                            : ''
+                        }`}
+                        onClick={() => setCurrentPracticeIndex(index)}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    className="nav-button next-button"
+                    onClick={handleNextPractice}
+                    disabled={currentPracticeIndex === practiceSegments.length - 1}
+                  >
+                    Next →
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         )}
       </div>
 
-      {/* Progress Bar - Only show in Practice Mode */}
-      {showPracticeMode && (
+      {/* Progress Bar - Show in Flashcard and Practice Mode */}
+      {currentMode === 'flashcard' && (
         <div className="lesson-progress">
           <div className="progress-stats">
             <span>
               Flashcards: {userProgress.completedFlashcards.length} /{' '}
               {flashcardSegments.length}
             </span>
+          </div>
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{
+                width: `${
+                  (userProgress.completedFlashcards.length /
+                    flashcardSegments.length) *
+                  100
+                }%`,
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {currentMode === 'practice' && (
+        <div className="lesson-progress">
+          <div className="progress-stats">
             <span>
               Practices: {userProgress.completedPractices.length} /{' '}
               {practiceSegments.length}
@@ -290,9 +362,8 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
               className="progress-fill"
               style={{
                 width: `${
-                  ((userProgress.completedFlashcards.length +
-                    userProgress.completedPractices.length) /
-                    (flashcardSegments.length + practiceSegments.length)) *
+                  (userProgress.completedPractices.length /
+                    practiceSegments.length) *
                   100
                 }%`,
               }}
