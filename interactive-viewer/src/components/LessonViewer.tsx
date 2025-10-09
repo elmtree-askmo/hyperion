@@ -272,32 +272,34 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({ lessonId }) => {
         )}
       </div>
 
-      {/* Progress Bar */}
-      <div className="lesson-progress">
-        <div className="progress-stats">
-          <span>
-            Flashcards: {userProgress.completedFlashcards.length} /{' '}
-            {flashcardSegments.length}
-          </span>
-          <span>
-            Practices: {userProgress.completedPractices.length} /{' '}
-            {practiceSegments.length}
-          </span>
+      {/* Progress Bar - Only show in Practice Mode */}
+      {showPracticeMode && (
+        <div className="lesson-progress">
+          <div className="progress-stats">
+            <span>
+              Flashcards: {userProgress.completedFlashcards.length} /{' '}
+              {flashcardSegments.length}
+            </span>
+            <span>
+              Practices: {userProgress.completedPractices.length} /{' '}
+              {practiceSegments.length}
+            </span>
+          </div>
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{
+                width: `${
+                  ((userProgress.completedFlashcards.length +
+                    userProgress.completedPractices.length) /
+                    (flashcardSegments.length + practiceSegments.length)) *
+                  100
+                }%`,
+              }}
+            />
+          </div>
         </div>
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{
-              width: `${
-                ((userProgress.completedFlashcards.length +
-                  userProgress.completedPractices.length) /
-                  (flashcardSegments.length + practiceSegments.length)) *
-                100
-              }%`,
-            }}
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 };
