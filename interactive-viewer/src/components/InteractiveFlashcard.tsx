@@ -51,19 +51,26 @@ export const InteractiveFlashcard: React.FC<InteractiveFlashcardProps> = ({
           <div className="flashcard-face flashcard-front">
             <div className="card-header">
               <span className="card-badge">📚 Vocabulary</span>
-              {!revealed && (
+              {revealed && (
                 <span className="click-hint animate-pulse">
-                  👆 Click to reveal
+                  👆 Click to flip
                 </span>
               )}
             </div>
             <div className="word-section">
-              <h2 className="word">{flashcard.word}</h2>
-              <p className="pronunciation">[{flashcard.pronunciation}]</p>
-              <p className="phonetic">{flashcard.phonetic}</p>
-            </div>
-            <div className="blur-overlay" style={{ opacity: revealed ? 0 : 1 }}>
-              <span>🔒 Click to unlock</span>
+              {revealed ? (
+                <>
+                  <h2 className="word">{flashcard.word}</h2>
+                  <p className="pronunciation">[{flashcard.pronunciation}]</p>
+                  <p className="phonetic">{flashcard.phonetic}</p>
+                </>
+              ) : (
+                <div className="locked-placeholder">
+                  <span className="lock-icon">🔒</span>
+                  <h3 className="unlock-title">Click to unlock</h3>
+                  <p className="unlock-hint">Tap anywhere to reveal the word</p>
+                </div>
+              )}
             </div>
           </div>
 
