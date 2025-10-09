@@ -31,7 +31,7 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
       />
 
       {backgroundImage && (
-        <AbsoluteFill style={{ opacity: 0.15 }}>
+        <AbsoluteFill style={{ opacity: 0.65 }}>
           <Img
             src={backgroundImage}
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}

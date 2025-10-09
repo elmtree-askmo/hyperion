@@ -40,7 +40,7 @@ export const TitleCard: React.FC<TitleCardProps> = ({
 
       {/* Background image if provided */}
       {backgroundImage && (
-        <AbsoluteFill style={{ opacity: 0.2 }}>
+        <AbsoluteFill style={{ opacity: 0.7 }}>
           <Img
             src={backgroundImage}
             style={{

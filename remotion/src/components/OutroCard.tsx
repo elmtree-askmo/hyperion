@@ -38,7 +38,7 @@ export const OutroCard: React.FC<OutroCardProps> = ({
       />
 
       {backgroundImage && (
-        <AbsoluteFill style={{ opacity: 0.2 }}>
+        <AbsoluteFill style={{ opacity: 0.7 }}>
           <Img
             src={backgroundImage}
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
