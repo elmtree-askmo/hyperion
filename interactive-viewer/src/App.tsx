@@ -5,7 +5,14 @@ import { loadLessonData } from './services/lessonService';
 import './App.css';
 
 const App: React.FC = () => {
-  const { lessonData, setLessonData } = useLessonStore();
+  const { 
+    lessonData, 
+    currentVideoId, 
+    currentLessonId, 
+    setLessonData, 
+    resetProgress,
+    setVideoEnded
+  } = useLessonStore();
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -13,9 +20,11 @@ const App: React.FC = () => {
     const loadLesson = async () => {
       try {
         setLoading(true);
-        // For demo, we'll load lesson_1 from henIVlCPVIY
-        const data = await loadLessonData('henIVlCPVIY', 'lesson_1');
+        setError(null);
+        const data = await loadLessonData(currentVideoId, currentLessonId);
         setLessonData(data);
+        resetProgress(); // Reset progress when loading new lesson
+        setVideoEnded(false); // Reset video ended state
         setLoading(false);
       } catch (err) {
         console.error('Failed to load lesson:', err);
@@ -25,7 +34,7 @@ const App: React.FC = () => {
     };
 
     loadLesson();
-  }, [setLessonData]);
+  }, [currentVideoId, currentLessonId, setLessonData, resetProgress, setVideoEnded]);
 
   if (loading) {
     return (
@@ -58,7 +67,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <LessonViewer lessonId="lesson_1" />
+      <LessonViewer />
     </div>
   );
 };

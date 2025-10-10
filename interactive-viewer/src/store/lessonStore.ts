@@ -7,6 +7,9 @@ interface LessonState {
   isPlaying: boolean;
   interactiveSegments: InteractiveSegment[];
   activeSegment: InteractiveSegment | null;
+  currentVideoId: string;
+  currentLessonId: string;
+  videoEnded: boolean;
   userProgress: {
     completedFlashcards: string[];
     completedPractices: string[];
@@ -18,6 +21,9 @@ interface LessonState {
   setCurrentTime: (time: number) => void;
   setIsPlaying: (playing: boolean) => void;
   setActiveSegment: (segment: InteractiveSegment | null) => void;
+  setCurrentVideoId: (videoId: string) => void;
+  setCurrentLessonId: (lessonId: string) => void;
+  setVideoEnded: (ended: boolean) => void;
   revealFlashcard: (word: string) => void;
   completePractice: (practiceId: string) => void;
   submitQuizAnswer: (questionId: string, answer: string) => void;
@@ -30,6 +36,9 @@ export const useLessonStore = create<LessonState>((set, get) => ({
   isPlaying: false,
   interactiveSegments: [],
   activeSegment: null,
+  currentVideoId: 'henIVlCPVIY',
+  currentLessonId: 'lesson_1',
+  videoEnded: false,
   userProgress: {
     completedFlashcards: [],
     completedPractices: [],
@@ -41,7 +50,7 @@ export const useLessonStore = create<LessonState>((set, get) => ({
     const segments: InteractiveSegment[] = [];
 
     // Add flashcards as interactive segments, sorted by appearance time in video
-    data.flashcards.forEach((flashcard, index) => {
+    data.flashcards.forEach((flashcard) => {
       const timing = data.lesson.segmentBasedTiming.find((seg) => seg.vocabWord === flashcard.word);
       if (timing) {
         segments.push({
@@ -59,7 +68,7 @@ export const useLessonStore = create<LessonState>((set, get) => ({
 
     // Add practices as interactive segments
     const practiceSegments: InteractiveSegment[] = [];
-    data.lesson.comprehensionQuestions.forEach((question, index) => {
+    data.lesson.comprehensionQuestions.forEach((question) => {
       practiceSegments.push({
         type: 'practice',
         startTime: 0, // Will be triggered manually
@@ -87,6 +96,12 @@ export const useLessonStore = create<LessonState>((set, get) => ({
   setIsPlaying: (playing) => set({ isPlaying: playing }),
 
   setActiveSegment: (segment) => set({ activeSegment: segment }),
+
+  setCurrentVideoId: (videoId) => set({ currentVideoId: videoId }),
+
+  setCurrentLessonId: (lessonId) => set({ currentLessonId: lessonId }),
+
+  setVideoEnded: (ended) => set({ videoEnded: ended }),
 
   revealFlashcard: (word) => {
     const { interactiveSegments, userProgress } = get();

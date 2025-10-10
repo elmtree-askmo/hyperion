@@ -7,18 +7,17 @@ import { LessonComposition } from '../../../remotion/src/components/LessonCompos
 import { VIDEO_CONFIG } from '../../../remotion/src/styles/theme';
 import './LessonViewer.css';
 
-interface LessonViewerProps {
-  lessonId: string;
-}
-
-export const LessonViewer: React.FC<LessonViewerProps> = () => {
+export const LessonViewer: React.FC = () => {
   const {
     lessonData,
     isPlaying,
     interactiveSegments,
     activeSegment,
     userProgress,
+    videoEnded,
     setIsPlaying,
+    setCurrentLessonId,
+    setVideoEnded,
     revealFlashcard,
     completePractice,
   } = useLessonStore();
@@ -27,6 +26,11 @@ export const LessonViewer: React.FC<LessonViewerProps> = () => {
   const [showInteractivePanel, setShowInteractivePanel] = useState(false);
   const [currentMode, setCurrentMode] = useState<'video' | 'flashcard' | 'practice'>('video');
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
+
+  // Calculate total duration
+  const totalDuration = lessonData?.lesson.segmentBasedTiming[
+    lessonData.lesson.segmentBasedTiming.length - 1
+  ]?.endTime || 300;
 
   // Auto-pause when encountering interactive segment
   useEffect(() => {
@@ -38,6 +42,26 @@ export const LessonViewer: React.FC<LessonViewerProps> = () => {
       }
     }
   }, [activeSegment, showInteractivePanel, playerRef, isPlaying, setIsPlaying]);
+
+  // Detect video end
+  useEffect(() => {
+    if (!playerRef || !lessonData) return;
+
+    const checkVideoEnd = () => {
+      const currentFrame = playerRef.getCurrentFrame();
+      const totalFrames = Math.ceil(totalDuration * VIDEO_CONFIG.fps);
+      
+      // Consider video ended if we're at the last frame or very close to it
+      if (currentFrame >= totalFrames - 2) {
+        setVideoEnded(true);
+        setIsPlaying(false);
+      }
+    };
+
+    // Check every 100ms
+    const interval = setInterval(checkVideoEnd, 100);
+    return () => clearInterval(interval);
+  }, [playerRef, lessonData, setVideoEnded, setIsPlaying]);
 
   const handleFlashcardReveal = (word: string) => {
     revealFlashcard(word);
@@ -67,6 +91,19 @@ export const LessonViewer: React.FC<LessonViewerProps> = () => {
     }
   };
 
+  const handleNextLesson = () => {
+    if (!lessonData) return;
+    
+    const currentEpisode = lessonData.lesson.episodeNumber;
+    const totalEpisodes = lessonData.lesson.totalEpisodes;
+    
+    if (currentEpisode < totalEpisodes) {
+      const nextLessonId = `lesson_${currentEpisode + 1}`;
+      setCurrentLessonId(nextLessonId);
+      setCurrentMode('video'); // Switch back to video mode for new lesson
+    }
+  };
+
   const flashcardSegments = interactiveSegments.filter(
     (seg) => seg.type === 'flashcard'
   );
@@ -82,11 +119,6 @@ export const LessonViewer: React.FC<LessonViewerProps> = () => {
       </div>
     );
   }
-
-  const totalDuration =
-    lessonData.lesson.segmentBasedTiming[
-      lessonData.lesson.segmentBasedTiming.length - 1
-    ]?.endTime || 300;
 
   return (
     <div className="lesson-viewer">
@@ -185,6 +217,38 @@ export const LessonViewer: React.FC<LessonViewerProps> = () => {
                     >
                       Continue Lesson →
                     </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Next Lesson Overlay - Show when video ends */}
+              {videoEnded && lessonData && lessonData.lesson.episodeNumber < lessonData.lesson.totalEpisodes && (
+                <div className="interactive-overlay next-lesson-overlay">
+                  <div className="interactive-overlay-content">
+                    <div className="next-lesson-content">
+                      <div className="congratulations-icon">🎉</div>
+                      <h2>เยี่ยมมาก!</h2>
+                      <p className="completion-message">
+                        คุณได้เรียนจบบทเรียนนี้แล้ว
+                      </p>
+                      <button
+                        className="next-lesson-button"
+                        onClick={handleNextLesson}
+                      >
+                        👉 Next: Lesson {lessonData.lesson.episodeNumber + 1}
+                      </button>
+                      <button
+                        className="replay-button"
+                        onClick={() => {
+                          if (playerRef) {
+                            playerRef.seekTo(0);
+                            setVideoEnded(false);
+                          }
+                        }}
+                      >
+                        🔄 Replay This Lesson
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
