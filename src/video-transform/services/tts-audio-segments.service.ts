@@ -7,9 +7,16 @@ import { exec } from 'child_process';
 
 const execAsync = promisify(exec);
 
+interface TextPart {
+  text: string;
+  language: 'th' | 'en';
+  speakingRate?: number;
+}
+
 interface AudioSegment {
   id: string;
   text: string;
+  textParts?: TextPart[];
   description?: string;
   screenElement: string;
   vocabWord?: string;
@@ -85,8 +92,18 @@ export class TtsAudioSegmentsService {
         const fileName = `${segment.id}.wav`;
         const audioFilePath = path.join(segmentsPath, fileName);
 
-        // Generate TTS audio for this segment
-        const duration = await this.generateTtsAudio(segment.text, audioFilePath);
+        let duration: number;
+
+        // Check if segment has textParts (new format with language separation)
+        if (segment.textParts && segment.textParts.length > 0) {
+          // Generate audio with multiple parts and merge them
+          duration = await this.generateTtsAudioWithParts(segment.textParts, audioFilePath, segmentsPath, segment.id);
+          this.logger.log(`Generated multi-part TTS audio for Episode ${episodeNumber}, segment ${segment.id}: ${fileName} (${duration.toFixed(2)}s)`);
+        } else {
+          // Backward compatibility: use original text field
+          duration = await this.generateTtsAudio(segment.text, audioFilePath);
+          this.logger.log(`Generated TTS audio for Episode ${episodeNumber}, segment ${segment.id}: ${fileName} (${duration.toFixed(2)}s)`);
+        }
 
         // Create timing metadata entry
         const timingEntry: TimingMetadata = {
@@ -100,8 +117,6 @@ export class TtsAudioSegmentsService {
 
         timingMetadata.push(timingEntry);
         currentTime += duration;
-
-        this.logger.log(`Generated TTS audio for Episode ${episodeNumber}, segment ${segment.id}: ${fileName} (${duration.toFixed(2)}s)`);
       }
 
       // Create final timing metadata
@@ -121,6 +136,139 @@ export class TtsAudioSegmentsService {
       this.logger.error(`Failed to generate TTS audio segments for episode ${episodeNumber}:`, error);
       throw new Error(`Failed to generate TTS audio segments for episode ${episodeNumber}: ${error.message}`);
     }
+  }
+
+  /**
+   * Generate TTS audio with multiple text parts (Thai and English) and merge them
+   */
+  async generateTtsAudioWithParts(textParts: TextPart[], outputPath: string, segmentsPath: string, segmentId: string): Promise<number> {
+    try {
+      const tempFiles: string[] = [];
+
+      this.logger.log(`Generating multi-part audio for ${segmentId} with ${textParts.length} parts`);
+
+      // Filter and merge very short parts to avoid TTS issues
+      const mergedParts = this.mergeShortTextParts(textParts);
+      this.logger.log(`After merging short parts: ${mergedParts.length} parts (from ${textParts.length})`);
+
+      // Generate audio for each text part
+      for (let i = 0; i < mergedParts.length; i++) {
+        const part = mergedParts[i];
+        const tempFileName = `${segmentId}_part_${i}.wav`;
+        const tempFilePath = path.join(segmentsPath, tempFileName);
+
+        // Determine speaking rate: English parts default to 0.8, Thai parts to 1.0
+        const speakingRate = part.speakingRate || (part.language === 'en' ? 0.8 : 1.0);
+
+        this.logger.log(
+          `Generating part ${i + 1}/${mergedParts.length}: [${part.language}] "${part.text.substring(0, 50)}${part.text.length > 50 ? '...' : ''}" (rate: ${speakingRate})`,
+        );
+
+        // Generate audio for this part
+        await this.generateTtsAudio(part.text, tempFilePath, speakingRate);
+
+        // Verify the file was created successfully
+        if (!fs.existsSync(tempFilePath)) {
+          throw new Error(`Failed to create audio file: ${tempFilePath}`);
+        }
+
+        const stats = fs.statSync(tempFilePath);
+        if (stats.size === 0) {
+          throw new Error(`Generated audio file is empty: ${tempFilePath}`);
+        }
+
+        tempFiles.push(tempFilePath);
+        this.logger.log(`✓ Part ${i + 1}/${mergedParts.length} generated successfully (${(stats.size / 1024).toFixed(2)} KB)`);
+      }
+
+      // Merge all audio parts into one file
+      if (tempFiles.length === 1) {
+        // Only one part, just rename it
+        this.logger.log(`Single part detected, renaming to final output`);
+        fs.renameSync(tempFiles[0], outputPath);
+      } else {
+        // Multiple parts, merge them
+        this.logger.log(`Merging ${tempFiles.length} audio parts into final output`);
+        await this.mergeAudioFiles(tempFiles, outputPath);
+      }
+
+      // Get duration of the merged audio
+      const duration = await this.getAudioDuration(outputPath);
+      this.logger.log(`✓ Multi-part audio generation completed for ${segmentId} (${duration.toFixed(2)}s)`);
+
+      return duration;
+    } catch (error) {
+      this.logger.error(`Failed to generate multi-part TTS audio for segment ${segmentId}:`, error);
+      // Clean up any temporary files on error
+      const segmentDir = path.join(segmentsPath);
+      if (fs.existsSync(segmentDir)) {
+        const files = fs.readdirSync(segmentDir);
+        files.forEach((file) => {
+          if (file.startsWith(`${segmentId}_part_`) && file.endsWith('.wav')) {
+            const filePath = path.join(segmentDir, file);
+            try {
+              fs.unlinkSync(filePath);
+              this.logger.log(`Cleaned up temporary file: ${file}`);
+            } catch (cleanupError) {
+              this.logger.warn(`Failed to clean up temporary file ${file}:`, cleanupError);
+            }
+          }
+        });
+      }
+      throw new Error(`Failed to generate multi-part TTS audio: ${error.message}`);
+    }
+  }
+
+  /**
+   * Merge short text parts (especially single punctuation) with adjacent parts of the same language
+   * to avoid TTS issues with very short texts
+   */
+  private mergeShortTextParts(textParts: TextPart[]): TextPart[] {
+    if (textParts.length <= 1) {
+      return textParts;
+    }
+
+    const merged: TextPart[] = [];
+    let i = 0;
+
+    while (i < textParts.length) {
+      const current = textParts[i];
+
+      // If current part is very short (< 3 characters, typically punctuation)
+      // and same language as previous part, merge with previous
+      if (current.text.trim().length < 3 && merged.length > 0) {
+        const previous = merged[merged.length - 1];
+        if (previous.language === current.language) {
+          // Merge with previous part
+          previous.text += current.text;
+          this.logger.log(`Merged short part "${current.text}" with previous part`);
+          i++;
+          continue;
+        }
+      }
+
+      // If current part is very short and same language as next part, merge with next
+      if (current.text.trim().length < 3 && i + 1 < textParts.length) {
+        const next = textParts[i + 1];
+        if (next.language === current.language) {
+          // Merge current with next
+          merged.push({
+            text: current.text + next.text,
+            language: current.language,
+            speakingRate: current.speakingRate || next.speakingRate,
+          });
+          this.logger.log(`Merged short part "${current.text}" with next part`);
+          i += 2; // Skip both current and next
+          continue;
+        }
+      }
+
+      // Otherwise, keep the part as is
+      merged.push({ ...current });
+      i++;
+    }
+
+    return merged;
   }
 
   async generateTtsAudio(text: string, outputPath: string, speed: number = 1, ssml: boolean = false): Promise<number> {
@@ -165,6 +313,73 @@ export class TtsAudioSegmentsService {
     } catch (error) {
       this.logger.error(`Failed to generate TTS audio for text: "${text.substring(0, 50)}..."`, error);
       throw new Error(`Failed to generate TTS audio: ${error.message}`);
+    }
+  }
+
+  /**
+   * Merge multiple audio files into one using ffmpeg
+   */
+  private async mergeAudioFiles(inputFiles: string[], outputFile: string): Promise<void> {
+    try {
+      // Verify all input files exist before merging
+      for (const file of inputFiles) {
+        if (!fs.existsSync(file)) {
+          throw new Error(`Input file does not exist: ${file}`);
+        }
+        const stats = fs.statSync(file);
+        if (stats.size === 0) {
+          throw new Error(`Input file is empty: ${file}`);
+        }
+      }
+
+      // Create a temporary concat list file for ffmpeg
+      const concatListPath = outputFile.replace('.wav', '_concat.txt');
+      const concatList = inputFiles.map((f) => `file '${path.basename(f)}'`).join('\n');
+      fs.writeFileSync(concatListPath, concatList);
+
+      this.logger.log(`Merging ${inputFiles.length} audio files...`);
+      this.logger.log(`Concat list: ${concatList.replace(/\n/g, ', ')}`);
+
+      // Use ffmpeg to concatenate audio files
+      // For WAV files with same format, we can use concat demuxer with copy codec
+      // But we need to ensure the format is exactly the same
+      const concatDir = path.dirname(inputFiles[0]);
+      const command = `cd "${concatDir}" && ffmpeg -f concat -safe 0 -i "${path.basename(concatListPath)}" -c copy "${path.basename(outputFile)}" -y 2>&1`;
+
+      try {
+        const { stdout, stderr } = await execAsync(command);
+        if (stderr && stderr.includes('error')) {
+          this.logger.warn(`ffmpeg stderr: ${stderr}`);
+        }
+      } catch (ffmpegError) {
+        // If copy codec fails, try re-encoding
+        this.logger.warn(`Copy codec failed, trying with re-encoding: ${ffmpegError.message}`);
+        const reencodeCommand = `cd "${concatDir}" && ffmpeg -f concat -safe 0 -i "${path.basename(concatListPath)}" -ar 24000 -ac 1 -sample_fmt s16 "${path.basename(outputFile)}" -y 2>&1`;
+        await execAsync(reencodeCommand);
+      }
+
+      // Verify output file was created
+      if (!fs.existsSync(outputFile)) {
+        throw new Error(`Output file was not created: ${outputFile}`);
+      }
+
+      const outputStats = fs.statSync(outputFile);
+      if (outputStats.size === 0) {
+        throw new Error(`Output file is empty: ${outputFile}`);
+      }
+
+      // Clean up temporary files
+      fs.unlinkSync(concatListPath);
+      inputFiles.forEach((f) => {
+        if (fs.existsSync(f)) {
+          fs.unlinkSync(f);
+        }
+      });
+
+      this.logger.log(`Successfully merged ${inputFiles.length} audio files into ${path.basename(outputFile)} (${(outputStats.size / 1024).toFixed(2)} KB)`);
+    } catch (error) {
+      this.logger.error(`Failed to merge audio files:`, error);
+      throw new Error(`Failed to merge audio files: ${error.message}`);
     }
   }
 

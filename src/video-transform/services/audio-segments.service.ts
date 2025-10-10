@@ -179,12 +179,24 @@ For backgroundImageDescription:
 - Creates an immersive cultural learning environment
 - Matches the segment's educational purpose
 
+TEXT PARTS FORMAT (CRITICAL FOR TTS):
+Each segment MUST include BOTH "text" and "textParts" fields:
+- "text": Complete text for display purposes (Thai + English mixed)
+- "textParts": Array separating Thai and English portions for optimized TTS synthesis
+  - Thai parts: {{"text": "...", "language": "th"}}
+  - English parts: {{"text": "...", "language": "en", "speakingRate": 0.8}}
+  
+The "textParts" allows the TTS system to apply slower speaking rate (0.8x) to English parts for better learning comprehension, while keeping Thai at normal speed (1.0x).
+
 Return ONLY a valid JSON object in this exact format:
 {{
   "audioSegments": [
     {{
       "id": "intro",
       "text": "สวัสดีค่ะ ยินดีต้อนรับสู่บทเรียนวันนี้...",
+      "textParts": [
+        {{"text": "สวัสดีค่ะ ยินดีต้อนรับสู่บทเรียนวันนี้...", "language": "th"}}
+      ],
       "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "title_card",
       "visualDescription": "Bright and welcoming introduction to the lesson",
@@ -192,25 +204,43 @@ Return ONLY a valid JSON object in this exact format:
     }},
     {{
       "id": "learning_objective1",
-      "text": "เป้าหมายแรกคือ...",
+      "text": "เป้าหมายแรกคือ I'd like to make a reservation และ Could you recommend a restaurant?",
+      "textParts": [
+        {{"text": "เป้าหมายแรกคือ ", "language": "th"}},
+        {{"text": "I'd like to make a reservation", "language": "en", "speakingRate": 0.8}},
+        {{"text": " และ ", "language": "th"}},
+        {{"text": "Could you recommend a restaurant?", "language": "en", "speakingRate": 0.8}}
+      ],
       "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "objective_card",
       "visualDescription": "Clear presentation of the first learning goal",
       "backgroundImageDescription": "Relevant Thai setting that matches the learning objective"
     }},
     {{
-      "id": "vocab_word1", 
-      "text": "คำศัพท์แรกคือ coffee - กาแฟ",
+      "id": "vocab_restaurant", 
+      "text": "คำศัพท์: restaurant — ร้านอาหาร ใช้เมื่อพูดถึงสถานที่กินข้าว เช่น Let's go to a Japanese restaurant near Siam",
+      "textParts": [
+        {{"text": "คำศัพท์: ", "language": "th"}},
+        {{"text": "restaurant", "language": "en", "speakingRate": 0.8}},
+        {{"text": " — ร้านอาหาร ใช้เมื่อพูดถึงสถานที่กินข้าว เช่น ", "language": "th"}},
+        {{"text": "Let's go to a Japanese restaurant near Siam", "language": "en", "speakingRate": 0.8}}
+      ],
       "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "vocabulary_card",
-      "vocabWord": "coffee",
+      "vocabWord": "restaurant",
       "visualDescription": "Introduction to the vocabulary word with visual context",
       "backgroundImageDescription": "Relevant Thai cultural scene that supports the vocabulary learning, such as Terminal 21 Food Court or Café Amazon setting"
     }}
   ]
 }}
 
-IMPORTANT: Do NOT omit the visualDescription field from ANY segment. Every segment must have both visualDescription and backgroundImageDescription.`;
+IMPORTANT REMINDERS:
+1. Every segment must have both visualDescription and backgroundImageDescription
+2. Every segment must have both "text" (complete) and "textParts" (separated by language)
+3. English parts in textParts should have "speakingRate": 0.8 for slower, clearer pronunciation
+4. Thai parts in textParts should NOT have speakingRate (defaults to 1.0)
+5. Ensure textParts accurately reflects the content in the "text" field
+6. AVOID creating very short textParts (< 3 characters like ", " or " และ "). Instead, merge short connectors with adjacent Thai text to ensure smooth TTS generation`;
 
       const promptTemplate = PromptTemplate.fromTemplate(prompt);
       const chain = RunnableSequence.from([promptTemplate, this.llm, new StringOutputParser()]);

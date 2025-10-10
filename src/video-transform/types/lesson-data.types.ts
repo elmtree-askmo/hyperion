@@ -39,9 +39,16 @@ export interface FlashcardsData {
   flashcards: VocabularyCard[];
 }
 
+export interface TextPart {
+  text: string;
+  language: 'th' | 'en';
+  speakingRate?: number; // Default: th=1.0, en=0.8
+}
+
 export interface AudioSegment {
   id: string;
-  text: string;
+  text: string; // Full text for display and backward compatibility
+  textParts?: TextPart[]; // Separated Thai and English parts for TTS
   description: string;
   screenElement: ScreenElementType;
   visualDescription: string;
