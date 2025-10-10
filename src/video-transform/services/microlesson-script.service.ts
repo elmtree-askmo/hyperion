@@ -177,19 +177,54 @@ export class MicrolessonScriptService {
     this.logger.log(`🚀 Using LLM approach for Episode ${episode.episodeNumber} microlesson generation...`);
 
     // Create focused analysis for this episode
+    // Extract segment IDs for this episode
+    const episodeSegmentIds = episodeSegments.map((seg) => seg.id);
+
+    // Filter content using LLM-provided segment mappings (much more accurate than string matching!)
+    const episodeVocabulary =
+      analysis.vocabulary?.filter((vocab) => {
+        // If segments are mapped by LLM, use that mapping
+        if (vocab.segments && vocab.segments.length > 0) {
+          return vocab.segments.some((segId) => episodeSegmentIds.includes(segId));
+        }
+        // Fallback: include all vocabulary if no mapping exists
+        return true;
+      }) || [];
+
+    const episodeGrammarPoints =
+      analysis.grammarPoints?.filter((grammar) => {
+        if (grammar.segments && grammar.segments.length > 0) {
+          return grammar.segments.some((segId) => episodeSegmentIds.includes(segId));
+        }
+        return true;
+      }) || [];
+
+    const episodeCulturalContexts =
+      analysis.culturalContexts?.filter((context) => {
+        if (context.segments && context.segments.length > 0) {
+          return context.segments.some((segId) => episodeSegmentIds.includes(segId));
+        }
+        return true;
+      }) || [];
+
+    this.logger.log(
+      `🎯 Episode ${episode.episodeNumber} filtered content (via LLM segment mapping): ${episodeVocabulary.length} vocab, ${episodeGrammarPoints.length} grammar points, ${episodeCulturalContexts.length} cultural contexts`,
+    );
+
+    // Create focused analysis containing ONLY this episode's content
     const episodeAnalysis = {
-      ...analysis,
+      videoId: analysis.videoId,
+      title: episode.title,
+      language: analysis.language,
+      targetAudience: analysis.targetAudience,
       segments: episodeSegments,
       learningObjectives: analysis.learningObjectives.filter((obj) => episode.objectives.includes(obj.id)),
-      // Focus vocabulary on segments for this episode
-      vocabulary: analysis.vocabulary?.filter((vocab) => episodeSegments.some((seg) => seg.content.toLowerCase().includes(vocab.word.toLowerCase()))) || [],
-      // Focus grammar points on this episode's objectives
-      grammarPoints:
-        analysis.grammarPoints?.filter((grammar) =>
-          episodeSegments.some((seg) =>
-            seg.keyTopics.some((topic) => grammar.structure.toLowerCase().includes(topic.toLowerCase()) || topic.toLowerCase().includes(grammar.structure.toLowerCase())),
-          ),
-        ) || [],
+      // Only pass content relevant to THIS episode's segments
+      vocabulary: episodeVocabulary,
+      grammarPoints: episodeGrammarPoints,
+      culturalContexts: episodeCulturalContexts,
+      // Episode-specific prerequisites (from its learning objectives)
+      prerequisites: analysis.prerequisites?.filter((prereq) => episodeSegments.some((seg) => seg.prerequisites?.includes(prereq.id))) || [],
     };
 
     const llmResults = await this.llmEnhancedService.generateEnhancedMicrolessonScript(analysis.videoId || 'unknown', episodeAnalysis);

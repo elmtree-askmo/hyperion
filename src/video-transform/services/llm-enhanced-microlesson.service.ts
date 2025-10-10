@@ -209,21 +209,45 @@ Return ONLY valid JSON in this format:
   private async generateEnhancedVocabulary(lessonAnalysis: any): Promise<any[]> {
     this.logger.log('📚 Generating LLM-enhanced vocabulary...');
 
-    const vocabularyList = lessonAnalysis.vocabulary?.slice(0, 12) || [];
+    // Get ALL vocabulary from the lesson analysis
+    const vocabularyList = lessonAnalysis.vocabulary || [];
     if (vocabularyList.length === 0) return [];
 
+    this.logger.log(`📖 Received ${vocabularyList.length} vocabulary words, selecting most relevant for episode`);
+
+    // Get episode context
+    const episodeSegments = lessonAnalysis.segments || [];
+    const episodeContent = episodeSegments.map((s: any) => s.content).join(' ');
+    const keyTopics = episodeSegments
+      .map((s: any) => s.keyTopics)
+      .flat()
+      .join(', ');
+
     const prompt = PromptTemplate.fromTemplate(`
-You are creating enhanced vocabulary for Thai students learning English. ALL explanations must be in Thai language.
+You are an expert English teacher creating vocabulary entries for Thai college students.
 
-Vocabulary words: {words}
-Context: {context}
+Episode Title: {episodeTitle}
+Key Topics: {keyTopics}
+Episode Content Summary: {contentSummary}
 
-For each word, create an enhanced entry with:
+Vocabulary Words for THIS episode ONLY: {allWords}
+
+IMPORTANT: The vocabulary list provided has been PRE-FILTERED to include ONLY words relevant to THIS specific episode.
+You MUST create entries for ALL words in the provided list. Do NOT skip any words. Do NOT add words not in the list.
+
+TASK:
+For EACH word in the provided vocabulary list, create an enhanced entry with:
 1. Thai translation (accurate and natural)
 2. Creative Thai memory hook/mnemonic using Thai phonetics or cultural references - IN THAI
-3. Practical context example using REAL Thai locations/situations - explanation in Thai
+3. Practical context example using REAL Thai locations/situations - IN THAI explanation
 
-CRITICAL: All explanations and memory hooks must be in Thai. Only the English word and example sentence should be in English.
+CRITICAL REQUIREMENTS:
+- Create entries for ALL {wordCount} words provided
+- Do NOT skip any words from the list
+- Do NOT add words not in the list
+- All explanations and memory hooks must be in Thai
+- Only the English word and example sentence should be in English
+- Each entry must be relevant to THIS specific episode's content
 
 Use these authentic Thai contexts in examples:
 - Shopping: "I need this at Big C/Lotus/Central World"
@@ -231,11 +255,13 @@ Use these authentic Thai contexts in examples:
 - Transport: "Take the BTS to Siam/MRT to Chatuchak"
 - Coffee: "I'll have this at TRUE Coffee/Café Amazon"
 - University: "We studied this at Chula/Thammasat/Mahidol"
+- Hotels: "I'd like to book at Novotel/Centara/Ibis Bangkok"
+- Restaurants: "May I have the menu at After You/Shabushi/Fuji Restaurant"
 
-Return ONLY valid JSON array:
+Return ONLY valid JSON array with EXACTLY {wordCount} entries (one for each word in the list):
 [
   {{
-    "word": "English word",
+    "word": "English word from the provided list",
     "thaiTranslation": "คำแปลภาษาไทย",
     "memoryHook": "วิธีจำเป็นภาษาไทย เช่น เสียงเหมือน... หรือ จำด้วย...",
     "contextExample": "English example sentence - คำอธิบายสถานการณ์เป็นภาษาไทย"
@@ -246,12 +272,29 @@ Return ONLY valid JSON array:
     const chain = prompt.pipe(this.llm).pipe(new StringOutputParser());
 
     const result = await chain.invoke({
-      words: vocabularyList.map((v) => v.word).join(', '),
-      context: lessonAnalysis.title,
+      episodeTitle: lessonAnalysis.title || 'English Lesson',
+      keyTopics: keyTopics || 'English conversation',
+      contentSummary: episodeContent.slice(0, 500) + '...', // First 500 chars for context
+      allWords: vocabularyList.map((v: any) => v.word).join(', '),
+      wordCount: vocabularyList.length,
     });
 
     try {
-      return JSON.parse(this.cleanJsonResponse(result));
+      const enhancedVocab = JSON.parse(this.cleanJsonResponse(result));
+      this.logger.log(`✅ LLM enhanced ${enhancedVocab.length} vocabulary words (expected ${vocabularyList.length})`);
+
+      // Warn if count doesn't match
+      if (enhancedVocab.length !== vocabularyList.length) {
+        this.logger.warn(
+          `⚠️ LLM returned ${enhancedVocab.length} words but received ${vocabularyList.length} words. ` +
+            `Missing: ${vocabularyList
+              .filter((v: any) => !enhancedVocab.find((e: any) => e.word === v.word))
+              .map((v: any) => v.word)
+              .join(', ')}`,
+        );
+      }
+
+      return enhancedVocab;
     } catch (parseError) {
       console.warn('Failed to parse LLM vocabulary response:', parseError);
       throw parseError;

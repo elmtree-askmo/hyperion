@@ -29,6 +29,7 @@ export interface VocabularyItem {
   exampleSentence: string;
   phonetic: string;
   frequency: number; // how often it appears in the content
+  segments?: string[]; // which segment IDs this vocabulary appears in
 }
 
 export interface GrammarPoint {
@@ -39,6 +40,7 @@ export interface GrammarPoint {
   examples: string[];
   thaiExplanation: string;
   commonMistakes: string[];
+  segments?: string[]; // which segment IDs this grammar point appears in
 }
 
 export interface CulturalContext {
@@ -48,6 +50,7 @@ export interface CulturalContext {
   culturalNotes: string[];
   thaiContext: string;
   practicalTips: string[];
+  segments?: string[]; // which segment IDs this cultural context is relevant to
 }
 
 export interface PrerequisiteKnowledge {
@@ -171,6 +174,10 @@ export class LangChainContentAnalysisService {
       this.extractGrammarPoints(transcript, targetAudience),
       this.extractCulturalContext(transcript, metadata, targetAudience),
     ]);
+
+    // Map vocabulary/grammar/cultural contexts to segments using LLM
+    this.logger.log('Mapping content to segments using LLM...');
+    await this.mapContentToSegmentsWithLLM(vocabulary, grammarPoints, culturalContexts, segments);
 
     // Create comprehensive analysis
     const analysis: LessonAnalysis = {
@@ -913,5 +920,120 @@ Respond in JSON format:
         practicalTips: ['Practice expressing needs clearly', 'Use polite phrases consistently', 'Give clear responses'],
       },
     ];
+  }
+
+  /**
+   * Map vocabulary, grammar points, and cultural contexts to segments using LLM
+   * This provides semantic understanding of which content belongs to which segment
+   */
+  private async mapContentToSegmentsWithLLM(
+    vocabulary: VocabularyItem[],
+    grammarPoints: GrammarPoint[],
+    culturalContexts: CulturalContext[],
+    segments: ContentSegment[],
+  ): Promise<void> {
+    this.logger.log('Using LLM to map vocabulary, grammar, and cultural context to segments...');
+
+    const prompt = PromptTemplate.fromTemplate(`
+You are an expert educational content analyzer. Your task is to map vocabulary words, grammar points, and cultural contexts to the specific video segments where they are most relevant.
+
+SEGMENTS:
+{segmentsList}
+
+VOCABULARY WORDS:
+{vocabularyList}
+
+GRAMMAR POINTS:
+{grammarList}
+
+CULTURAL CONTEXTS:
+{culturalList}
+
+TASK:
+For each vocabulary word, grammar point, and cultural context, determine which segment(s) it is most relevant to based on:
+1. Direct mention or use in the segment content
+2. Semantic relevance to the segment's topic
+3. Teaching value for that specific segment
+
+Return a JSON object with three arrays mapping content to segments:
+
+{{
+  "vocabularyMapping": [
+    {{ "word": "recommend", "segments": ["seg_1"] }},
+    {{ "word": "vegetarian", "segments": ["seg_1", "seg_2"] }}
+  ],
+  "grammarMapping": [
+    {{ "id": "grammar_1", "segments": ["seg_1", "seg_2"] }}
+  ],
+  "culturalMapping": [
+    {{ "id": "culture_1", "segments": ["seg_1"] }}
+  ]
+}}
+
+IMPORTANT:
+- Each item can belong to multiple segments if relevant
+- Only include segments where the content is actually relevant
+- Be precise - don't map content to segments where it doesn't belong
+`);
+
+    try {
+      const chain = RunnableSequence.from([prompt, this.llm, new StringOutputParser()]);
+
+      const segmentsList = segments.map((seg) => `${seg.id}: "${seg.title}"\nContent: ${seg.content.substring(0, 200)}...`).join('\n\n');
+
+      const vocabularyList = vocabulary.map((v) => `- ${v.word}: ${v.definition}`).join('\n');
+
+      const grammarList = grammarPoints.map((g) => `- ${g.id}: ${g.structure}`).join('\n');
+
+      const culturalList = culturalContexts.map((c) => `- ${c.id}: ${c.topic}`).join('\n');
+
+      const result = await chain.invoke({
+        segmentsList,
+        vocabularyList,
+        grammarList,
+        culturalList,
+      });
+
+      const mapping = JSON.parse(this.extractJSONFromResponse(result));
+
+      // Apply the mappings
+      if (mapping.vocabularyMapping) {
+        mapping.vocabularyMapping.forEach((m: { word: string; segments: string[] }) => {
+          const vocabItem = vocabulary.find((v) => v.word.toLowerCase() === m.word.toLowerCase());
+          if (vocabItem) {
+            vocabItem.segments = m.segments;
+          }
+        });
+      }
+
+      if (mapping.grammarMapping) {
+        mapping.grammarMapping.forEach((m: { id: string; segments: string[] }) => {
+          const grammarItem = grammarPoints.find((g) => g.id === m.id);
+          if (grammarItem) {
+            grammarItem.segments = m.segments;
+          }
+        });
+      }
+
+      if (mapping.culturalMapping) {
+        mapping.culturalMapping.forEach((m: { id: string; segments: string[] }) => {
+          const culturalItem = culturalContexts.find((c) => c.id === m.id);
+          if (culturalItem) {
+            culturalItem.segments = m.segments;
+          }
+        });
+      }
+
+      this.logger.log(
+        `✅ Mapped content to segments: ${mapping.vocabularyMapping?.length || 0} vocabulary, ` +
+          `${mapping.grammarMapping?.length || 0} grammar, ${mapping.culturalMapping?.length || 0} cultural contexts`,
+      );
+    } catch (error) {
+      this.logger.warn('Failed to map content to segments with LLM, using fallback logic:', error);
+      // Fallback: assign all content to all segments
+      vocabulary.forEach((v) => (v.segments = segments.map((s) => s.id)));
+      grammarPoints.forEach((g) => (g.segments = segments.map((s) => s.id)));
+      culturalContexts.forEach((c) => (c.segments = segments.map((s) => s.id)));
+    }
   }
 }
