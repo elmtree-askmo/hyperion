@@ -66,7 +66,6 @@ export class GeminiImageService {
     const lessonDir = path.join(videosDir, videoId, `lesson_${episodeNumber}`);
     const audioSegmentsPath = path.join(lessonDir, 'audio_segments.json');
     const lessonSegmentsDir = path.join(lessonDir, 'lesson_segments');
-    const finalSynchronizedPath = path.join(lessonDir, 'final_synchronized_lesson.json');
 
     this.logger.log(`🖼️ Generating images for video ${videoId}, episode ${episodeNumber}`);
 
@@ -106,48 +105,10 @@ export class GeminiImageService {
         }
       }
 
-      // Update final_synchronized_lesson.json with background URLs
-      if (fs.existsSync(finalSynchronizedPath)) {
-        await this.updateSynchronizedLessonWithBackgrounds(finalSynchronizedPath, audioSegments, videoId, episodeNumber);
-      }
-
       this.logger.log(`🖼️ Completed image generation for video ${videoId}, episode ${episodeNumber}`);
     } catch (error) {
       this.logger.error(`Failed to generate episode images for video ${videoId}, episode ${episodeNumber}:`, error);
       throw error;
     }
-  }
-
-  private async updateSynchronizedLessonWithBackgrounds(finalSynchronizedPath: string, audioSegments: any[], videoId: string, episodeNumber: number): Promise<void> {
-    try {
-      const synchronizedData = JSON.parse(fs.readFileSync(finalSynchronizedPath, 'utf8'));
-
-      // Update each timing segment with background URL if available
-      synchronizedData.lesson?.segmentBasedTiming?.forEach((timingSegment) => {
-        // Find matching audio segment by text content or similar logic
-        const matchingAudioSegment = audioSegments.find(
-          (audioSeg) => audioSeg.text === timingSegment.text || audioSeg.id === this.extractSegmentIdFromAudioUrl(timingSegment.audioUrl),
-        );
-
-        if (matchingAudioSegment?.backgroundImageDescription) {
-          // Determine image extension (assuming PNG for now, could be made dynamic)
-          const imageExtension = '.png';
-          timingSegment.backgroundUrl = `/videos/${videoId}/lesson_${episodeNumber}/lesson_segments/${matchingAudioSegment.id}${imageExtension}`;
-        }
-      });
-
-      // Save the updated synchronized lesson
-      fs.writeFileSync(finalSynchronizedPath, JSON.stringify(synchronizedData, null, 2));
-      this.logger.log(`✅ Updated final_synchronized_lesson.json with background URLs`);
-    } catch (error) {
-      this.logger.error('Failed to update synchronized lesson with backgrounds:', error);
-    }
-  }
-
-  private extractSegmentIdFromAudioUrl(audioUrl: string): string {
-    // Extract segment ID from audio URL like "/video/lesson_1/lesson_segments/intro.wav"
-    const regex = /\/([^/]+)\.wav$/;
-    const matches = regex.exec(audioUrl);
-    return matches ? matches[1] : '';
   }
 }

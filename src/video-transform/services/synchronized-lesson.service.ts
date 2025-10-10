@@ -19,6 +19,7 @@ interface SegmentBasedTiming {
   audioUrl: string;
   text: string;
   vocabWord?: string;
+  backgroundUrl?: string;
 }
 
 interface SynchronizedLesson {
@@ -89,7 +90,9 @@ export class SynchronizedLessonService {
     return JSON.parse(timingContent);
   }
 
-  private async loadAudioSegmentsForEpisode(episodeDir: string): Promise<{ audioSegments: Array<{ id: string; screenElement: string; vocabWord?: string }> }> {
+  private async loadAudioSegmentsForEpisode(
+    episodeDir: string,
+  ): Promise<{ audioSegments: Array<{ id: string; screenElement: string; vocabWord?: string; backgroundImageDescription?: string }> }> {
     const audioSegmentsPath = path.join(episodeDir, 'audio_segments.json');
     const audioSegmentsContent = fs.readFileSync(audioSegmentsPath, 'utf-8');
     return JSON.parse(audioSegmentsContent);
@@ -98,7 +101,7 @@ export class SynchronizedLessonService {
   private createSynchronizedLesson(
     microlessonScript: MicrolessonScript,
     timingMetadata: { segments: TimingSegment[] },
-    audioSegments: { audioSegments: Array<{ id: string; screenElement: string; vocabWord?: string }> },
+    audioSegments: { audioSegments: Array<{ id: string; screenElement: string; vocabWord?: string; backgroundImageDescription?: string }> },
     lessonDir: string,
   ): SynchronizedLesson {
     const segmentBasedTiming: SegmentBasedTiming[] = [];
@@ -123,6 +126,11 @@ export class SynchronizedLessonService {
       if (segment.segmentId.startsWith('vocab') && audioSegment?.vocabWord) {
         timingSegment.vocabWord = audioSegment.vocabWord;
         timingSegment.screenElement = 'vocabulary_card';
+      }
+
+      // Add background URL if the audio segment has a background image description
+      if (audioSegment?.backgroundImageDescription) {
+        timingSegment.backgroundUrl = this.generateBackgroundUrl(lessonDir, segment.segmentId);
       }
 
       segmentBasedTiming.push(timingSegment);
@@ -192,6 +200,23 @@ export class SynchronizedLessonService {
     } else {
       // Single microlesson structure
       return lastPart;
+    }
+  }
+
+  private generateBackgroundUrl(lessonDir: string, segmentId: string): string {
+    // Check if this is an episode directory (contains episode number)
+    const videoId = this.getVideoIdFromPath(lessonDir);
+    const pathParts = lessonDir.split(path.sep);
+    const lastPart = pathParts[pathParts.length - 1];
+
+    // If the last part is "lesson_X" format, it's an episode directory
+    const lessonMatch = /^lesson_(\d+)$/.exec(lastPart);
+    if (lessonMatch) {
+      const episodeNumber = lessonMatch[1];
+      return `/videos/${videoId}/lesson_${episodeNumber}/lesson_segments/${segmentId}.png`;
+    } else {
+      // Legacy single microlesson structure
+      return `/videos/${videoId}/lesson_segments/${segmentId}.png`;
     }
   }
 

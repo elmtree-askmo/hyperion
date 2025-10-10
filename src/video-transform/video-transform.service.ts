@@ -213,11 +213,11 @@ export class VideoTransformService {
           // Step 4.3: Generate Individual TTS Audio Segments for this episode
           await this.ttsAudioSegmentsService.generateTtsAudioSegmentsForEpisode(videoId, episode.episodeNumber);
 
-          // Step 4.4: Create Synchronized Lesson for this episode
-          await this.synchronizedLessonService.generateSynchronizedLessonForEpisode(videoId, episode.episodeNumber);
-
-          // Step 4.5: AI Background Image Generation
+          // Step 4.4: AI Background Image Generation
           await this.geminiImageService.generateImagesForEpisode(videoId, episode.episodeNumber);
+
+          // Step 4.5: Create Synchronized Lesson for this episode
+          await this.synchronizedLessonService.generateSynchronizedLessonForEpisode(videoId, episode.episodeNumber);
         }
       } else {
         this.logger.log('No episodes found in series structure');
