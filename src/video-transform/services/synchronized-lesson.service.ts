@@ -11,6 +11,12 @@ interface TimingSegment {
   text: string;
 }
 
+interface TextPart {
+  text: string;
+  language: string;
+  speakingRate?: number;
+}
+
 interface SegmentBasedTiming {
   startTime: number;
   endTime: number;
@@ -18,6 +24,7 @@ interface SegmentBasedTiming {
   duration: number;
   audioUrl: string;
   text: string;
+  textParts?: TextPart[];
   vocabWord?: string;
   backgroundUrl?: string;
 }
@@ -90,9 +97,15 @@ export class SynchronizedLessonService {
     return JSON.parse(timingContent);
   }
 
-  private async loadAudioSegmentsForEpisode(
-    episodeDir: string,
-  ): Promise<{ audioSegments: Array<{ id: string; screenElement: string; vocabWord?: string; backgroundImageDescription?: string }> }> {
+  private async loadAudioSegmentsForEpisode(episodeDir: string): Promise<{
+    audioSegments: Array<{
+      id: string;
+      screenElement: string;
+      vocabWord?: string;
+      backgroundImageDescription?: string;
+      textParts?: TextPart[];
+    }>;
+  }> {
     const audioSegmentsPath = path.join(episodeDir, 'audio_segments.json');
     const audioSegmentsContent = fs.readFileSync(audioSegmentsPath, 'utf-8');
     return JSON.parse(audioSegmentsContent);
@@ -101,7 +114,15 @@ export class SynchronizedLessonService {
   private createSynchronizedLesson(
     microlessonScript: MicrolessonScript,
     timingMetadata: { segments: TimingSegment[] },
-    audioSegments: { audioSegments: Array<{ id: string; screenElement: string; vocabWord?: string; backgroundImageDescription?: string }> },
+    audioSegments: {
+      audioSegments: Array<{
+        id: string;
+        screenElement: string;
+        vocabWord?: string;
+        backgroundImageDescription?: string;
+        textParts?: TextPart[];
+      }>;
+    },
     lessonDir: string,
   ): SynchronizedLesson {
     const segmentBasedTiming: SegmentBasedTiming[] = [];
@@ -120,6 +141,11 @@ export class SynchronizedLessonService {
         audioUrl: this.generateAudioUrl(lessonDir, segment.fileName),
         text: segment.text,
       };
+
+      // Add textParts if available from audio_segments.json
+      if (audioSegment?.textParts) {
+        timingSegment.textParts = audioSegment.textParts;
+      }
 
       // Use vocabWord from audio_segments.json if available for vocabulary cards
       // Support both 'vocab_word' and 'vocab_' prefixes

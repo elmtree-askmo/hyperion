@@ -12,6 +12,12 @@ import { PracticeCard } from './PracticeCard';
 import { OutroCard } from './OutroCard';
 import { VIDEO_CONFIG } from '../styles/theme';
 
+interface TextPart {
+  text: string;
+  language: string;
+  speakingRate?: number;
+}
+
 interface SegmentTiming {
   startTime: number;
   endTime: number;
@@ -20,6 +26,8 @@ interface SegmentTiming {
   audioUrl: string;
   text: string;
   vocabWord?: string;
+  textParts?: TextPart[];
+  backgroundUrl?: string;
 }
 
 interface LessonData {
@@ -184,6 +192,7 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
             Component = (
               <PracticeCard
                 text={segment.text}
+                textParts={segment.textParts}
                 audioUrl={audioUrl}
                 backgroundImage={backgroundImage}
                 durationInFrames={durationInFrames}
