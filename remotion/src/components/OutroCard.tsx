@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { AbsoluteFill, Audio, Img } from 'remotion';
-import { theme } from '../styles/theme';
+import { theme, VIDEO_CONFIG } from '../styles/theme';
 import { useFadeIn, useSlideIn, useScaleIn } from '../utils/animation';
 
 interface OutroCardProps {
@@ -41,17 +41,17 @@ export const OutroCard: React.FC<OutroCardProps> = ({
         <AbsoluteFill style={{ opacity: 0.7 }}>
           <Img
             src={backgroundImage}
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
         </AbsoluteFill>
       )}
 
-      {/* Content */}
+      {/* Content - Optimized for 9:16 vertical format */}
       <AbsoluteFill
         style={{
           display: 'flex',
           flexDirection: 'column',
-          padding: theme.spacing.xl,
+          padding: `${theme.spacing.xxl}px ${theme.spacing.xl}px`,
           justifyContent: 'center',
           alignItems: 'center',
         }}
@@ -61,12 +61,12 @@ export const OutroCard: React.FC<OutroCardProps> = ({
           style={{
             opacity: fadeIn,
             transform: `scale(${scale})`,
-            marginBottom: theme.spacing.lg,
+            marginBottom: theme.spacing.xxl,
           }}
         >
           <div
             style={{
-              fontSize: 64,
+              fontSize: 96,
               fontFamily: theme.fonts.heading,
               color: theme.colors.primary,
               textAlign: 'center',
@@ -83,17 +83,17 @@ export const OutroCard: React.FC<OutroCardProps> = ({
             transform: `translateY(${(1 - slideIn) * 30}px)`,
             backgroundColor: theme.colors.backgroundLight,
             borderRadius: theme.borderRadius.lg,
-            padding: theme.spacing.lg,
-            marginBottom: theme.spacing.lg,
-            maxWidth: '90%',
+            padding: theme.spacing.xl,
+            marginBottom: theme.spacing.xxl,
+            width: '85%',
           }}
         >
           <div
             style={{
-              fontSize: 34,
+              fontSize: 42,
               fontFamily: theme.fonts.primary,
               color: theme.colors.text,
-              lineHeight: 1.6,
+              lineHeight: 1.7,
               textAlign: 'center',
             }}
           >
@@ -111,13 +111,13 @@ export const OutroCard: React.FC<OutroCardProps> = ({
           >
             <div
               style={{
-                fontSize: 36,
+                fontSize: 44,
                 fontFamily: theme.fonts.primary,
                 color: theme.colors.textAccent,
                 textAlign: 'center',
-                padding: theme.spacing.md,
+                padding: `${theme.spacing.lg}px ${theme.spacing.xl}px`,
                 backgroundColor: theme.colors.backgroundLight + '80',
-                borderRadius: theme.borderRadius.md,
+                borderRadius: theme.borderRadius.lg,
               }}
             >
               ➡️ Next: Lesson {episodeNumber + 1}
@@ -129,9 +129,9 @@ export const OutroCard: React.FC<OutroCardProps> = ({
         <div
           style={{
             position: 'absolute',
-            bottom: theme.spacing.xl,
-            width: '80%',
-            height: 4,
+            bottom: theme.spacing.xxl,
+            width: '70%',
+            height: 6,
             background: `linear-gradient(90deg, transparent, ${theme.colors.primary}, transparent)`,
             opacity: fadeIn,
           }}

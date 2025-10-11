@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { AbsoluteFill, Audio, Img, useCurrentFrame, useVideoConfig } from 'remotion';
-import { theme } from '../styles/theme';
+import { theme, VIDEO_CONFIG } from '../styles/theme';
 import { useFadeIn, useSlideIn } from '../utils/animation';
 
 interface TextPart {
@@ -167,18 +167,19 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
         <AbsoluteFill style={{ opacity: 0.65 }}>
           <Img
             src={backgroundImage}
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
         </AbsoluteFill>
       )}
 
-      {/* Content */}
+      {/* Content - Optimized for 9:16 vertical format */}
       <AbsoluteFill
         style={{
           display: 'flex',
           flexDirection: 'column',
-          padding: theme.spacing.xl,
-          justifyContent: 'center',
+          padding: `${theme.spacing.xl}px ${theme.spacing.lg}px`,
+          justifyContent: 'flex-start',
+          paddingTop: VIDEO_CONFIG.height * 0.2, // Start at 20% from top
         }}
       >
         {/* Label */}
@@ -186,16 +187,17 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
           style={{
             opacity: fadeIn,
             transform: `translateY(${(1 - slideIn) * -30}px)`,
-            marginBottom: theme.spacing.md,
+            marginBottom: theme.spacing.xl,
           }}
         >
           <div
             style={{
-              fontSize: 32,
+              fontSize: 40,
               fontFamily: theme.fonts.primary,
               color: theme.colors.textSecondary,
               textTransform: 'uppercase',
-              letterSpacing: 2,
+              letterSpacing: 3,
+              textAlign: 'center',
             }}
           >
             📖 GRAMMAR POINT
@@ -209,9 +211,9 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
             transform: `translateX(${(1 - slideIn) * -30}px)`,
             backgroundColor: theme.colors.backgroundLight,
             borderRadius: theme.borderRadius.lg,
-            padding: theme.spacing.lg,
+            padding: theme.spacing.xl,
             boxShadow: theme.shadows.lg,
-            borderLeft: `8px solid ${theme.colors.primary}`,
+            borderLeft: `10px solid ${theme.colors.primary}`,
           }}
         >
           {renderTextWithHighlight()}

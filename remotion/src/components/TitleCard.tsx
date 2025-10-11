@@ -46,20 +46,21 @@ export const TitleCard: React.FC<TitleCardProps> = ({
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'contain',
+              objectFit: 'cover',
+              objectPosition: 'center',
             }}
           />
         </AbsoluteFill>
       )}
 
-      {/* Content */}
+      {/* Content - Optimized for 9:16 vertical format */}
       <AbsoluteFill
         style={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: theme.spacing.xl,
+          padding: `${theme.spacing.xxl}px ${theme.spacing.xl}px`,
         }}
       >
         {/* Episode indicator */}
@@ -67,17 +68,17 @@ export const TitleCard: React.FC<TitleCardProps> = ({
           style={{
             opacity: fadeIn,
             transform: `translateY(${(1 - slideIn) * -50}px)`,
-            marginBottom: theme.spacing.md,
+            marginBottom: theme.spacing.xl,
           }}
         >
           <div
             style={{
-              fontSize: 32,
+              fontSize: 40,
               fontFamily: theme.fonts.primary,
               color: theme.colors.textSecondary,
               textAlign: 'center',
               textTransform: 'uppercase',
-              letterSpacing: 4,
+              letterSpacing: 6,
             }}
           >
             Lesson {episodeNumber} of {totalEpisodes}
@@ -89,12 +90,13 @@ export const TitleCard: React.FC<TitleCardProps> = ({
           style={{
             opacity: fadeIn,
             transform: `scale(${scale})`,
-            marginBottom: theme.spacing.lg,
+            marginBottom: theme.spacing.xxl,
+            padding: `0 ${theme.spacing.md}px`,
           }}
         >
           <h1
             style={{
-              fontSize: 72,
+              fontSize: 88,
               fontFamily: theme.fonts.heading,
               color: theme.colors.text,
               textAlign: 'center',
@@ -112,11 +114,12 @@ export const TitleCard: React.FC<TitleCardProps> = ({
           style={{
             opacity: fadeIn,
             transform: `translateY(${(1 - slideIn) * 50}px)`,
+            padding: `0 ${theme.spacing.md}px`,
           }}
         >
           <h2
             style={{
-              fontSize: 48,
+              fontSize: 64,
               fontFamily: theme.fonts.primary,
               color: theme.colors.textAccent,
               textAlign: 'center',
@@ -133,9 +136,9 @@ export const TitleCard: React.FC<TitleCardProps> = ({
         <div
           style={{
             position: 'absolute',
-            bottom: theme.spacing.xl,
-            width: '80%',
-            height: 4,
+            bottom: theme.spacing.xxl,
+            width: '70%',
+            height: 6,
             background: `linear-gradient(90deg, transparent, ${theme.colors.primary}, transparent)`,
             opacity: fadeIn,
           }}

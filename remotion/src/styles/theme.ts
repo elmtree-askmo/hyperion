@@ -40,8 +40,9 @@ export const theme = {
 };
 
 export const VIDEO_CONFIG = {
-  width: 1024,
-  height: 1024,
+  width: 1080,
+  height: 1920,
   fps: 30,
   durationInSeconds: 300, // 5 minutes
+  aspectRatio: '9:16', // Vertical format for TikTok, Instagram Reels, YouTube Shorts
 };

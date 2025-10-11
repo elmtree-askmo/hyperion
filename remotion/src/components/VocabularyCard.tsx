@@ -48,18 +48,19 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
         <AbsoluteFill style={{ opacity: 0.65 }}>
           <Img
             src={backgroundImage}
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
         </AbsoluteFill>
       )}
 
-      {/* Content Container */}
+      {/* Content Container - Optimized for 9:16 vertical format */}
       <AbsoluteFill
         style={{
           display: 'flex',
           flexDirection: 'column',
-          padding: theme.spacing.xl,
-          justifyContent: 'center',
+          padding: `${theme.spacing.xl}px ${theme.spacing.lg}px`,
+          justifyContent: 'flex-start',
+          paddingTop: VIDEO_CONFIG.height * 0.15, // Start at 15% from top
         }}
       >
         {/* Label */}
@@ -67,19 +68,20 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
           style={{
             opacity: fadeIn,
             transform: `translateY(${(1 - slideIn) * -30}px)`,
-            marginBottom: theme.spacing.md,
+            marginBottom: theme.spacing.lg,
           }}
         >
           <div
             style={{
-              fontSize: 28,
+              fontSize: 32,
               fontFamily: theme.fonts.primary,
               color: theme.colors.textSecondary,
               textTransform: 'uppercase',
-              letterSpacing: 2,
+              letterSpacing: 3,
+              textAlign: 'center',
             }}
           >
-            Vocabulary
+            📚 VOCABULARY
           </div>
         </div>
 
@@ -90,19 +92,21 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
             transform: `scale(${scale})`,
             backgroundColor: theme.colors.backgroundLight,
             borderRadius: theme.borderRadius.lg,
-            padding: theme.spacing.lg,
-            marginBottom: theme.spacing.md,
+            padding: theme.spacing.xl,
+            marginBottom: theme.spacing.xl,
             boxShadow: theme.shadows.lg,
+            textAlign: 'center',
           }}
         >
           {/* Word */}
           <div
             style={{
-              fontSize: 80,
+              fontSize: 96,
               fontFamily: theme.fonts.heading,
               color: theme.colors.primary,
-              marginBottom: theme.spacing.sm,
+              marginBottom: theme.spacing.lg,
               fontWeight: 'bold',
+              lineHeight: 1.1,
             }}
           >
             {word}
@@ -111,10 +115,11 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
           {/* Thai Translation */}
           <div
             style={{
-              fontSize: 48,
+              fontSize: 56,
               fontFamily: theme.fonts.primary,
               color: theme.colors.textAccent,
-              marginBottom: theme.spacing.sm,
+              marginBottom: theme.spacing.md,
+              lineHeight: 1.3,
             }}
           >
             {thaiTranslation}
@@ -123,7 +128,7 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
           {/* Pronunciation */}
           <div
             style={{
-              fontSize: 36,
+              fontSize: 40,
               fontFamily: theme.fonts.monospace,
               color: theme.colors.textSecondary,
               fontStyle: 'italic',
@@ -140,16 +145,17 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
             transform: `translateX(${(1 - slideIn) * -30}px)`,
             backgroundColor: theme.colors.backgroundLight + '90',
             borderRadius: theme.borderRadius.md,
-            padding: theme.spacing.md,
-            marginBottom: theme.spacing.sm,
+            padding: theme.spacing.lg,
+            marginBottom: theme.spacing.lg,
           }}
         >
           <div
             style={{
-              fontSize: 32,
+              fontSize: 38,
               fontFamily: theme.fonts.primary,
               color: theme.colors.text,
-              lineHeight: 1.5,
+              lineHeight: 1.6,
+              textAlign: 'center',
             }}
           >
             {thaiDefinition}
@@ -163,16 +169,16 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
             transform: `translateX(${(1 - slideIn) * 30}px)`,
             backgroundColor: theme.colors.accent + '20',
             borderRadius: theme.borderRadius.md,
-            padding: theme.spacing.md,
-            borderLeft: `6px solid ${theme.colors.accent}`,
+            padding: theme.spacing.lg,
+            borderLeft: `8px solid ${theme.colors.accent}`,
           }}
         >
           <div
             style={{
-              fontSize: 28,
+              fontSize: 32,
               fontFamily: theme.fonts.primary,
               color: theme.colors.text,
-              lineHeight: 1.5,
+              lineHeight: 1.6,
             }}
           >
             💡 {memoryHook}

@@ -294,8 +294,9 @@
   border-radius: 12px;
   overflow: hidden;
   width: 100%;
-  max-width: 800px;
+  max-width: 608px;
   margin: 0 auto;
+  aspect-ratio: 9 / 16;
 }
 
 .interactive-overlay {
