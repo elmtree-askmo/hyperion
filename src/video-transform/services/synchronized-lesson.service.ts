@@ -2,6 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 
+interface TextPartTiming {
+  text: string;
+  language: string;
+  duration: number;
+  startTime: number;
+  endTime: number;
+}
+
 interface TimingSegment {
   segmentId: string;
   fileName: string;
@@ -9,6 +17,7 @@ interface TimingSegment {
   startTime: number;
   endTime: number;
   text: string;
+  textPartTimings?: TextPartTiming[];
 }
 
 interface TextPart {
@@ -25,6 +34,7 @@ interface SegmentBasedTiming {
   audioUrl: string;
   text: string;
   textParts?: TextPart[];
+  textPartTimings?: TextPartTiming[];
   vocabWord?: string;
   backgroundUrl?: string;
 }
@@ -145,6 +155,11 @@ export class SynchronizedLessonService {
       // Add textParts if available from audio_segments.json
       if (audioSegment?.textParts) {
         timingSegment.textParts = audioSegment.textParts;
+      }
+
+      // Add textPartTimings if available from timing-metadata.json
+      if (segment.textPartTimings) {
+        timingSegment.textPartTimings = segment.textPartTimings;
       }
 
       // Use vocabWord from audio_segments.json if available for vocabulary cards

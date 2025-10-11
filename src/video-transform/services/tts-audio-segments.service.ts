@@ -29,6 +29,14 @@ interface AudioSegmentsResponse {
   audioSegments: AudioSegment[];
 }
 
+export interface TextPartTiming {
+  text: string;
+  language: string;
+  duration: number;
+  startTime: number;
+  endTime: number;
+}
+
 export interface TimingMetadata {
   segmentId: string;
   fileName: string;
@@ -36,6 +44,7 @@ export interface TimingMetadata {
   startTime: number;
   endTime: number;
   text: string;
+  textPartTimings?: TextPartTiming[];
 }
 
 export interface TtsTimingMetadata {
@@ -93,12 +102,17 @@ export class TtsAudioSegmentsService {
         const audioFilePath = path.join(segmentsPath, fileName);
 
         let duration: number;
+        let textPartTimings: TextPartTiming[] | undefined;
 
         // Check if segment has textParts (new format with language separation)
         if (segment.textParts && segment.textParts.length > 0) {
           // Generate audio with multiple parts and merge them
-          duration = await this.generateTtsAudioWithParts(segment.textParts, audioFilePath, segmentsPath, segment.id);
-          this.logger.log(`Generated multi-part TTS audio for Episode ${episodeNumber}, segment ${segment.id}: ${fileName} (${duration.toFixed(2)}s)`);
+          const result = await this.generateTtsAudioWithParts(segment.textParts, audioFilePath, segmentsPath, segment.id);
+          duration = result.duration;
+          textPartTimings = result.partTimings;
+          this.logger.log(
+            `Generated multi-part TTS audio for Episode ${episodeNumber}, segment ${segment.id}: ${fileName} (${duration.toFixed(2)}s) with ${textPartTimings.length} part timings`,
+          );
         } else {
           // Backward compatibility: use original text field
           duration = await this.generateTtsAudio(segment.text, audioFilePath);
@@ -113,6 +127,7 @@ export class TtsAudioSegmentsService {
           startTime: currentTime,
           endTime: currentTime + duration,
           text: segment.text,
+          textPartTimings: textPartTimings,
         };
 
         timingMetadata.push(timingEntry);
@@ -140,10 +155,17 @@ export class TtsAudioSegmentsService {
 
   /**
    * Generate TTS audio with multiple text parts (Thai and English) and merge them
+   * Returns both total duration and an array of part timings
    */
-  async generateTtsAudioWithParts(textParts: TextPart[], outputPath: string, segmentsPath: string, segmentId: string): Promise<number> {
+  async generateTtsAudioWithParts(
+    textParts: TextPart[],
+    outputPath: string,
+    segmentsPath: string,
+    segmentId: string,
+  ): Promise<{ duration: number; partTimings: TextPartTiming[] }> {
     try {
       const tempFiles: string[] = [];
+      const partTimings: TextPartTiming[] = [];
 
       this.logger.log(`Generating multi-part audio for ${segmentId} with ${textParts.length} parts`);
 
@@ -151,7 +173,9 @@ export class TtsAudioSegmentsService {
       const mergedParts = this.mergeShortTextParts(textParts);
       this.logger.log(`After merging short parts: ${mergedParts.length} parts (from ${textParts.length})`);
 
-      // Generate audio for each text part
+      let currentTime = 0;
+
+      // Generate audio for each text part and record timing
       for (let i = 0; i < mergedParts.length; i++) {
         const part = mergedParts[i];
         const tempFileName = `${segmentId}_part_${i}.wav`;
@@ -177,8 +201,22 @@ export class TtsAudioSegmentsService {
           throw new Error(`Generated audio file is empty: ${tempFilePath}`);
         }
 
+        // Get duration of this part
+        const partDuration = await this.getAudioDuration(tempFilePath);
+
+        // Record timing for this part
+        partTimings.push({
+          text: part.text,
+          language: part.language,
+          duration: partDuration,
+          startTime: currentTime,
+          endTime: currentTime + partDuration,
+        });
+
+        currentTime += partDuration;
+
         tempFiles.push(tempFilePath);
-        this.logger.log(`✓ Part ${i + 1}/${mergedParts.length} generated successfully (${(stats.size / 1024).toFixed(2)} KB)`);
+        this.logger.log(`✓ Part ${i + 1}/${mergedParts.length} generated successfully (${(stats.size / 1024).toFixed(2)} KB, ${partDuration.toFixed(2)}s)`);
       }
 
       // Merge all audio parts into one file
@@ -194,9 +232,9 @@ export class TtsAudioSegmentsService {
 
       // Get duration of the merged audio
       const duration = await this.getAudioDuration(outputPath);
-      this.logger.log(`✓ Multi-part audio generation completed for ${segmentId} (${duration.toFixed(2)}s)`);
+      this.logger.log(`✓ Multi-part audio generation completed for ${segmentId} (${duration.toFixed(2)}s) with ${partTimings.length} timing entries`);
 
-      return duration;
+      return { duration, partTimings };
     } catch (error) {
       this.logger.error(`Failed to generate multi-part TTS audio for segment ${segmentId}:`, error);
       // Clean up any temporary files on error
