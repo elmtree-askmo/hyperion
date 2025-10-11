@@ -1,27 +1,137 @@
 /**
  * Grammar Card Component
  * Displays grammar structure with explanations and examples
+ * Supports phrase-level timing based on textParts
  */
 import React from 'react';
-import { AbsoluteFill, Audio, Img } from 'remotion';
+import { AbsoluteFill, Audio, Img, useCurrentFrame, useVideoConfig } from 'remotion';
 import { theme } from '../styles/theme';
 import { useFadeIn, useSlideIn } from '../utils/animation';
 
+interface TextPart {
+  text: string;
+  language: string;
+  speakingRate?: number;
+}
+
 interface GrammarCardProps {
   text: string;
+  textParts?: TextPart[];
   examples?: string[];
   audioUrl?: string;
   backgroundImage?: string;
+  durationInFrames?: number;
 }
 
 export const GrammarCard: React.FC<GrammarCardProps> = ({
   text,
+  textParts,
   examples,
   audioUrl,
   backgroundImage,
+  durationInFrames,
 }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const fadeIn = useFadeIn(0, 20);
   const slideIn = useSlideIn(5);
+
+  // Helper function to estimate duration for each text part based on character count and speaking rate
+  const estimatePartDuration = (part: TextPart): number => {
+    const baseCharsPerSecond = part.language === 'th' ? 8 : 15; // Thai is slower
+    const adjustedSpeed = baseCharsPerSecond * (part.speakingRate || 1.0);
+    return part.text.length / adjustedSpeed;
+  };
+
+  // Calculate timing for each text part
+  const getPartTimings = () => {
+    if (!textParts || textParts.length === 0) {
+      return [];
+    }
+
+    const totalFrames = durationInFrames || fps * 10;
+    const totalDuration = totalFrames / fps;
+
+    // Estimate duration for each part
+    const estimatedDurations = textParts.map(estimatePartDuration);
+    const totalEstimated = estimatedDurations.reduce((sum, d) => sum + d, 0);
+
+    // Scale to fit actual duration
+    const scale = totalDuration / totalEstimated;
+
+    let currentTime = 0;
+    return textParts.map((part, index) => {
+      const duration = estimatedDurations[index] * scale;
+      const startTime = currentTime;
+      const endTime = currentTime + duration;
+      currentTime = endTime;
+
+      return {
+        part,
+        startFrame: Math.round(startTime * fps),
+        endFrame: Math.round(endTime * fps),
+      };
+    });
+  };
+
+  const partTimings = getPartTimings();
+
+  // Render text with highlighting based on textParts timing
+  const renderTextWithHighlight = () => {
+    if (!textParts || textParts.length === 0 || partTimings.length === 0) {
+      // Fallback to simple display without highlighting
+      return (
+        <div style={{ fontSize: 36, lineHeight: 1.6 }}>
+          {text}
+        </div>
+      );
+    }
+
+    return (
+      <div
+        style={{
+          fontSize: 36,
+          fontFamily: theme.fonts.primary,
+          color: theme.colors.text,
+          lineHeight: 1.8,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+        }}
+      >
+        {partTimings.map((timing, index) => {
+          const isActive = frame >= timing.startFrame && frame < timing.endFrame;
+          const isEnglish = timing.part.language === 'en';
+
+          return (
+            <span
+              key={index}
+              style={{
+                color: isActive
+                  ? theme.colors.primary
+                  : isEnglish
+                  ? theme.colors.text
+                  : theme.colors.textSecondary,
+                fontWeight: isActive ? 'bold' : isEnglish ? '600' : 'normal',
+                textShadow: isActive ? theme.shadows.md : 'none',
+                transition: 'color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease',
+                fontSize: isEnglish ? 40 : 34,
+                backgroundColor: isActive
+                  ? `${theme.colors.primary}20`
+                  : 'transparent',
+                padding: '4px 8px',
+                borderRadius: theme.borderRadius.sm,
+                display: 'inline-block',
+                boxSizing: 'border-box',
+              }}
+            >
+              {timing.part.text}
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <AbsoluteFill style={{ backgroundColor: theme.colors.background }}>
@@ -67,7 +177,7 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
               letterSpacing: 2,
             }}
           >
-            📖 Grammar Point
+            📖 GRAMMAR POINT
           </div>
         </div>
 
@@ -83,16 +193,7 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
             borderLeft: `8px solid ${theme.colors.primary}`,
           }}
         >
-          <div
-            style={{
-              fontSize: 36,
-              fontFamily: theme.fonts.primary,
-              color: theme.colors.text,
-              lineHeight: 1.6,
-            }}
-          >
-            {text}
-          </div>
+          {renderTextWithHighlight()}
 
           {/* Examples if provided */}
           {examples && examples.length > 0 && (
@@ -124,4 +225,3 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
     </AbsoluteFill>
   );
 };
-

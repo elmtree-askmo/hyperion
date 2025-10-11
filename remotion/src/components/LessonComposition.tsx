@@ -182,8 +182,10 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
             Component = (
               <GrammarCard
                 text={segment.text}
+                textParts={segment.textParts}
                 audioUrl={audioUrl}
                 backgroundImage={backgroundImage}
+                durationInFrames={durationInFrames}
               />
             );
             break;
