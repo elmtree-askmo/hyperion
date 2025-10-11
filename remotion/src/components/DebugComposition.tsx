@@ -6,10 +6,10 @@ import React from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion';
 
 interface DebugProps {
-  lessonData: any;
+  lessonData?: any;
 }
 
-export const DebugComposition: React.FC<DebugProps> = ({ lessonData }) => {
+export const DebugComposition: React.FC<DebugProps> = ({ lessonData = { lesson: { segmentBasedTiming: [] } } }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
 

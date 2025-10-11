@@ -7,9 +7,11 @@ import { Composition } from 'remotion';
 import { LessonComposition } from './components/LessonComposition';
 import { DebugComposition } from './components/DebugComposition';
 import { VIDEO_CONFIG } from './styles/theme';
+import { loadLesson1Data } from './utils/loadLessonData';
 
-// Import lesson data (this will be replaced dynamically during rendering)
-// For now, we'll export the component that accepts props
+// Load actual lesson data for preview
+const lesson1Data = loadLesson1Data();
+
 export const RemotionRoot: React.FC = () => {
   return (
     <>
@@ -20,19 +22,7 @@ export const RemotionRoot: React.FC = () => {
         fps={VIDEO_CONFIG.fps}
         width={VIDEO_CONFIG.width}
         height={VIDEO_CONFIG.height}
-        defaultProps={{
-          lessonData: {
-            lesson: {
-              title: 'Sample Lesson',
-              titleTh: 'บทเรียนตัวอย่าง',
-              episodeNumber: 1,
-              totalEpisodes: 3,
-              segmentBasedTiming: [],
-            },
-            flashcards: [],
-            audioSegments: [],
-          },
-        }}
+        defaultProps={lesson1Data}
         // Calculate duration from props if available
         calculateMetadata={({ props }) => {
           if (props.lessonData?.lesson?.segmentBasedTiming?.length > 0) {
@@ -60,14 +50,7 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={VIDEO_CONFIG.width}
         height={VIDEO_CONFIG.height}
-        defaultProps={{
-          lessonData: {
-            lesson: {
-              title: 'Debug',
-              segmentBasedTiming: [],
-            },
-          },
-        }}
+        defaultProps={lesson1Data}
       />
     </>
   );

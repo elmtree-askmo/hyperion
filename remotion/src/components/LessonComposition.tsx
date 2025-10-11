@@ -18,6 +18,14 @@ interface TextPart {
   speakingRate?: number;
 }
 
+interface TextPartTiming {
+  text: string;
+  language: string;
+  duration: number;
+  startTime: number;
+  endTime: number;
+}
+
 interface SegmentTiming {
   startTime: number;
   endTime: number;
@@ -27,6 +35,7 @@ interface SegmentTiming {
   text: string;
   vocabWord?: string;
   textParts?: TextPart[];
+  textPartTimings?: TextPartTiming[];
   backgroundUrl?: string;
 }
 
@@ -183,6 +192,7 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
               <GrammarCard
                 text={segment.text}
                 textParts={segment.textParts}
+                textPartTimings={segment.textPartTimings}
                 audioUrl={audioUrl}
                 backgroundImage={backgroundImage}
                 durationInFrames={durationInFrames}
@@ -195,6 +205,7 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
               <PracticeCard
                 text={segment.text}
                 textParts={segment.textParts}
+                textPartTimings={segment.textPartTimings}
                 audioUrl={audioUrl}
                 backgroundImage={backgroundImage}
                 durationInFrames={durationInFrames}

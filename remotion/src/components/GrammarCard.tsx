@@ -14,9 +14,18 @@ interface TextPart {
   speakingRate?: number;
 }
 
+interface TextPartTiming {
+  text: string;
+  language: string;
+  duration: number;
+  startTime: number;
+  endTime: number;
+}
+
 interface GrammarCardProps {
   text: string;
   textParts?: TextPart[];
+  textPartTimings?: TextPartTiming[];
   examples?: string[];
   audioUrl?: string;
   backgroundImage?: string;
@@ -26,6 +35,7 @@ interface GrammarCardProps {
 export const GrammarCard: React.FC<GrammarCardProps> = ({
   text,
   textParts,
+  textPartTimings,
   examples,
   audioUrl,
   backgroundImage,
@@ -38,9 +48,11 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
 
   // Helper function to estimate duration for each text part based on character count and speaking rate
   const estimatePartDuration = (part: TextPart): number => {
-    const baseCharsPerSecond = part.language === 'th' ? 8 : 15; // Thai is slower
+    // More accurate estimation based on actual TTS behavior
+    const baseCharsPerSecond = part.language === 'th' ? 10 : 12; // Adjusted for better accuracy
     const adjustedSpeed = baseCharsPerSecond * (part.speakingRate || 1.0);
-    return part.text.length / adjustedSpeed;
+    // Add small pause between parts (0.1 seconds)
+    return (part.text.length / adjustedSpeed) + 0.1;
   };
 
   // Calculate timing for each text part
@@ -78,7 +90,16 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
 
   // Render text with highlighting based on textParts timing
   const renderTextWithHighlight = () => {
-    if (!textParts || textParts.length === 0 || partTimings.length === 0) {
+    // Use precise textPartTimings if available, otherwise fall back to estimation
+    const timingsToUse = textPartTimings && textPartTimings.length > 0
+      ? textPartTimings.map((timing) => ({
+          part: { text: timing.text, language: timing.language },
+          startFrame: Math.round(timing.startTime * fps),
+          endFrame: Math.round(timing.endTime * fps),
+        }))
+      : partTimings;
+
+    if (!textParts || textParts.length === 0 || timingsToUse.length === 0) {
       // Fallback to simple display without highlighting
       return (
         <div style={{ fontSize: 36, lineHeight: 1.6 }}>
@@ -99,7 +120,7 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
           gap: '12px',
         }}
       >
-        {partTimings.map((timing, index) => {
+        {timingsToUse.map((timing, index) => {
           const isActive = frame >= timing.startFrame && frame < timing.endFrame;
           const isEnglish = timing.part.language === 'en';
 
