@@ -133,9 +133,9 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
                   : isEnglish
                   ? theme.colors.text
                   : theme.colors.textSecondary,
-                fontWeight: isActive ? 'bold' : isEnglish ? '600' : 'normal',
+                fontWeight: isEnglish ? (isActive ? 'bold' : '600') : 'normal',
                 textShadow: isActive ? theme.shadows.md : 'none',
-                transition: 'color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease',
+                transition: 'color 0.2s ease, background-color 0.2s ease, text-shadow 0.2s ease',
                 fontSize: isEnglish ? 40 : 34,
                 backgroundColor: isActive
                   ? `${theme.colors.primary}20`
