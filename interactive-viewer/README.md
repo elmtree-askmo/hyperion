@@ -4,6 +4,19 @@ An interactive web application for viewing and interacting with language learnin
 
 ## Features
 
+### 🎬 Episode Navigation
+
+- **Right Sidebar**: Beautiful episode browser with thumbnails and titles
+- **Episode Cards**: Rich preview of each episode including:
+  - Thumbnail image from the lesson
+  - English and Thai titles
+  - Episode duration
+  - Episode number badge
+  - Playing indicator for current episode
+- **Quick Navigation**: Click any episode card to instantly switch
+- **Visual Feedback**: Current episode is highlighted with special styling
+- **Responsive Design**: Adapts to mobile with grid layout at bottom
+
 ### 🎥 Video Mode
 
 - Watch lessons with synchronized animations and audio

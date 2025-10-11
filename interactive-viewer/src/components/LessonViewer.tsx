@@ -15,6 +15,7 @@ export const LessonViewer: React.FC = () => {
     activeSegment,
     userProgress,
     videoEnded,
+    currentVideoId,
     setIsPlaying,
     setCurrentLessonId,
     setVideoEnded,
@@ -26,11 +27,86 @@ export const LessonViewer: React.FC = () => {
   const [showInteractivePanel, setShowInteractivePanel] = useState(false);
   const [currentMode, setCurrentMode] = useState<'video' | 'flashcard' | 'practice'>('video');
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
+  const [episodesMetadata, setEpisodesMetadata] = useState<Array<{
+    episodeNumber: number;
+    title: string;
+    titleTh: string;
+    thumbnail: string;
+    duration: number;
+  }>>([]);
 
   // Calculate total duration
   const totalDuration = lessonData?.lesson.segmentBasedTiming[
     lessonData.lesson.segmentBasedTiming.length - 1
   ]?.endTime || 300;
+
+  // Load episodes metadata
+  useEffect(() => {
+    const loadEpisodesMetadata = async () => {
+      if (!lessonData) return;
+      
+      const episodes: Array<{
+        episodeNumber: number;
+        title: string;
+        titleTh: string;
+        thumbnail: string;
+        duration: number;
+      }> = [];
+
+      for (let i = 1; i <= lessonData.lesson.totalEpisodes; i++) {
+        try {
+          // Load both files to get title and thumbnail
+          const [microlessonResponse, synchronizedResponse] = await Promise.all([
+            fetch(`/videos/${currentVideoId}/lesson_${i}/microlesson_script.json`),
+            fetch(`/videos/${currentVideoId}/lesson_${i}/final_synchronized_lesson.json`),
+          ]);
+          
+          let title = `Episode ${i}`;
+          let titleTh = `บทที่ ${i}`;
+          let thumbnail = '/videos/placeholder-thumbnail.jpg';
+          let duration = 300;
+
+          if (microlessonResponse.ok) {
+            const microlessonData = await microlessonResponse.json();
+            title = microlessonData.lesson.title || title;
+            titleTh = microlessonData.lesson.titleTh || titleTh;
+          }
+
+          if (synchronizedResponse.ok) {
+            const synchronizedData = await synchronizedResponse.json();
+            const firstSegment = synchronizedData.lesson.segmentBasedTiming?.[0];
+            thumbnail = firstSegment?.backgroundUrl || thumbnail;
+            const lastSegment = synchronizedData.lesson.segmentBasedTiming?.[
+              synchronizedData.lesson.segmentBasedTiming.length - 1
+            ];
+            duration = lastSegment?.endTime || duration;
+          }
+
+          episodes.push({
+            episodeNumber: i,
+            title,
+            titleTh,
+            thumbnail,
+            duration,
+          });
+        } catch (error) {
+          console.warn(`Could not load metadata for lesson_${i}:`, error);
+          // Fallback data
+          episodes.push({
+            episodeNumber: i,
+            title: `Episode ${i}`,
+            titleTh: `บทที่ ${i}`,
+            thumbnail: '/videos/placeholder-thumbnail.jpg',
+            duration: 300,
+          });
+        }
+      }
+      
+      setEpisodesMetadata(episodes);
+    };
+
+    loadEpisodesMetadata();
+  }, [lessonData, currentVideoId]);
 
   // Auto-pause when encountering interactive segment
   useEffect(() => {
@@ -136,6 +212,7 @@ export const LessonViewer: React.FC = () => {
             <span>{Math.floor(totalDuration / 60)} minutes</span>
           </div>
         </div>
+
         <div className="lesson-actions">
           <button
             className={`mode-button ${currentMode === 'video' ? 'active' : ''}`}
@@ -158,8 +235,11 @@ export const LessonViewer: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="lesson-content">
+      {/* Main Layout with Episode Sidebar */}
+      <div className="lesson-layout">
+        {/* Main Content */}
+        <div className="lesson-content">
+          <div className="lesson-content-inner">
         {currentMode === 'video' ? (
           <>
             {/* Video Player */}
@@ -388,53 +468,106 @@ export const LessonViewer: React.FC = () => {
             )}
           </div>
         )}
-      </div>
+          </div>
 
-      {/* Progress Bar - Show in Flashcard and Practice Mode */}
-      {currentMode === 'flashcard' && (
-        <div className="lesson-progress">
-          <div className="progress-stats">
-            <span>
-              Flashcards: {userProgress.completedFlashcards.length} /{' '}
-              {flashcardSegments.length}
-            </span>
+        {/* Progress Bar - Show in Flashcard and Practice Mode */}
+        {currentMode === 'flashcard' && (
+          <div className="lesson-progress">
+            <div className="progress-stats">
+              <span>
+                Flashcards: {userProgress.completedFlashcards.length} /{' '}
+                {flashcardSegments.length}
+              </span>
+            </div>
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{
+                  width: `${
+                    (userProgress.completedFlashcards.length /
+                      flashcardSegments.length) *
+                    100
+                  }%`,
+                }}
+              />
+            </div>
           </div>
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{
-                width: `${
-                  (userProgress.completedFlashcards.length /
-                    flashcardSegments.length) *
-                  100
-                }%`,
-              }}
-            />
+        )}
+        {currentMode === 'practice' && (
+          <div className="lesson-progress">
+            <div className="progress-stats">
+              <span>
+                Practices: {userProgress.completedPractices.length} /{' '}
+                {practiceSegments.length}
+              </span>
+            </div>
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{
+                  width: `${
+                    (userProgress.completedPractices.length /
+                      practiceSegments.length) *
+                    100
+                  }%`,
+                }}
+              />
+            </div>
+          </div>
+        )}
+        </div>
+
+        {/* Episode Navigation Sidebar - Right */}
+        <div className="episode-sidebar">
+          <div className="episode-sidebar-header">
+            <h3>📚 Episodes</h3>
+            <p className="episode-count">
+              {lessonData.lesson.episodeNumber} / {lessonData.lesson.totalEpisodes}
+            </p>
+          </div>
+
+          <div className="episode-list">
+            {episodesMetadata.map((episode) => (
+              <div
+                key={episode.episodeNumber}
+                className={`episode-card ${
+                  episode.episodeNumber === lessonData.lesson.episodeNumber ? 'active' : ''
+                }`}
+                onClick={() => {
+                  setCurrentLessonId(`lesson_${episode.episodeNumber}`);
+                  setCurrentMode('video');
+                }}
+              >
+                <div className="episode-thumbnail">
+                  <img 
+                    src={episode.thumbnail} 
+                    alt={episode.title}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/videos/placeholder-thumbnail.jpg';
+                    }}
+                  />
+                  <div className="episode-number-badge">{episode.episodeNumber}</div>
+                  {episode.episodeNumber === lessonData.lesson.episodeNumber && (
+                    <div className="playing-indicator">
+                      <span className="playing-icon">▶</span>
+                    </div>
+                  )}
+                </div>
+                <div className="episode-info">
+                  <h4 className="episode-title">{episode.title}</h4>
+                  <p className="episode-title-th">{episode.titleTh}</p>
+                  <div className="episode-meta">
+                    <span className="episode-duration">
+                      {Math.floor(episode.duration / 60)}:{String(Math.floor(episode.duration % 60)).padStart(2, '0')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      )}
-      {currentMode === 'practice' && (
-        <div className="lesson-progress">
-          <div className="progress-stats">
-            <span>
-              Practices: {userProgress.completedPractices.length} /{' '}
-              {practiceSegments.length}
-            </span>
-          </div>
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{
-                width: `${
-                  (userProgress.completedPractices.length /
-                    practiceSegments.length) *
-                  100
-                }%`,
-              }}
-            />
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 };
