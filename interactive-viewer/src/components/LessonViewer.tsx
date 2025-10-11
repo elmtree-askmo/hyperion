@@ -302,7 +302,7 @@ export const LessonViewer: React.FC = () => {
               )}
 
               {/* Next Lesson Overlay - Show when video ends */}
-              {videoEnded && lessonData && lessonData.lesson.episodeNumber < lessonData.lesson.totalEpisodes && (
+              {videoEnded && lessonData && (
                 <div className="interactive-overlay next-lesson-overlay">
                   <div className="interactive-overlay-content">
                     <div className="next-lesson-content">
@@ -311,12 +311,14 @@ export const LessonViewer: React.FC = () => {
                       <p className="completion-message">
                         คุณได้เรียนจบบทเรียนนี้แล้ว
                       </p>
-                      <button
-                        className="next-lesson-button"
-                        onClick={handleNextLesson}
-                      >
-                        👉 Next: Lesson {lessonData.lesson.episodeNumber + 1}
-                      </button>
+                      {lessonData.lesson.episodeNumber < lessonData.lesson.totalEpisodes && (
+                        <button
+                          className="next-lesson-button"
+                          onClick={handleNextLesson}
+                        >
+                          👉 Next: Lesson {lessonData.lesson.episodeNumber + 1}
+                        </button>
+                      )}
                       <button
                         className="replay-button"
                         onClick={() => {
