@@ -58,3 +58,5 @@ audios/
 
 # Gemini
 GEMINI.md
+
+.credentials/
