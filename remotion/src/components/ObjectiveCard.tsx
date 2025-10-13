@@ -39,14 +39,13 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
         </AbsoluteFill>
       )}
 
-      {/* Content - Optimized for 9:16 vertical format */}
+      {/* Content - Responsive layout for both 1:1 preview and 9:16 export */}
       <AbsoluteFill
         style={{
           display: 'flex',
           flexDirection: 'column',
           padding: `${theme.spacing.xl}px ${theme.spacing.lg}px`,
-          justifyContent: 'flex-start',
-          paddingTop: VIDEO_CONFIG.height * 0.25, // Start at 25% from top
+          justifyContent: 'center', // Center for square format
         }}
       >
         {/* Label */}

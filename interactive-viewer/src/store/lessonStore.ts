@@ -10,10 +10,14 @@ interface LessonState {
   currentVideoId: string;
   currentLessonId: string;
   videoEnded: boolean;
+  practicePauseEnabled: boolean;
+  currentPracticePhrase: string | null;
+  isPracticePaused: boolean;
   userProgress: {
     completedFlashcards: string[];
     completedPractices: string[];
     quizAnswers: Record<string, string>;
+    practicedPhrases: string[];
   };
 
   // Actions
@@ -24,6 +28,10 @@ interface LessonState {
   setCurrentVideoId: (videoId: string) => void;
   setCurrentLessonId: (lessonId: string) => void;
   setVideoEnded: (ended: boolean) => void;
+  setPracticePauseEnabled: (enabled: boolean) => void;
+  setCurrentPracticePhrase: (phrase: string | null) => void;
+  setIsPracticePaused: (paused: boolean) => void;
+  completePracticePhrase: (phrase: string) => void;
   revealFlashcard: (word: string) => void;
   completePractice: (practiceId: string) => void;
   submitQuizAnswer: (questionId: string, answer: string) => void;
@@ -39,10 +47,14 @@ export const useLessonStore = create<LessonState>((set, get) => ({
   currentVideoId: 'henIVlCPVIY',
   currentLessonId: 'lesson_1',
   videoEnded: false,
+  practicePauseEnabled: false,
+  currentPracticePhrase: null,
+  isPracticePaused: false,
   userProgress: {
     completedFlashcards: [],
     completedPractices: [],
     quizAnswers: {},
+    practicedPhrases: [],
   },
 
   setLessonData: (data) => {
@@ -103,6 +115,24 @@ export const useLessonStore = create<LessonState>((set, get) => ({
 
   setVideoEnded: (ended) => set({ videoEnded: ended }),
 
+  setPracticePauseEnabled: (enabled) => set({ practicePauseEnabled: enabled }),
+
+  setCurrentPracticePhrase: (phrase) => set({ currentPracticePhrase: phrase }),
+
+  setIsPracticePaused: (paused) => set({ isPracticePaused: paused }),
+
+  completePracticePhrase: (phrase) => {
+    const { userProgress } = get();
+    set({
+      userProgress: {
+        ...userProgress,
+        practicedPhrases: [...userProgress.practicedPhrases, phrase],
+      },
+      currentPracticePhrase: null,
+      isPracticePaused: false,
+    });
+  },
+
   revealFlashcard: (word) => {
     const { interactiveSegments, userProgress } = get();
     const updatedSegments = interactiveSegments.map((seg) => (seg.type === 'flashcard' && seg.data.word === word ? { ...seg, revealed: true } : seg));
@@ -145,12 +175,15 @@ export const useLessonStore = create<LessonState>((set, get) => ({
         completedFlashcards: [],
         completedPractices: [],
         quizAnswers: {},
+        practicedPhrases: [],
       },
       interactiveSegments: get().interactiveSegments.map((seg) => ({
         ...seg,
         revealed: false,
         completed: false,
       })),
+      currentPracticePhrase: null,
+      isPracticePaused: false,
     });
   },
 }));

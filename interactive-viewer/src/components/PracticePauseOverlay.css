@@ -1,0 +1,325 @@
+.practice-pause-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.practice-pause-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.practice-pause-content {
+  position: relative;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 24px;
+  padding: 32px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+.practice-pause-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.practice-pause-header h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.practiced-badge {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.close-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.practice-phrase-display {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
+  border: 2px solid rgba(59, 130, 246, 0.4);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.phrase-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.phrase-text {
+  font-size: 32px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.phrase-translation {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}
+
+.countdown-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120px;
+  font-weight: bold;
+  color: rgba(59, 130, 246, 0.9);
+  text-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.practice-instructions {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.instruction-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.instruction-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.instruction-item:last-child {
+  margin-bottom: 0;
+}
+
+.instruction-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.recording-section {
+  margin-bottom: 20px;
+}
+
+.recording-button {
+  width: 100%;
+  padding: 16px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 2px dashed rgba(239, 68, 68, 0.4);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.recording-button:not(:disabled) {
+  cursor: pointer;
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #fff;
+}
+
+.recording-button:not(:disabled):hover {
+  background: rgba(239, 68, 68, 0.4);
+  transform: translateY(-2px);
+}
+
+.recording-button.recording {
+  background: rgba(239, 68, 68, 0.8);
+  border-color: rgba(239, 68, 68, 1);
+  animation: pulse 1.5s infinite;
+}
+
+.recording-indicator {
+  font-size: 20px;
+  color: #fff;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.3; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.mic-icon {
+  font-size: 20px;
+}
+
+.practice-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.practice-action-button {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.practice-action-button.mark-practiced {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  grid-column: 1 / -1;
+}
+
+.practice-action-button.mark-practiced:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+}
+
+.practice-action-button.mark-practiced:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.practice-action-button.continue-now {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.practice-action-button.continue-now:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.practice-action-button.auto-continue {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.practice-action-button.auto-continue:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.practice-action-button.auto-continue:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.practice-hint {
+  background: rgba(250, 204, 21, 0.1);
+  border-left: 4px solid #facc15;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.practice-hint strong {
+  color: #facc15;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .practice-pause-content {
+    padding: 24px 20px;
+  }
+
+  .practice-pause-header h2 {
+    font-size: 24px;
+  }
+
+  .phrase-text {
+    font-size: 24px;
+  }
+
+  .phrase-translation {
+    font-size: 16px;
+  }
+
+  .instruction-item {
+    font-size: 14px;
+  }
+
+  .practice-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .countdown-display {
+    font-size: 80px;
+  }
+}
+

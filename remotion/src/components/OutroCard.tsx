@@ -46,7 +46,7 @@ export const OutroCard: React.FC<OutroCardProps> = ({
         </AbsoluteFill>
       )}
 
-      {/* Content - Optimized for 9:16 vertical format */}
+      {/* Content - Responsive layout for both 1:1 preview and 9:16 export */}
       <AbsoluteFill
         style={{
           display: 'flex',

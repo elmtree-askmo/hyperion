@@ -39,7 +39,17 @@ export const theme = {
   },
 };
 
+// Preview configuration for Interactive Viewer (1:1 square for desktop viewing)
 export const VIDEO_CONFIG = {
+  width: 1024,
+  height: 1024,
+  fps: 30,
+  durationInSeconds: 300, // 5 minutes
+  aspectRatio: '1:1', // Square format for desktop preview
+};
+
+// Export configuration for MP4 files (9:16 vertical for mobile platforms)
+export const EXPORT_VIDEO_CONFIG = {
   width: 1080,
   height: 1920,
   fps: 30,

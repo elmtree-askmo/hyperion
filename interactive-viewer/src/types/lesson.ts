@@ -11,6 +11,14 @@ export interface Flashcard {
   difficulty: string;
 }
 
+export interface TextPartTiming {
+  text: string;
+  language: string;
+  duration: number;
+  startTime: number;
+  endTime: number;
+}
+
 export interface SegmentTiming {
   startTime: number;
   endTime: number;
@@ -20,6 +28,7 @@ export interface SegmentTiming {
   text: string;
   vocabWord?: string;
   backgroundUrl?: string;
+  textPartTimings?: TextPartTiming[];
 }
 
 export interface ComprehensionQuestion {

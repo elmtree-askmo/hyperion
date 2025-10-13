@@ -137,11 +137,12 @@ export class RemotionVideoService {
       const outputDir = path.dirname(absoluteOutputPath);
       fs.mkdirSync(outputDir, { recursive: true });
 
-      // Build Remotion command
+      // Build Remotion command for MP4 export
       // Note: Use CRF for quality control (lower = better quality, 18-28 is good range)
       // Cannot use both CRF and video-bitrate together
       // Audio bitrate must be string with K or M suffix (e.g., "128K" or "0.128M")
-      // IMPORTANT: Props must be passed with correct format for Remotion to read
+      // IMPORTANT: Override dimensions to 9:16 (1080x1920) for mobile platform export
+      // while keeping 1:1 (1024x1024) for Interactive Viewer preview
       const command = [
         'npx',
         'remotion',
@@ -158,6 +159,10 @@ export class RemotionVideoService {
         '128K',
         '--crf',
         '23',
+        '--width',
+        '1080',
+        '--height',
+        '1920',
       ].join(' ');
 
       this.logger.log(`Executing Remotion render: ${command}`);

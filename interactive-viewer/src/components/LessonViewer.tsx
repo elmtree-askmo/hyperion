@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Player } from '@remotion/player';
 import { InteractiveFlashcard } from './InteractiveFlashcard';
 import { InteractivePractice } from './InteractivePractice';
+import { PracticePauseOverlay } from './PracticePauseOverlay';
 import { useLessonStore } from '../store/lessonStore';
 import { LessonComposition } from '../../../remotion/src/components/LessonComposition';
 import { VIDEO_CONFIG } from '../../../remotion/src/styles/theme';
@@ -16,9 +17,14 @@ export const LessonViewer: React.FC = () => {
     userProgress,
     videoEnded,
     currentVideoId,
+    currentPracticePhrase,
+    isPracticePaused,
     setIsPlaying,
     setCurrentLessonId,
     setVideoEnded,
+    setCurrentPracticePhrase,
+    setIsPracticePaused,
+    completePracticePhrase,
     revealFlashcard,
     completePractice,
   } = useLessonStore();
@@ -27,6 +33,9 @@ export const LessonViewer: React.FC = () => {
   const [showInteractivePanel, setShowInteractivePanel] = useState(false);
   const [currentMode, setCurrentMode] = useState<'video' | 'flashcard' | 'practice'>('video');
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
+  const [lastCheckedTime, setLastCheckedTime] = useState(0);
+  const [lastPausedTime, setLastPausedTime] = useState(0);
+  const [showDebugPanel, setShowDebugPanel] = useState(false);
   const [episodesMetadata, setEpisodesMetadata] = useState<Array<{
     episodeNumber: number;
     title: string;
@@ -139,6 +148,92 @@ export const LessonViewer: React.FC = () => {
     return () => clearInterval(interval);
   }, [playerRef, lessonData, setVideoEnded, setIsPlaying]);
 
+  // Auto-pause for practice mode (always enabled for practice_card segments)
+  useEffect(() => {
+    if (!playerRef || !lessonData || currentMode !== 'video' || isPracticePaused) {
+      return;
+    }
+
+    const checkForPracticeSegments = () => {
+      const currentFrame = playerRef.getCurrentFrame();
+      const currentTime = currentFrame / VIDEO_CONFIG.fps;
+
+      // Avoid checking the same time multiple times (but allow re-checking after 0.2s)
+      if (Math.abs(currentTime - lastCheckedTime) < 0.2) return;
+      
+      // Cooldown period after pausing - prevent immediate re-trigger
+      // If we just paused within the last 3 seconds, skip checking
+      if (lastPausedTime > 0 && currentTime - lastPausedTime < 3) {
+        return;
+      }
+      
+      setLastCheckedTime(currentTime);
+
+      // Debug: Log current position (only occasionally to reduce noise)
+      if (Math.abs(currentTime - lastCheckedTime) > 1) {
+        console.log('🔍 Checking at time:', currentTime.toFixed(2));
+      }
+
+      // Find ONLY practice_card segments with English textParts
+      const segments = lessonData.lesson.segmentBasedTiming;
+      
+      for (const segment of segments) {
+        // ONLY trigger for practice_card segments
+        if (segment.screenElement !== 'practice_card') continue;
+        
+        if (!segment.textPartTimings || segment.textPartTimings.length === 0) continue;
+
+        // Check each textPart timing for English phrases
+        for (const timing of segment.textPartTimings) {
+          if (timing.language !== 'en') continue;
+
+          const absoluteStartTime = segment.startTime + timing.startTime;
+          const absoluteEndTime = segment.startTime + timing.endTime;
+
+          // Check if we're within or just passed an English phrase
+          // Narrower window: from 0.1s before end to 0.8s after end
+          if (
+            currentTime >= absoluteEndTime - 0.1 &&
+            currentTime <= absoluteEndTime + 0.8 &&
+            !userProgress.practicedPhrases.includes(timing.text)
+          ) {
+            // Debug log
+            console.log('🎤 Practice pause triggered:', {
+              phrase: timing.text,
+              currentTime: currentTime.toFixed(2),
+              phraseWindow: `${absoluteStartTime.toFixed(2)} - ${absoluteEndTime.toFixed(2)}`,
+              segment: segment.screenElement,
+              isPlaying,
+            });
+
+            // Pause the video and show overlay
+            playerRef.pause();
+            setIsPlaying(false);
+            setCurrentPracticePhrase(timing.text);
+            setIsPracticePaused(true);
+            setLastPausedTime(currentTime);
+            return;
+          }
+        }
+      }
+    };
+
+    const interval = setInterval(checkForPracticeSegments, 100);
+    return () => clearInterval(interval);
+  }, [
+    playerRef,
+    lessonData,
+    currentMode,
+    isPracticePaused,
+    isPlaying,
+    userProgress.practicedPhrases,
+    lastCheckedTime,
+    lastPausedTime,
+    setIsPlaying,
+    setCurrentPracticePhrase,
+    setIsPracticePaused,
+  ]);
+
   const handleFlashcardReveal = (word: string) => {
     revealFlashcard(word);
   };
@@ -180,6 +275,27 @@ export const LessonViewer: React.FC = () => {
     }
   };
 
+  const handlePracticeContinue = () => {
+    // Mark as practiced to prevent re-triggering
+    if (currentPracticePhrase) {
+      completePracticePhrase(currentPracticePhrase);
+    }
+    
+    setIsPracticePaused(false);
+    setCurrentPracticePhrase(null);
+    
+    if (playerRef) {
+      playerRef.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handlePracticeMarkPracticed = () => {
+    if (currentPracticePhrase) {
+      completePracticePhrase(currentPracticePhrase);
+    }
+  };
+
   const flashcardSegments = interactiveSegments.filter(
     (seg) => seg.type === 'flashcard'
   );
@@ -198,6 +314,90 @@ export const LessonViewer: React.FC = () => {
 
   return (
     <div className="lesson-viewer">
+      {/* Debug Panel Toggle Button (Only in development) */}
+      {process.env.NODE_ENV === 'development' && (
+        <button
+          onClick={() => setShowDebugPanel(!showDebugPanel)}
+          style={{
+            position: 'fixed',
+            bottom: 20,
+            right: 20,
+            background: showDebugPanel ? 'rgba(59, 130, 246, 0.9)' : 'rgba(0, 0, 0, 0.6)',
+            color: '#fff',
+            border: '2px solid rgba(255, 255, 255, 0.2)',
+            padding: '12px',
+            borderRadius: '50%',
+            fontSize: '20px',
+            cursor: 'pointer',
+            zIndex: 9999,
+            width: '48px',
+            height: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          }}
+          title={showDebugPanel ? 'Hide Debug Info' : 'Show Debug Info'}
+        >
+          🐛
+        </button>
+      )}
+
+      {/* Debug Panel (Only in development) */}
+      {process.env.NODE_ENV === 'development' && showDebugPanel && (
+        <div style={{
+          position: 'fixed',
+          bottom: 80,
+          right: 20,
+          background: 'rgba(0, 0, 0, 0.95)',
+          color: '#fff',
+          padding: '16px',
+          borderRadius: '12px',
+          fontSize: '11px',
+          zIndex: 9998,
+          maxWidth: '320px',
+          fontFamily: 'monospace',
+          lineHeight: '1.6',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+          border: '1px solid rgba(59, 130, 246, 0.3)',
+        }}>
+          <div style={{ 
+            fontWeight: 'bold', 
+            marginBottom: '12px', 
+            borderBottom: '2px solid rgba(59, 130, 246, 0.5)', 
+            paddingBottom: '8px',
+            fontSize: '13px',
+            color: '#3b82f6',
+          }}>
+            🐛 Debug Info
+          </div>
+          <div>Is Paused: {isPracticePaused ? '⏸️ Yes' : '▶️ No'}</div>
+          <div>Mode: {currentMode}</div>
+          <div>Playing: {isPlaying ? '▶️ Yes' : '⏸️ No'}</div>
+          <div>Practiced: {userProgress.practicedPhrases.length} phrases</div>
+          {playerRef && (
+            <>
+              <div>Current Time: {(playerRef.getCurrentFrame() / VIDEO_CONFIG.fps).toFixed(2)}s</div>
+              {lastPausedTime > 0 && (
+                <div style={{ color: '#facc15' }}>
+                  Cooldown: {Math.max(0, 3 - ((playerRef.getCurrentFrame() / VIDEO_CONFIG.fps) - lastPausedTime)).toFixed(1)}s
+                </div>
+              )}
+              <div style={{ marginTop: '12px', fontSize: '10px', color: '#888', borderTop: '1px solid #333', paddingTop: '8px' }}>
+                💡 Check console for "🔍 Checking" logs
+              </div>
+            </>
+          )}
+          {currentPracticePhrase && (
+            <div style={{ marginTop: '12px', padding: '8px', background: '#1a1a1a', borderRadius: '6px', border: '1px solid #333' }}>
+              <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>Current Phrase:</div>
+              <div style={{ color: '#10b981' }}>{currentPracticePhrase.substring(0, 40)}{currentPracticePhrase.length > 40 ? '...' : ''}</div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Header */}
       <div className="lesson-header">
         <div className="lesson-title-section">
@@ -299,6 +499,17 @@ export const LessonViewer: React.FC = () => {
                     </button>
                   </div>
                 </div>
+              )}
+
+              {/* Practice Pause Overlay */}
+              {isPracticePaused && currentPracticePhrase && (
+                <PracticePauseOverlay
+                  phrase={currentPracticePhrase}
+                  thaiTranslation={undefined}
+                  onContinue={handlePracticeContinue}
+                  onMarkPracticed={handlePracticeMarkPracticed}
+                  isPracticed={userProgress.practicedPhrases.includes(currentPracticePhrase)}
+                />
               )}
 
               {/* Next Lesson Overlay - Show when video ends */}
