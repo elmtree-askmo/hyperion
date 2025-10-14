@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Player } from '@remotion/player';
 import { InteractiveFlashcard } from './InteractiveFlashcard';
 import { InteractivePractice } from './InteractivePractice';
 import { PracticePauseOverlay } from './PracticePauseOverlay';
+import { VocabularyPauseOverlay } from './VocabularyPauseOverlay';
 import { useLessonStore } from '../store/lessonStore';
 import { LessonComposition } from '../../../remotion/src/components/LessonComposition';
 import { VIDEO_CONFIG } from '../../../remotion/src/styles/theme';
@@ -19,12 +20,17 @@ export const LessonViewer: React.FC = () => {
     currentVideoId,
     currentPracticePhrase,
     isPracticePaused,
+    currentVocabularyWord,
+    isVocabularyPaused,
     setIsPlaying,
     setCurrentLessonId,
     setVideoEnded,
     setCurrentPracticePhrase,
     setIsPracticePaused,
+    setCurrentVocabularyWord,
+    setIsVocabularyPaused,
     completePracticePhrase,
+    markVocabularyReviewed,
     revealFlashcard,
     completePractice,
   } = useLessonStore();
@@ -35,7 +41,13 @@ export const LessonViewer: React.FC = () => {
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
   const [lastCheckedTime, setLastCheckedTime] = useState(0);
   const [lastPausedTime, setLastPausedTime] = useState(0);
+  const [lastVocabPausedTime, setLastVocabPausedTime] = useState(0);
   const [showDebugPanel, setShowDebugPanel] = useState(false);
+  
+  // Use ref to track just-clicked vocabulary (doesn't trigger re-render)
+  const justClickedVocabRef = useRef<string | null>(null);
+  // Track the timeout to clear it on new clicks
+  const vocabClickTimeoutRef = useRef<number | null>(null);
   const [episodesMetadata, setEpisodesMetadata] = useState<Array<{
     episodeNumber: number;
     title: string;
@@ -190,11 +202,11 @@ export const LessonViewer: React.FC = () => {
           const absoluteStartTime = segment.startTime + timing.startTime;
           const absoluteEndTime = segment.startTime + timing.endTime;
 
-          // Check if we're within or just passed an English phrase
-          // Narrower window: from 0.1s before end to 0.8s after end
+          // Check if we just passed the end of the English phrase
+          // Wait for phrase to finish playing before pausing
           if (
-            currentTime >= absoluteEndTime - 0.1 &&
-            currentTime <= absoluteEndTime + 0.8 &&
+            currentTime >= absoluteEndTime &&
+            currentTime <= absoluteEndTime + 0.5 &&
             !userProgress.practicedPhrases.includes(timing.text)
           ) {
             // Debug log
@@ -206,7 +218,8 @@ export const LessonViewer: React.FC = () => {
               isPlaying,
             });
 
-            // Pause the video and show overlay
+            // Pause immediately without seeking
+            // This ensures audio has finished playing
             playerRef.pause();
             setIsPlaying(false);
             setCurrentPracticePhrase(timing.text);
@@ -232,6 +245,143 @@ export const LessonViewer: React.FC = () => {
     setIsPlaying,
     setCurrentPracticePhrase,
     setIsPracticePaused,
+  ]);
+
+  // Auto-pause for vocabulary cards (at the end of each vocabulary_card segment)
+  useEffect(() => {
+    if (!playerRef || !lessonData || currentMode !== 'video' || isVocabularyPaused) {
+      return;
+    }
+
+    const checkForVocabularySegmentEnd = () => {
+      const currentFrame = playerRef.getCurrentFrame();
+      const currentTime = currentFrame / VIDEO_CONFIG.fps;
+
+      // Cooldown period after pausing - prevent immediate re-trigger
+      if (lastVocabPausedTime > 0 && currentTime - lastVocabPausedTime < 2) {
+        return;
+      }
+
+      // Find vocabulary_card segments
+      const segments = lessonData.lesson.segmentBasedTiming;
+      
+      for (const segment of segments) {
+        // ONLY trigger for vocabulary_card segments
+        if (segment.screenElement !== 'vocabulary_card') continue;
+        
+        if (!segment.vocabWord) continue;
+
+        // Check if we've already reviewed this word
+        if (userProgress.reviewedVocabulary.includes(segment.vocabWord)) continue;
+
+        // Skip if user just clicked to jump (using ref for immediate check)
+        // "*" means skip all detection (user is manually navigating)
+        if (justClickedVocabRef.current === segment.vocabWord || 
+            justClickedVocabRef.current === "*") continue;
+
+        // Check if we just passed the end of the vocabulary card
+        // Wait for card to finish completely before pausing
+        // This ensures audio is fully played, even if background transitions
+        if (
+          currentTime >= segment.endTime &&
+          currentTime <= segment.endTime + 0.5
+        ) {
+          // Debug log
+          console.log('📚 Vocabulary pause triggered:', {
+            word: segment.vocabWord,
+            currentTime: currentTime.toFixed(2),
+            segmentEnd: segment.endTime.toFixed(2),
+            segment: segment.screenElement,
+            isPlaying,
+          });
+
+          // Find the flashcard data for this word
+          const flashcard = lessonData.flashcards.find(f => f.word === segment.vocabWord);
+          
+          if (flashcard) {
+            // Pause immediately without seeking
+            // This ensures audio has finished playing completely
+            playerRef.pause();
+            setIsPlaying(false);
+            setCurrentVocabularyWord(segment.vocabWord);
+            setIsVocabularyPaused(true);
+            setLastVocabPausedTime(currentTime);
+          }
+          return;
+        }
+      }
+    };
+
+    const interval = setInterval(checkForVocabularySegmentEnd, 100);
+    return () => clearInterval(interval);
+  }, [
+    playerRef,
+    lessonData,
+    currentMode,
+    isVocabularyPaused,
+    isPlaying,
+    userProgress.reviewedVocabulary,
+    lastVocabPausedTime,
+    setIsPlaying,
+    setCurrentVocabularyWord,
+    setIsVocabularyPaused,
+  ]);
+
+  // Monitor playback state changes - close overlays if user manually plays video
+  useEffect(() => {
+    if (!playerRef) return;
+
+    // Check if player is actually playing
+    // The Remotion Player doesn't have a direct isPlaying() method, 
+    // so we monitor frame changes to detect if video is playing
+    let lastFrame = playerRef.getCurrentFrame();
+    let consecutiveChanges = 0;
+    const requiredConsecutiveChanges = 2; // Need 2+ consecutive changes to confirm playback
+    
+    const checkInterval = setInterval(() => {
+      const currentFrame = playerRef.getCurrentFrame();
+      const frameChanged = currentFrame !== lastFrame;
+      
+      if (frameChanged) {
+        consecutiveChanges++;
+      } else {
+        consecutiveChanges = 0; // Reset if no change detected
+      }
+      
+      lastFrame = currentFrame;
+
+      // Only close overlays if we have consecutive frame changes (real playback)
+      // This prevents closing when we just seeked to a new position
+      if (consecutiveChanges >= requiredConsecutiveChanges) {
+        if (isPracticePaused) {
+          console.log('📹 Video resumed during practice pause - closing overlay');
+          setIsPracticePaused(false);
+          setCurrentPracticePhrase(null);
+          setIsPlaying(true);
+          consecutiveChanges = 0; // Reset after closing
+        }
+        if (isVocabularyPaused) {
+          console.log('📹 Video resumed during vocabulary pause - closing overlay');
+          setIsVocabularyPaused(false);
+          setCurrentVocabularyWord(null);
+          setIsPlaying(true);
+          consecutiveChanges = 0; // Reset after closing
+        }
+      }
+    }, 100); // Check every 100ms
+
+    return () => {
+      clearInterval(checkInterval);
+    };
+  }, [
+    playerRef,
+    isPracticePaused,
+    isVocabularyPaused,
+    setIsPracticePaused,
+    setCurrentPracticePhrase,
+    setIsVocabularyPaused,
+    setCurrentVocabularyWord,
+    setIsPlaying,
   ]);
 
   const handleFlashcardReveal = (word: string) => {
@@ -290,9 +440,88 @@ export const LessonViewer: React.FC = () => {
     }
   };
 
-  const handlePracticeMarkPracticed = () => {
-    if (currentPracticePhrase) {
-      completePracticePhrase(currentPracticePhrase);
+  const handlePracticeReplay = () => {
+    // Find the segment containing the current practice phrase
+    if (currentPracticePhrase && lessonData && playerRef) {
+      console.log('🔄 Replaying phrase:', currentPracticePhrase);
+      
+      // Search through ONLY practice_card segments
+      for (const segment of lessonData.lesson.segmentBasedTiming) {
+        // Only look in practice_card segments
+        if (segment.screenElement !== 'practice_card') continue;
+        
+        if (segment.textPartTimings) {
+          const timing = segment.textPartTimings.find(
+            t => t.text === currentPracticePhrase && t.language === 'en'
+          );
+          
+          if (timing) {
+            // Seek to the start of this specific phrase within the segment
+            const phraseStartTime = segment.startTime + timing.startTime;
+            const startFrame = Math.round(phraseStartTime * VIDEO_CONFIG.fps);
+            
+            console.log('🔄 Found phrase in segment:', {
+              segment: segment.screenElement,
+              segmentStart: segment.startTime.toFixed(2),
+              phraseStart: phraseStartTime.toFixed(2),
+              frame: startFrame,
+            });
+            
+            playerRef.seekTo(startFrame);
+            
+            // Reset last paused time to allow re-triggering after replay
+            setLastPausedTime(0);
+            
+            // Close the overlay and play
+            setIsPracticePaused(false);
+            setCurrentPracticePhrase(null);
+            playerRef.play();
+            setIsPlaying(true);
+            return;
+          }
+        }
+      }
+      
+      console.warn('⚠️ Could not find phrase in segments:', currentPracticePhrase);
+    }
+  };
+
+  const handleVocabularyContinue = () => {
+    // Mark as reviewed to prevent re-triggering
+    if (currentVocabularyWord) {
+      markVocabularyReviewed(currentVocabularyWord);
+    }
+    
+    setIsVocabularyPaused(false);
+    setCurrentVocabularyWord(null);
+    
+    if (playerRef) {
+      playerRef.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handleVocabularyReplay = () => {
+    // Find the segment for the current vocabulary word
+    if (currentVocabularyWord && lessonData && playerRef) {
+      const segment = lessonData.lesson.segmentBasedTiming.find(
+        seg => seg.screenElement === 'vocabulary_card' && seg.vocabWord === currentVocabularyWord
+      );
+      
+      if (segment) {
+        // Seek to the start of the vocabulary card
+        const startFrame = Math.round(segment.startTime * VIDEO_CONFIG.fps);
+        playerRef.seekTo(startFrame);
+        
+        // Reset cooldown to allow re-triggering after replay
+        setLastVocabPausedTime(0);
+        
+        // Close the overlay and play
+        setIsVocabularyPaused(false);
+        setCurrentVocabularyWord(null);
+        playerRef.play();
+        setIsPlaying(true);
+      }
     }
   };
 
@@ -507,9 +736,26 @@ export const LessonViewer: React.FC = () => {
                   phrase={currentPracticePhrase}
                   thaiTranslation={undefined}
                   onContinue={handlePracticeContinue}
-                  onMarkPracticed={handlePracticeMarkPracticed}
+                  onReplay={handlePracticeReplay}
                   isPracticed={userProgress.practicedPhrases.includes(currentPracticePhrase)}
                 />
+              )}
+
+              {/* Vocabulary Pause Overlay */}
+              {isVocabularyPaused && currentVocabularyWord && lessonData && (
+                (() => {
+                  const flashcard = lessonData.flashcards.find(f => f.word === currentVocabularyWord);
+                  return flashcard ? (
+                    <VocabularyPauseOverlay
+                      word={flashcard.word}
+                      thaiTranslation={flashcard.thaiTranslation}
+                      pronunciation={flashcard.pronunciation}
+                      onContinue={handleVocabularyContinue}
+                      onReplay={handleVocabularyReplay}
+                      isReviewed={userProgress.reviewedVocabulary.includes(currentVocabularyWord)}
+                    />
+                  ) : null;
+                })()
               )}
 
               {/* Next Lesson Overlay - Show when video ends */}
@@ -563,9 +809,27 @@ export const LessonViewer: React.FC = () => {
                     }`}
                     onClick={() => {
                       if (playerRef) {
+                        // Clear any existing timeout from previous clicks
+                        if (vocabClickTimeoutRef.current) {
+                          clearTimeout(vocabClickTimeoutRef.current);
+                        }
+                        
+                        // Set ref to "*" to skip ALL pause detection temporarily
+                        // This prevents triggering any vocabulary pause overlay
+                        // when user is manually jumping to a specific word
+                        justClickedVocabRef.current = "*";
+                        
+                        // Seek to position
                         playerRef.seekTo(
                           Math.round(segment.startTime * VIDEO_CONFIG.fps)
                         );
+                        
+                        // Clear the ref after a short delay to allow next detection
+                        // This allows normal pause behavior if user continues watching
+                        vocabClickTimeoutRef.current = setTimeout(() => {
+                          justClickedVocabRef.current = null;
+                          vocabClickTimeoutRef.current = null;
+                        }, 3000);
                       }
                     }}
                   >

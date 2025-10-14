@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './PracticePauseOverlay.css';
 
@@ -6,7 +6,7 @@ interface PracticePauseOverlayProps {
   phrase: string;
   thaiTranslation?: string;
   onContinue: () => void;
-  onMarkPracticed: () => void;
+  onReplay: () => void;
   isPracticed: boolean;
 }
 
@@ -14,39 +14,15 @@ export const PracticePauseOverlay: React.FC<PracticePauseOverlayProps> = ({
   phrase,
   thaiTranslation,
   onContinue,
-  onMarkPracticed,
+  onReplay,
   isPracticed,
 }) => {
-  const [countdown, setCountdown] = useState<number | null>(null);
-  const [isRecording, setIsRecording] = useState(false);
-
-  useEffect(() => {
-    if (countdown !== null && countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (countdown === 0) {
-      onContinue();
-    }
-  }, [countdown, onContinue]);
-
   const handleContinue = () => {
     onContinue();
   };
 
-  const handlePractice = () => {
-    if (!isPracticed) {
-      onMarkPracticed();
-    }
-  };
-
-  const handleQuickContinue = () => {
-    setCountdown(3);
-  };
-
-  const handleToggleRecording = () => {
-    setIsRecording(!isRecording);
-    // In a real implementation, this would integrate with Web Audio API
-    // to record the user's voice
+  const handleReplay = () => {
+    onReplay();
   };
 
   return (
@@ -57,7 +33,7 @@ export const PracticePauseOverlay: React.FC<PracticePauseOverlayProps> = ({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <div className="practice-pause-backdrop" onClick={handleContinue} />
+        <div className="practice-pause-backdrop" />
         
         <motion.div
           className="practice-pause-content"
@@ -84,85 +60,21 @@ export const PracticePauseOverlay: React.FC<PracticePauseOverlayProps> = ({
             )}
           </div>
 
-          {/* Countdown Display */}
-          {countdown !== null && (
-            <motion.div
-              className="countdown-display"
-              initial={{ scale: 1.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              key={countdown}
-            >
-              {countdown > 0 ? countdown : '▶️'}
-            </motion.div>
-          )}
-
-          {/* Instructions */}
-          <div className="practice-instructions">
-            <div className="instruction-item">
-              <span className="instruction-icon">👂</span>
-              <span>Listen carefully to the pronunciation</span>
-            </div>
-            <div className="instruction-item">
-              <span className="instruction-icon">🗣️</span>
-              <span>Say it out loud 2-3 times</span>
-            </div>
-            <div className="instruction-item">
-              <span className="instruction-icon">✅</span>
-              <span>Mark as practiced when ready</span>
-            </div>
-          </div>
-
-          {/* Recording Simulation (Future Feature) */}
-          <div className="recording-section">
-            <button
-              className={`recording-button ${isRecording ? 'recording' : ''}`}
-              onClick={handleToggleRecording}
-              disabled
-              title="Recording feature coming soon!"
-            >
-              {isRecording ? (
-                <>
-                  <span className="recording-indicator">●</span>
-                  Recording...
-                </>
-              ) : (
-                <>
-                  <span className="mic-icon">🎙️</span>
-                  Record Your Voice (Coming Soon)
-                </>
-              )}
-            </button>
-          </div>
-
           {/* Action Buttons */}
           <div className="practice-actions">
             <button
-              className="practice-action-button mark-practiced"
-              onClick={handlePractice}
-              disabled={isPracticed}
+              className="practice-action-button replay-button"
+              onClick={handleReplay}
             >
-              {isPracticed ? '✓ Already Practiced' : '✓ Mark as Practiced'}
+              🔄 Replay This Phrase
             </button>
             
             <button
-              className="practice-action-button continue-now"
+              className="practice-action-button continue-button"
               onClick={handleContinue}
             >
-              Continue Now →
+              Next Phrase →
             </button>
-            
-            <button
-              className="practice-action-button auto-continue"
-              onClick={handleQuickContinue}
-              disabled={countdown !== null}
-            >
-              Auto-Continue in 3s
-            </button>
-          </div>
-
-          {/* Progress Hint */}
-          <div className="practice-hint">
-            💡 <strong>Tip:</strong> The video will automatically pause at each English phrase for you to practice.
           </div>
         </motion.div>
       </motion.div>
