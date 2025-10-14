@@ -52,11 +52,11 @@ jest.config.js
 # TypeScript
 *.tsbuildinfo
 
-# Downloaded files
-videos/
-audios/
+# Backend files
+backend/videos/
+backend/audios/
+backend/logs/
+backend/GEMINI.md
 
-# Gemini
-GEMINI.md
-
+# Credentials
 .credentials/

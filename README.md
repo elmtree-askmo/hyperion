@@ -1,54 +1,73 @@
-# Hyperion Backend
+# Hyperion
 
-A secure NestJS backend application with enterprise-grade security features.
+An AI-powered educational video transformation platform that converts long-form English learning YouTube videos into engaging, bite-sized micro-lessons optimized for Thai college students.
 
-## Features
+## 🎯 Overview
 
-- 🔐 **JWT Authentication & Authorization**
-- 🛡️ **Security Middleware** (Helmet, CORS, Rate Limiting)
-- ✅ **Input Validation** with class-validator
-- 📝 **API Documentation** with Swagger
-- 🏗️ **Modular Architecture**
-- 📊 **Structured Logging** with Winston
-- 🐳 **Docker Support**
-- 🔒 **Role-based Access Control (RBAC)**
-- 🗄️ **PostgreSQL + TypeORM** with Schema Support
-- 🔄 **Database Migrations** for Schema Management
-- 🎓 **AI-Powered Content Analysis** with LangChain & OpenAI GPT-4
-- 📺 **YouTube Video Processing** with intelligent segmentation
+Hyperion is a comprehensive video learning platform consisting of three main components:
 
-## Security Features
+1. **Backend API** - NestJS-based REST API for video processing and content analysis
+2. **Interactive Viewer** - React-based web application for viewing and interacting with lessons
+3. **Remotion Video Generator** - Remotion-based video rendering engine for creating educational content
 
-### Authentication & Authorization
+## 🏗️ Project Structure
 
-- JWT-based authentication
-- Role-based access control (User, Admin)
-- Password hashing with bcrypt
-- Token expiration handling
+```
+hyperion/
+├── backend/              # NestJS backend API
+│   ├── src/             # Source code
+│   ├── scripts/         # Utility scripts
+│   ├── videos/          # Generated video content
+│   └── package.json
+├── interactive-viewer/   # React frontend for lesson viewing
+│   ├── src/             # Source code
+│   └── package.json
+├── remotion/            # Remotion video generation
+│   ├── src/             # Video components
+│   └── package.json
+└── docs/                # Project documentation
+```
 
-### Security Middleware
+## ✨ Key Features
 
-- **Helmet**: Sets various HTTP headers to secure the app
-- **CORS**: Configurable cross-origin resource sharing
-- **Rate Limiting**: Prevents abuse with configurable limits
-- **Input Validation**: Validates and sanitizes all inputs
+### Backend
 
-### Data Protection
+- 🤖 **AI-Powered Content Analysis** - Uses LangChain and LLMs (GPT-4, OpenRouter, Groq) to analyze and segment video content
+- 📺 **YouTube Integration** - Extracts metadata and transcripts from YouTube videos
+- 🎙️ **Text-to-Speech** - Mixed language (English/Thai) TTS with voice synthesis
+- 🖼️ **AI Image Generation** - Creates contextual images using Gemini
+- 📝 **Flashcard Generation** - Automatically generates vocabulary flashcards
+- 🔐 **JWT Authentication** - Secure role-based access control
+- 🗄️ **PostgreSQL Database** - TypeORM with schema support and migrations
+- 🐳 **Docker Support** - Containerized deployment
 
-- Environment variable configuration
-- Secure password storage
-- Input sanitization
-- Request validation
+### Interactive Viewer
 
-## Installation
+- 🎬 **Episode Navigation** - Beautiful episode browser with thumbnails
+- 🎥 **Video Mode** - Watch lessons with synchronized animations and audio
+- 🃏 **Interactive Flashcards** - Click-to-reveal vocabulary cards with flip animations
+- ✍️ **Practice Mode** - Complete comprehension questions and exercises
+- 📊 **Progress Tracking** - Visual progress tracking for completed activities
+- 📱 **Responsive Design** - Optimized for desktop and mobile
+
+### Remotion Video Generator
+
+- 📱 **9:16 Vertical Format** - Mobile-optimized video output
+- 🎬 **Animated Components** - Title cards, vocabulary cards, grammar explanations
+- 🔊 **Synchronized Audio** - Word-level timing with audio segments
+- 🎨 **Customizable Themes** - Configurable colors, fonts, and animations
+- ⚡ **Fast Rendering** - Efficient video generation pipeline
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+
+- PostgreSQL 12+ (or Docker)
 - npm or yarn
-- PostgreSQL 12+ (or Docker for containerized setup)
+- FFmpeg (for video generation)
 
-### Local Development
+### Installation
 
 1. **Clone the repository**
 
@@ -57,331 +76,230 @@ A secure NestJS backend application with enterprise-grade security features.
    cd hyperion
    ```
 
-2. **Install dependencies**
+2. **Set up Backend**
 
    ```bash
+   cd backend
    npm install
-   ```
-
-3. **Configure environment variables**
-
-   ```bash
    cp .env.example .env
    # Edit .env with your configuration
-   ```
 
-4. **Set up database**
-
-   ```bash
    # Start PostgreSQL (using Docker)
    docker-compose up postgres -d
 
    # Run database migrations
    npm run migration:run
-   ```
 
-5. **Start the development server**
-   ```bash
+   # Start backend server
    npm run start:dev
    ```
 
-### Using Docker
-
-1. **Build and run with Docker Compose**
+3. **Set up Interactive Viewer**
 
    ```bash
-   docker-compose up --build
+   cd ../interactive-viewer
+   npm install
+   npm run dev
    ```
 
-2. **Or build manually**
+4. **Set up Remotion (optional)**
    ```bash
-   docker build -t hyperion-backend .
-   docker run -p 3000:3000 hyperion-backend
+   cd ../remotion
+   npm install
    ```
 
-## Environment Variables
+### Quick Scripts
 
-| Variable               | Description                           | Default                               |
-| ---------------------- | ------------------------------------- | ------------------------------------- |
-| `NODE_ENV`             | Environment (development/production)  | `development`                         |
-| `PORT`                 | Server port                           | `3000`                                |
-| `JWT_SECRET`           | JWT signing secret                    | Required                              |
-| `JWT_EXPIRES_IN`       | JWT expiration time                   | `1d`                                  |
-| `CORS_ORIGIN`          | Allowed CORS origins                  | `http://localhost:3000`               |
-| `RATE_LIMIT_TTL`       | Rate limit time window (seconds)      | `60`                                  |
-| `RATE_LIMIT_LIMIT`     | Max requests per TTL                  | `10`                                  |
-| `LOG_LEVEL`            | Logging level                         | `info`                                |
-| `DB_HOST`              | Database host                         | `localhost`                           |
-| `DB_PORT`              | Database port                         | `5432`                                |
-| `DB_USERNAME`          | Database username                     | `postgres`                            |
-| `DB_PASSWORD`          | Database password                     | `password`                            |
-| `DB_DATABASE`          | Database name                         | `hyperion`                            |
-| `DB_SCHEMA`            | Database schema                       | `public`                              |
-| `LLM_PROVIDER`         | LLM provider to use                   | `openrouter` (openai/openrouter/groq) |
-| `OPENAI_API_KEY`       | OpenAI API key for GPT models         | Required if using OpenAI              |
-| `OPENROUTER_API_KEY`   | OpenRouter API key for diverse models | Required if using OpenRouter          |
-| `GROQ_API_KEY`         | Groq API key for fast inference       | Required if using Groq                |
-| `LANGCHAIN_API_KEY`    | LangSmith API key for LLM debugging   | Optional for debugging                |
-| `LANGCHAIN_TRACING_V2` | Enable LangSmith tracing              | `true` (optional)                     |
-| `LANGCHAIN_PROJECT`    | LangSmith project name                | `hyperion-content-analysis`           |
-
-## LLM Provider Configuration
-
-The application supports multiple LLM providers for content analysis. You can switch between providers using the `LLM_PROVIDER` environment variable.
-
-### Supported Providers
-
-| Provider       | Value        | Description                           | Model Used                 |
-| -------------- | ------------ | ------------------------------------- | -------------------------- |
-| **OpenRouter** | `openrouter` | Access to multiple open-source models | `openai/gpt-oss-120b:free` |
-| **OpenAI**     | `openai`     | Direct OpenAI API access              | `gpt-5`                    |
-| **Groq**       | `groq`       | Fast inference with Groq hardware     | `openai/gpt-oss-120b`      |
-
-### Configuration Examples
+The backend includes convenient scripts for common tasks:
 
 ```bash
-# Use OpenRouter (default)
-LLM_PROVIDER=openrouter
-OPENROUTER_API_KEY=your_openrouter_api_key_here
+cd backend
 
-# Use OpenAI
-LLM_PROVIDER=openai
-OPENAI_API_KEY=your_openai_api_key_here
+# Start both backend and interactive viewer
+./scripts/start-interactive-viewer.sh
 
-# Use Groq
-LLM_PROVIDER=groq
-GROQ_API_KEY=your_groq_api_key_here
+# View a specific lesson
+./scripts/view-lesson.sh henIVlCPVIY lesson_1
+
+# Test services
+npm run test:llm
+npm run test:tts
+npm run test:flashcards
+npm run test:video
 ```
 
-### Provider Selection Guidelines
+## 📚 Documentation
 
-- **OpenRouter**: Best for cost-effectiveness and access to diverse models
-- **OpenAI**: Best for highest quality results (requires paid API)
-- **Groq**: Best for speed and low-latency inference
+Comprehensive documentation is available in the `docs/` directory:
 
-## API Documentation
+- [Database Setup](docs/DATABASE.md) - PostgreSQL configuration and migrations
+- [Flashcards Guide](docs/FLASHCARDS_QUICKSTART.md) - Flashcard generation and usage
+- [Mixed Language TTS](docs/MIXED_LANGUAGE_TTS.md) - Text-to-speech setup
+- [Video Generation](docs/VIDEO_GENERATION_SUMMARY.md) - Video rendering workflow
+- [Remotion Usage](docs/REMOTION_USAGE.md) - Remotion configuration and customization
+- [Interactive Viewer Index](docs/INTERACTIVE_VIEWER_INDEX.md) - Frontend features
+- [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
 
-The API documentation is available at `/api-docs` when running in development mode.
+## 🔧 Configuration
 
-### Authentication Endpoints
+### Backend Environment Variables
 
-- `POST /api/v1/auth/register` - Register a new user
-- `POST /api/v1/auth/login` - Login user
+Key environment variables for the backend (see `backend/.env.example`):
 
-### User Endpoints
+```bash
+# Server
+NODE_ENV=development
+PORT=3000
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=password
+DB_DATABASE=hyperion
+DB_SCHEMA=public
+
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=1d
+
+# LLM Provider (openai/openrouter/groq)
+LLM_PROVIDER=openrouter
+OPENROUTER_API_KEY=your_api_key_here
+
+# Optional services
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+### LLM Providers
+
+The platform supports multiple LLM providers:
+
+| Provider   | Value        | Best For                               |
+| ---------- | ------------ | -------------------------------------- |
+| OpenRouter | `openrouter` | Cost-effectiveness and model diversity |
+| OpenAI     | `openai`     | Highest quality results                |
+| Groq       | `groq`       | Speed and low-latency inference        |
+
+## 🌐 API Endpoints
+
+### Authentication
+
+- `POST /api/v1/auth/register` - Register new user
+- `POST /api/v1/auth/login` - User login
+
+### Video Transform
+
+- `POST /api/v1/video-transform/analyze` - Analyze YouTube video
+- `POST /api/v1/video-transform/generate-microlesson` - Generate micro-lesson
+- `POST /api/v1/video-transform/generate-video` - Generate video output
+- `GET /api/v1/video-transform/lessons/:videoId` - List lessons
+- `GET /api/v1/video-transform/lessons/:videoId/:lessonId` - Get lesson data
+
+### Users
 
 - `GET /api/v1/users/profile` - Get current user profile
-- `GET /api/v1/users/:id` - Get user by ID
 - `PATCH /api/v1/users/:id` - Update user
-- `GET /api/v1/users` - Get all users (Admin only)
-- `POST /api/v1/users` - Create user (Admin only)
-- `DELETE /api/v1/users/:id` - Delete user (Admin only)
 
-### Health Check
+## 🎨 Video Processing Pipeline
 
-- `GET /api/v1/` - Health check endpoint
-- `GET /api/v1/version` - Get application version
+1. **Content Analysis** - YouTube video is analyzed using LangChain and LLMs
+2. **Segmentation** - Content is divided into 5-minute micro-lessons
+3. **Script Generation** - Lesson scripts are created with vocabulary and grammar points
+4. **Flashcard Creation** - Vocabulary flashcards are automatically generated
+5. **TTS Audio** - Text-to-speech audio is generated for all segments
+6. **Image Generation** - Contextual images are created using AI
+7. **Synchronization** - All assets are synchronized with precise timing
+8. **Video Rendering** - Final video is rendered using Remotion
 
-## Project Structure
-
-```
-src/
-├── auth/                 # Authentication module
-│   ├── dto/             # Data transfer objects
-│   ├── strategies/      # Passport strategies
-│   ├── auth.controller.ts
-│   ├── auth.service.ts
-│   └── auth.module.ts
-├── users/               # Users module
-│   ├── dto/            # Data transfer objects
-│   ├── entities/       # User entities
-│   ├── users.controller.ts
-│   ├── users.service.ts
-│   └── users.module.ts
-├── common/              # Shared resources
-│   ├── decorators/     # Custom decorators
-│   ├── guards/         # Route guards
-│   └── dto/           # Common DTOs
-├── app.controller.ts    # Main app controller
-├── app.service.ts       # Main app service
-├── app.module.ts        # Root module
-└── main.ts             # Application entry point
-```
-
-## Database Management
-
-### PostgreSQL + TypeORM Setup
-
-This application uses PostgreSQL with TypeORM for data persistence and schema management.
-
-#### Initial Database Setup
-
-1. **Start PostgreSQL**:
-
-   ```bash
-   # Using Docker (recommended)
-   docker-compose up postgres -d
-
-   # Or with local PostgreSQL
-   brew services start postgresql  # macOS
-   sudo systemctl start postgresql # Linux
-   ```
-
-2. **Create database and schema** (if needed):
-
-   ```sql
-   -- Connect to PostgreSQL
-   psql -h localhost -U postgres
-
-   -- Create database
-   CREATE DATABASE hyperion;
-
-   -- Create custom schema (optional)
-   \c hyperion
-   CREATE SCHEMA IF NOT EXISTS hyperion_dev;
-   ```
-
-3. **Run migrations**:
-   ```bash
-   npm run migration:run
-   ```
-
-#### Migration Workflow
-
-1. **Generate migration from entity changes**:
-
-   ```bash
-   # Make changes to your entity files first
-   npm run migration:generate src/migrations/UpdateUserTable
-   ```
-
-2. **Create empty migration**:
-
-   ```bash
-   npm run migration:create src/migrations/AddIndexes
-   ```
-
-3. **Run migrations**:
-
-   ```bash
-   npm run migration:run
-   ```
-
-4. **Revert migration** (if needed):
-
-   ```bash
-   npm run migration:revert
-   ```
-
-5. **Check migration status**:
-   ```bash
-   npx typeorm-ts-node-commonjs migration:show -d src/config/typeorm.config.ts
-   ```
-
-#### Environment-specific Database Configuration
-
-- **Development**: Uses `synchronize: true` for automatic schema updates
-- **Production**: Uses migrations only, `synchronize: false`
-- **Schema Support**: Configure `DB_SCHEMA` environment variable
-
-#### Troubleshooting
-
-- **Connection issues**: Verify PostgreSQL is running and credentials are correct
-- **Migration failures**: Check database permissions and schema existence
-- **Schema not found**: Ensure the specified schema exists in the database
+## 🧪 Testing
 
 ```bash
-# Test database connection
-psql -h localhost -U postgres -d hyperion -c "SELECT version();"
-
-# Check if schema exists
-psql -h localhost -U postgres -d hyperion -c "\dn"
-```
-
-## Development
-
-### Scripts
-
-- `npm run start:dev` - Start development server with hot reload
-- `npm run build` - Build for production
-- `npm run start:prod` - Start production server
-- `npm run test` - Run tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:cov` - Run tests with coverage
-- `npm run lint` - Lint code
-- `npm run format` - Format code with Prettier
-
-### Database Scripts
-
-- `npm run migration:generate src/migrations/MigrationName` - Generate new migration
-- `npm run migration:run` - Run pending migrations
-- `npm run migration:revert` - Revert last migration
-- `npm run migration:create src/migrations/MigrationName` - Create empty migration file
-
-### Testing
-
-```bash
-# Unit tests
+# Backend tests
+cd backend
 npm run test
-
-# Watch mode
 npm run test:watch
-
-# Coverage
 npm run test:cov
 
-# E2E tests
-npm run test:e2e
+# Test individual services
+npm run test:llm
+npm run test:tts
+npm run test:flashcards
+npm run test:gemini
+npm run test:video
 ```
 
-## Security Best Practices
+## 🐳 Docker Deployment
 
-This application implements several security best practices:
+### Using Docker Compose
 
-1. **Environment Configuration**: Sensitive data stored in environment variables
-2. **Input Validation**: All inputs validated using class-validator
-3. **Authentication**: JWT tokens with proper expiration
-4. **Authorization**: Role-based access control
-5. **Password Security**: Bcrypt hashing with salt rounds
-6. **Rate Limiting**: Prevents brute force attacks
-7. **CORS**: Configurable cross-origin policies
-8. **Security Headers**: Helmet middleware for HTTP security
-9. **Logging**: Structured logging for security monitoring
-10. **Docker Security**: Non-root user in containers
+```bash
+cd backend
+docker-compose up --build
+```
 
-## Production Deployment
+This will start:
 
-### Environment Setup
+- Backend API on port 3000
+- PostgreSQL database on port 5432
 
-1. Set strong `JWT_SECRET`
-2. Configure proper `CORS_ORIGIN`
-3. Set `NODE_ENV=production`
-4. Configure logging levels
-5. Set up proper database connections:
-   - Configure `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`
-   - Set appropriate `DB_SCHEMA` (e.g., `production` or `hyperion_prod`)
-   - Ensure database user has proper permissions
-   - Enable SSL connections for remote databases
-6. Configure reverse proxy (nginx/Apache)
-7. Set up SSL/TLS certificates
-8. Run database migrations: `npm run migration:run`
+### Manual Docker Build
 
-### Health Monitoring
+```bash
+cd backend
+docker build -t hyperion-backend .
+docker run -p 3000:3000 hyperion-backend
+```
 
-The application includes health check endpoints:
+## 📊 Tech Stack
 
-- Basic health: `GET /api/v1/`
-- Docker health check: Built-in container health monitoring
+### Backend
 
-## Contributing
+- **Framework**: NestJS
+- **Database**: PostgreSQL with TypeORM
+- **Authentication**: JWT with Passport
+- **LLM Integration**: LangChain (OpenAI, OpenRouter, Groq)
+- **TTS**: Google Cloud TTS
+- **Image Generation**: Google Gemini
+- **Video Processing**: FFmpeg, Remotion
+
+### Frontend
+
+- **Framework**: React 18 with TypeScript
+- **Video Player**: Remotion Player
+- **Animations**: Framer Motion
+- **State Management**: Zustand
+- **Build Tool**: Vite
+
+### Video Generation
+
+- **Engine**: Remotion
+- **Format**: MP4 (H.264), 9:16 vertical
+- **Quality**: 1080x1920px, 30 FPS
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new features
-5. Ensure all tests pass
-6. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## License
+## 📝 License
 
-This project is licensed under the MIT License.
+This project is proprietary software. All rights reserved.
+
+## 🙏 Acknowledgments
+
+- LangChain for LLM orchestration
+- Remotion for video generation framework
+- NestJS for backend framework
+- React for frontend framework
+
+## 📧 Support
+
+For issues, questions, or contributions, please refer to the documentation in the `docs/` directory or contact the development team.
+
+---
+
+**Built with ❤️ for Thai college students learning English**

@@ -24,6 +24,7 @@ services:
       - DB_SCHEMA=public
     volumes:
       - ./logs:/app/logs
+      - ./videos:/app/videos
     restart: unless-stopped
     depends_on:
       postgres:
