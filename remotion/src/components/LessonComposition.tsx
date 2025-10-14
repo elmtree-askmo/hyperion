@@ -123,8 +123,9 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
         );
 
         // Use staticFile with path relative to public directory
-        // Public dir is set to /Users/cpuser/Cherrypicks/Source/elmtree-askmo/hyperion
-        // So we just need to remove the leading slash from paths like "/videos/..."
+        // Public dir is set to backend/ directory
+        // Audio URLs from JSON are like "/videos/..." which maps to "backend/videos/..."
+        // So we just need to remove the leading slash
         const audioUrl = segment.audioUrl
           ? staticFile(segment.audioUrl.replace(/^\//, ''))
           : undefined;
