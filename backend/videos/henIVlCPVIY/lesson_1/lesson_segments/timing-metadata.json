@@ -1,0 +1,767 @@
+{
+  "segments": [
+    {
+      "segmentId": "intro",
+      "fileName": "intro.wav",
+      "duration": 15.04,
+      "startTime": 0,
+      "endTime": 15.04,
+      "text": "สวัสดีค่ะ ยินดีต้อนรับเข้าสู่บทเรียน From Lobby to Table: วันนี้เราจะฝึกพูดอังกฤษที่ใช้ได้จริง ตั้งแต่คุยกับพนักงานล็อบบี้โรงแรมไปจนถึงสั่งอาหารที่ร้าน แนะนำให้หายใจลึกๆ ตั้งใจฟัง แล้วพูดตามทีละช่วงนะคะ",
+      "textPartTimings": [
+        {
+          "text": "สวัสดีค่ะ ยินดีต้อนรับเข้าสู่บทเรียน From Lobby to Table: วันนี้เราจะฝึกพูดอังกฤษที่ใช้ได้จริง ตั้งแต่คุยกับพนักงานล็อบบี้โรงแรมไปจนถึงสั่งอาหารที่ร้าน แนะนำให้หายใจลึกๆ ตั้งใจฟัง แล้วพูดตามทีละช่วงนะคะ",
+          "language": "th",
+          "duration": 15.04,
+          "startTime": 0,
+          "endTime": 15.04
+        }
+      ]
+    },
+    {
+      "segmentId": "learning_objective1",
+      "fileName": "learning_objective1.wav",
+      "duration": 18.360667,
+      "startTime": 15.04,
+      "endTime": 33.400667,
+      "text": "เป้าหมายแรก: ฝึกขอจองโต๊ะและขอคำแนะนำจากพนักงานโรงแรมอย่างสุภาพ โดยใช้ประโยคหลัก เช่น I'd like to make a reservation. และ Could you recommend a restaurant? จากนั้นปิดท้ายด้วยการขอความช่วยเหลือเรื่องการเดินทาง",
+      "textPartTimings": [
+        {
+          "text": "เป้าหมายแรก: ฝึกขอจองโต๊ะและขอคำแนะนำจากพนักงานโรงแรมอย่างสุภาพ โดยใช้ประโยคหลัก เช่น ",
+          "language": "th",
+          "duration": 8.08,
+          "startTime": 0,
+          "endTime": 8.08
+        },
+        {
+          "text": "I'd like to make a reservation.",
+          "language": "en",
+          "duration": 2.965333,
+          "startTime": 8.08,
+          "endTime": 11.045333
+        },
+        {
+          "text": " และ ",
+          "language": "th",
+          "duration": 0.92,
+          "startTime": 11.045333,
+          "endTime": 11.965333
+        },
+        {
+          "text": "Could you recommend a restaurant?",
+          "language": "en",
+          "duration": 2.395333,
+          "startTime": 11.965333,
+          "endTime": 14.360665999999998
+        },
+        {
+          "text": " จากนั้นปิดท้ายด้วยการขอความช่วยเหลือเรื่องการเดินทาง",
+          "language": "th",
+          "duration": 4,
+          "startTime": 14.360665999999998,
+          "endTime": 18.360666
+        }
+      ]
+    },
+    {
+      "segmentId": "learning_objective2",
+      "fileName": "learning_objective2.wav",
+      "duration": 17.826,
+      "startTime": 33.400667,
+      "endTime": 51.226667,
+      "text": "เป้าหมายที่สอง: ฝึกถามเมนูพิเศษและแจ้งข้อจำกัดอาหารที่ร้านอย่างชัดเจน โดยใช้วลี What's today's special? และ I'm vegetarian. พร้อมวิธีขอน้ำสลัดแยกด้วยประโยค Dressing on the side, please.",
+      "textPartTimings": [
+        {
+          "text": "เป้าหมายที่สอง: ฝึกถามเมนูพิเศษและแจ้งข้อจำกัดอาหารที่ร้านอย่างชัดเจน โดยใช้วลี ",
+          "language": "th",
+          "duration": 7.4,
+          "startTime": 0,
+          "endTime": 7.4
+        },
+        {
+          "text": "What's today's special?",
+          "language": "en",
+          "duration": 1.795333,
+          "startTime": 7.4,
+          "endTime": 9.195333
+        },
+        {
+          "text": " และ ",
+          "language": "th",
+          "duration": 1.08,
+          "startTime": 9.195333,
+          "endTime": 10.275333
+        },
+        {
+          "text": "I'm vegetarian.",
+          "language": "en",
+          "duration": 1.795333,
+          "startTime": 10.275333,
+          "endTime": 12.070666
+        },
+        {
+          "text": " พร้อมวิธีขอน้ำสลัดแยกด้วยประโยค ",
+          "language": "th",
+          "duration": 2.76,
+          "startTime": 12.070666,
+          "endTime": 14.830665999999999
+        },
+        {
+          "text": "Dressing on the side, please.",
+          "language": "en",
+          "duration": 2.995333,
+          "startTime": 14.830665999999999,
+          "endTime": 17.825999
+        }
+      ]
+    },
+    {
+      "segmentId": "vocab_restaurant",
+      "fileName": "vocab_restaurant.wav",
+      "duration": 12.040667,
+      "startTime": 51.226667,
+      "endTime": 63.267334,
+      "text": "คำศัพท์: restaurant — แปลว่า ร้านอาหาร ใช้พูดถึงสถานที่ไปกินข้าว ตัวอย่างประโยค: Let's go to a Japanese restaurant near Siam.",
+      "textPartTimings": [
+        {
+          "text": "คำศัพท์: ",
+          "language": "th",
+          "duration": 1.04,
+          "startTime": 0,
+          "endTime": 1.04
+        },
+        {
+          "text": "restaurant",
+          "language": "en",
+          "duration": 2.065333,
+          "startTime": 1.04,
+          "endTime": 3.105333
+        },
+        {
+          "text": " — แปลว่า ร้านอาหาร ใช้พูดถึงสถานที่ไปกินข้าว ตัวอย่างประโยค: ",
+          "language": "th",
+          "duration": 4.92,
+          "startTime": 3.105333,
+          "endTime": 8.025333
+        },
+        {
+          "text": "Let's go to a Japanese restaurant near Siam.",
+          "language": "en",
+          "duration": 4.015333,
+          "startTime": 8.025333,
+          "endTime": 12.040666
+        }
+      ]
+    },
+    {
+      "segmentId": "vocab_reservation",
+      "fileName": "vocab_reservation.wav",
+      "duration": 13.450667,
+      "startTime": 63.267334,
+      "endTime": 76.718001,
+      "text": "คำศัพท์: reservation — แปลว่า การจองโต๊ะ ใช้เมื่อโทรหรือขอจองที่นั่ง ตัวอย่างประโยค: I'd like to make a reservation for two at 7 pm.",
+      "textPartTimings": [
+        {
+          "text": "คำศัพท์: ",
+          "language": "th",
+          "duration": 1.04,
+          "startTime": 0,
+          "endTime": 1.04
+        },
+        {
+          "text": "reservation",
+          "language": "en",
+          "duration": 2.005333,
+          "startTime": 1.04,
+          "endTime": 3.045333
+        },
+        {
+          "text": " — แปลว่า การจองโต๊ะ ใช้เมื่อโทรหรือขอจองที่นั่ง ตัวอย่างประโยค: ",
+          "language": "th",
+          "duration": 5.76,
+          "startTime": 3.045333,
+          "endTime": 8.805333
+        },
+        {
+          "text": "I'd like to make a reservation for two at 7 pm.",
+          "language": "en",
+          "duration": 4.645333,
+          "startTime": 8.805333,
+          "endTime": 13.450665999999998
+        }
+      ]
+    },
+    {
+      "segmentId": "vocab_recommend",
+      "fileName": "vocab_recommend.wav",
+      "duration": 10.860667,
+      "startTime": 76.718001,
+      "endTime": 87.578668,
+      "text": "คำศัพท์: recommend — แปลว่า แนะนำ ใช้เมื่อถามทางเลือกที่เหมาะสม ตัวอย่างประโยค: Could you recommend a restaurant near CentralWorld?",
+      "textPartTimings": [
+        {
+          "text": "คำศัพท์: ",
+          "language": "th",
+          "duration": 0.68,
+          "startTime": 0,
+          "endTime": 0.68
+        },
+        {
+          "text": "recommend",
+          "language": "en",
+          "duration": 1.495333,
+          "startTime": 0.68,
+          "endTime": 2.175333
+        },
+        {
+          "text": " — แปลว่า แนะนำ ใช้เมื่อถามทางเลือกที่เหมาะสม ตัวอย่างประโยค: ",
+          "language": "th",
+          "duration": 5.24,
+          "startTime": 2.175333,
+          "endTime": 7.415333
+        },
+        {
+          "text": "Could you recommend a restaurant near CentralWorld?",
+          "language": "en",
+          "duration": 3.445333,
+          "startTime": 7.415333,
+          "endTime": 10.860666
+        }
+      ]
+    },
+    {
+      "segmentId": "vocab_spicy",
+      "fileName": "vocab_spicy.wav",
+      "duration": 11.530667,
+      "startTime": 87.578668,
+      "endTime": 99.10933499999999,
+      "text": "คำศัพท์: spicy — แปลว่า เผ็ด ใช้ถามหรือบอกระดับความเผ็ด ตัวอย่างประโยค: Is the curry very spicy?",
+      "textPartTimings": [
+        {
+          "text": "คำศัพท์: ",
+          "language": "th",
+          "duration": 1.12,
+          "startTime": 0,
+          "endTime": 1.12
+        },
+        {
+          "text": "spicy",
+          "language": "en",
+          "duration": 1.855333,
+          "startTime": 1.12,
+          "endTime": 2.975333
+        },
+        {
+          "text": " — แปลว่า เผ็ด ใช้ถามหรือบอกระดับความเผ็ด ตัวอย่างประโยค: ",
+          "language": "th",
+          "duration": 4.6,
+          "startTime": 2.975333,
+          "endTime": 7.575333
+        },
+        {
+          "text": "Is the curry very spicy?",
+          "language": "en",
+          "duration": 3.955333,
+          "startTime": 7.575333,
+          "endTime": 11.530666
+        }
+      ]
+    },
+    {
+      "segmentId": "vocab_vegetarian",
+      "fileName": "vocab_vegetarian.wav",
+      "duration": 8.090667,
+      "startTime": 99.10933499999999,
+      "endTime": 107.20000199999998,
+      "text": "คำศัพท์: vegetarian — แปลว่า มังสวิรัติ ใช้แจ้งข้อจำกัดอาหาร ตัวอย่างประโยค: I'm vegetarian.",
+      "textPartTimings": [
+        {
+          "text": "คำศัพท์: ",
+          "language": "th",
+          "duration": 0.68,
+          "startTime": 0,
+          "endTime": 0.68
+        },
+        {
+          "text": "vegetarian",
+          "language": "en",
+          "duration": 1.645333,
+          "startTime": 0.68,
+          "endTime": 2.325333
+        },
+        {
+          "text": " — แปลว่า มังสวิรัติ ใช้แจ้งข้อจำกัดอาหาร ตัวอย่างประโยค: ",
+          "language": "th",
+          "duration": 4.36,
+          "startTime": 2.325333,
+          "endTime": 6.685333
+        },
+        {
+          "text": "I'm vegetarian.",
+          "language": "en",
+          "duration": 1.405333,
+          "startTime": 6.685333,
+          "endTime": 8.090666
+        }
+      ]
+    },
+    {
+      "segmentId": "vocab_menu",
+      "fileName": "vocab_menu.wav",
+      "duration": 9.380667,
+      "startTime": 107.20000199999998,
+      "endTime": 116.58066899999999,
+      "text": "คำศัพท์: menu — แปลว่า เมนู ใช้เมื่อขอรายการอาหาร ตัวอย่างประโยค: May I have the menu, please?",
+      "textPartTimings": [
+        {
+          "text": "คำศัพท์: ",
+          "language": "th",
+          "duration": 1.24,
+          "startTime": 0,
+          "endTime": 1.24
+        },
+        {
+          "text": "menu",
+          "language": "en",
+          "duration": 1.645333,
+          "startTime": 1.24,
+          "endTime": 2.885333
+        },
+        {
+          "text": " — แปลว่า เมนู ใช้เมื่อขอรายการอาหาร ตัวอย่างประโยค: ",
+          "language": "th",
+          "duration": 4.04,
+          "startTime": 2.885333,
+          "endTime": 6.925333
+        },
+        {
+          "text": "May I have the menu, please?",
+          "language": "en",
+          "duration": 2.455333,
+          "startTime": 6.925333,
+          "endTime": 9.380666
+        }
+      ]
+    },
+    {
+      "segmentId": "vocab_daily_special",
+      "fileName": "vocab_daily_special.wav",
+      "duration": 13.250667,
+      "startTime": 116.58066899999999,
+      "endTime": 129.831336,
+      "text": "คำศัพท์: daily special — แปลว่า เมนูพิเศษประจำวัน ใช้ถามตัวเลือกคุ้มค่าและสดใหม่ ตัวอย่างประโยค: What's today's special?",
+      "textPartTimings": [
+        {
+          "text": "คำศัพท์: ",
+          "language": "th",
+          "duration": 1.4,
+          "startTime": 0,
+          "endTime": 1.4
+        },
+        {
+          "text": "daily special",
+          "language": "en",
+          "duration": 1.345333,
+          "startTime": 1.4,
+          "endTime": 2.7453329999999996
+        },
+        {
+          "text": " — แปลว่า เมนูพิเศษประจำวัน ใช้ถามตัวเลือกคุ้มค่าและสดใหม่ ตัวอย่างประโยค: ",
+          "language": "th",
+          "duration": 7.6,
+          "startTime": 2.7453329999999996,
+          "endTime": 10.345333
+        },
+        {
+          "text": "What's today's special?",
+          "language": "en",
+          "duration": 2.905333,
+          "startTime": 10.345333,
+          "endTime": 13.250666
+        }
+      ]
+    },
+    {
+      "segmentId": "vocab_dressing",
+      "fileName": "vocab_dressing.wav",
+      "duration": 12.700667,
+      "startTime": 129.831336,
+      "endTime": 142.532003,
+      "text": "คำศัพท์: dressing — แปลว่า น้ำสลัด ใช้เวลาขอให้แยกถ้วยเพื่อควบคุมรส ตัวอย่างประโยค: Dressing on the side, please.",
+      "textPartTimings": [
+        {
+          "text": "คำศัพท์: ",
+          "language": "th",
+          "duration": 1.2,
+          "startTime": 0,
+          "endTime": 1.2
+        },
+        {
+          "text": "dressing",
+          "language": "en",
+          "duration": 1.945333,
+          "startTime": 1.2,
+          "endTime": 3.145333
+        },
+        {
+          "text": " — แปลว่า น้ำสลัด ใช้เวลาขอให้แยกถ้วยเพื่อควบคุมรส ตัวอย่างประโยค: ",
+          "language": "th",
+          "duration": 6.2,
+          "startTime": 3.145333,
+          "endTime": 9.345333
+        },
+        {
+          "text": "Dressing on the side, please.",
+          "language": "en",
+          "duration": 3.355333,
+          "startTime": 9.345333,
+          "endTime": 12.700666
+        }
+      ]
+    },
+    {
+      "segmentId": "grammar_present_simple",
+      "fileName": "grammar_present_simple.wav",
+      "duration": 27.116,
+      "startTime": 142.532003,
+      "endTime": 169.64800300000002,
+      "text": "ไวยากรณ์: Present Simple ใช้พูดถึงนิสัย ความจริงทั่วไป และความชอบ เช่นถามหรือบอกว่ากินปลาไหม ชอบเผ็ดไหม ฟังและสังเกตโครงสร้างจากตัวอย่างต่อไปนี้: Do you eat fish? และ My wife likes spicy food but I do not. รวมถึง I prefer short books.",
+      "textPartTimings": [
+        {
+          "text": "ไวยากรณ์: Present Simple ใช้พูดถึงนิสัย ความจริงทั่วไป และความชอบ เช่นถามหรือบอกว่ากินปลาไหม ชอบเผ็ดไหม ฟังและสังเกตโครงสร้างจากตัวอย่างต่อไปนี้: ",
+          "language": "th",
+          "duration": 14.24,
+          "startTime": 0,
+          "endTime": 14.24
+        },
+        {
+          "text": "Do you eat fish?",
+          "language": "en",
+          "duration": 2.365333,
+          "startTime": 14.24,
+          "endTime": 16.605333
+        },
+        {
+          "text": " และ ",
+          "language": "th",
+          "duration": 1.08,
+          "startTime": 16.605333,
+          "endTime": 17.685333
+        },
+        {
+          "text": "My wife likes spicy food but I do not.",
+          "language": "en",
+          "duration": 5.305333,
+          "startTime": 17.685333,
+          "endTime": 22.990666
+        },
+        {
+          "text": " รวมถึง ",
+          "language": "th",
+          "duration": 1.52,
+          "startTime": 22.990666,
+          "endTime": 24.510666
+        },
+        {
+          "text": "I prefer short books.",
+          "language": "en",
+          "duration": 2.605333,
+          "startTime": 24.510666,
+          "endTime": 27.115999000000002
+        }
+      ]
+    },
+    {
+      "segmentId": "grammar_present_continuous",
+      "fileName": "grammar_present_continuous.wav",
+      "duration": 24.996,
+      "startTime": 169.64800300000002,
+      "endTime": 194.64400300000003,
+      "text": "ไวยากรณ์: Present Continuous ใช้ be + V-ing เพื่อบอกสิ่งที่กำลังเกิดขึ้นหรือชั่วคราว เช่นระหว่างเข้าพักโรงแรมหรือกำลังมองหาเมนู ฟังตัวอย่าง: Are you enjoying your stay at our hotel? และ My wife and I are having a great time. ปิดท้ายด้วย What kind of book are you looking for?",
+      "textPartTimings": [
+        {
+          "text": "ไวยากรณ์: Present Continuous ใช้ be + V-ing เพื่อบอกสิ่งที่กำลังเกิดขึ้นหรือชั่วคราว เช่นระหว่างเข้าพักโรงแรมหรือกำลังมองหาเมนู ฟังตัวอย่าง: ",
+          "language": "th",
+          "duration": 11.92,
+          "startTime": 0,
+          "endTime": 11.92
+        },
+        {
+          "text": "Are you enjoying your stay at our hotel?",
+          "language": "en",
+          "duration": 3.715333,
+          "startTime": 11.92,
+          "endTime": 15.635333
+        },
+        {
+          "text": " และ ",
+          "language": "th",
+          "duration": 1.16,
+          "startTime": 15.635333,
+          "endTime": 16.795333
+        },
+        {
+          "text": "My wife and I are having a great time.",
+          "language": "en",
+          "duration": 3.595333,
+          "startTime": 16.795333,
+          "endTime": 20.390666
+        },
+        {
+          "text": " ปิดท้ายด้วย ",
+          "language": "th",
+          "duration": 1.64,
+          "startTime": 20.390666,
+          "endTime": 22.030666
+        },
+        {
+          "text": "What kind of book are you looking for?",
+          "language": "en",
+          "duration": 2.965333,
+          "startTime": 22.030666,
+          "endTime": 24.995999
+        }
+      ]
+    },
+    {
+      "segmentId": "grammar_modals",
+      "fileName": "grammar_modals.wav",
+      "duration": 26.776,
+      "startTime": 194.64400300000003,
+      "endTime": 221.42000300000004,
+      "text": "ไวยากรณ์: Modals เพื่อขอร้อง/เสนอ/ขออนุญาต ใช้ can, may, would + V1 เพื่อความสุภาพ เหมาะมากกับการจองและสั่งอาหาร ฟังและพูดตามตัวอย่าง: Can you recommend a nice restaurant? ต่อด้วย May we please have a table for two? และ Would you also like to add a salad on the side, sir?",
+      "textPartTimings": [
+        {
+          "text": "ไวยากรณ์: Modals เพื่อขอร้อง/เสนอ/ขออนุญาต ใช้ can, may, would + V1 เพื่อความสุภาพ เหมาะมากกับการจองและสั่งอาหาร ฟังและพูดตามตัวอย่าง: ",
+          "language": "th",
+          "duration": 14.8,
+          "startTime": 0,
+          "endTime": 14.8
+        },
+        {
+          "text": "Can you recommend a nice restaurant?",
+          "language": "en",
+          "duration": 2.995333,
+          "startTime": 14.8,
+          "endTime": 17.795333
+        },
+        {
+          "text": " ต่อด้วย ",
+          "language": "th",
+          "duration": 1.36,
+          "startTime": 17.795333,
+          "endTime": 19.155333
+        },
+        {
+          "text": "May we please have a table for two?",
+          "language": "en",
+          "duration": 3.115333,
+          "startTime": 19.155333,
+          "endTime": 22.270666
+        },
+        {
+          "text": " และ ",
+          "language": "th",
+          "duration": 1,
+          "startTime": 22.270666,
+          "endTime": 23.270666
+        },
+        {
+          "text": "Would you also like to add a salad on the side, sir?",
+          "language": "en",
+          "duration": 3.505333,
+          "startTime": 23.270666,
+          "endTime": 26.775999
+        }
+      ]
+    },
+    {
+      "segmentId": "practice_concierge",
+      "fileName": "practice_concierge.wav",
+      "duration": 17.646,
+      "startTime": 221.42000300000004,
+      "endTime": 239.06600300000002,
+      "text": "ฝึกพูดสถานการณ์ที่ล็อบบี้โรงแรม: ลองพูดตาม 2 รอบต่อประโยค พร้อมใส่น้ำเสียงสุภาพนะคะ ประโยคที่ 1: I'd like to make a reservation. ประโยคที่ 2: Could you recommend a restaurant? ประโยคที่ 3: Could you call a taxi?",
+      "textPartTimings": [
+        {
+          "text": "ฝึกพูดสถานการณ์ที่ล็อบบี้โรงแรม: ลองพูดตาม 2 รอบต่อประโยค พร้อมใส่น้ำเสียงสุภาพนะคะ ประโยคที่ 1: ",
+          "language": "th",
+          "duration": 7.76,
+          "startTime": 0,
+          "endTime": 7.76
+        },
+        {
+          "text": "I'd like to make a reservation.",
+          "language": "en",
+          "duration": 2.155333,
+          "startTime": 7.76,
+          "endTime": 9.915333
+        },
+        {
+          "text": " ประโยคที่ 2: ",
+          "language": "th",
+          "duration": 1.48,
+          "startTime": 9.915333,
+          "endTime": 11.395333
+        },
+        {
+          "text": "Could you recommend a restaurant?",
+          "language": "en",
+          "duration": 2.395333,
+          "startTime": 11.395333,
+          "endTime": 13.790666000000002
+        },
+        {
+          "text": " ประโยคที่ 3: ",
+          "language": "th",
+          "duration": 2,
+          "startTime": 13.790666000000002,
+          "endTime": 15.790666000000002
+        },
+        {
+          "text": "Could you call a taxi?",
+          "language": "en",
+          "duration": 1.855333,
+          "startTime": 15.790666000000002,
+          "endTime": 17.645999000000003
+        }
+      ]
+    },
+    {
+      "segmentId": "practice_restaurant_order",
+      "fileName": "practice_restaurant_order.wav",
+      "duration": 23.741333,
+      "startTime": 239.06600300000002,
+      "endTime": 262.807336,
+      "text": "ฝึกพูดในร้านอาหาร: สมมติคุณเปิดเมนูแล้ว อยากถามและแจ้งข้อจำกัดอาหาร พูดตามช้าๆ ชัดๆ นะคะ ประโยคที่ 1: What's today's special? ประโยคที่ 2: I'm vegetarian. ประโยคที่ 3: Not too spicy, please. ประโยคที่ 4: Dressing on the side, please.",
+      "textPartTimings": [
+        {
+          "text": "ฝึกพูดในร้านอาหาร: สมมติคุณเปิดเมนูแล้ว อยากถามและแจ้งข้อจำกัดอาหาร พูดตามช้าๆ ชัดๆ นะคะ ประโยคที่ 1: ",
+          "language": "th",
+          "duration": 9.28,
+          "startTime": 0,
+          "endTime": 9.28
+        },
+        {
+          "text": "What's today's special?",
+          "language": "en",
+          "duration": 1.645333,
+          "startTime": 9.28,
+          "endTime": 10.925332999999998
+        },
+        {
+          "text": " ประโยคที่ 2: ",
+          "language": "th",
+          "duration": 1.48,
+          "startTime": 10.925332999999998,
+          "endTime": 12.405332999999999
+        },
+        {
+          "text": "I'm vegetarian.",
+          "language": "en",
+          "duration": 2.515333,
+          "startTime": 12.405332999999999,
+          "endTime": 14.920665999999999
+        },
+        {
+          "text": " ประโยคที่ 3: ",
+          "language": "th",
+          "duration": 1.68,
+          "startTime": 14.920665999999999,
+          "endTime": 16.600666
+        },
+        {
+          "text": "Not too spicy, please.",
+          "language": "en",
+          "duration": 3.415333,
+          "startTime": 16.600666,
+          "endTime": 20.015999
+        },
+        {
+          "text": " ประโยคที่ 4: ",
+          "language": "th",
+          "duration": 1.48,
+          "startTime": 20.015999,
+          "endTime": 21.495999
+        },
+        {
+          "text": "Dressing on the side, please.",
+          "language": "en",
+          "duration": 2.245333,
+          "startTime": 21.495999,
+          "endTime": 23.741332
+        }
+      ]
+    },
+    {
+      "segmentId": "practice_confirm_and_thanks",
+      "fileName": "practice_confirm_and_thanks.wav",
+      "duration": 22.256,
+      "startTime": 262.807336,
+      "endTime": 285.06333600000005,
+      "text": "ฝึกสรุปและขอบคุณอย่างมืออาชีพ หลังจองหรือสั่งอาหารเสร็จ ควรยืนยันและปิดท้ายสุภาพ พูดตามนะคะ ประโยคที่ 1: May we please have a table for two? ประโยคที่ 2: Could you confirm the reservation at 7 pm? ประโยคที่ 3: Thank you very much.",
+      "textPartTimings": [
+        {
+          "text": "ฝึกสรุปและขอบคุณอย่างมืออาชีพ หลังจองหรือสั่งอาหารเสร็จ ควรยืนยันและปิดท้ายสุภาพ พูดตามนะคะ ประโยคที่ 1: ",
+          "language": "th",
+          "duration": 9.28,
+          "startTime": 0,
+          "endTime": 9.28
+        },
+        {
+          "text": "May we please have a table for two?",
+          "language": "en",
+          "duration": 3.355333,
+          "startTime": 9.28,
+          "endTime": 12.635333
+        },
+        {
+          "text": " ประโยคที่ 2: ",
+          "language": "th",
+          "duration": 1.48,
+          "startTime": 12.635333,
+          "endTime": 14.115333
+        },
+        {
+          "text": "Could you confirm the reservation at 7 pm?",
+          "language": "en",
+          "duration": 4.765333,
+          "startTime": 14.115333,
+          "endTime": 18.880665999999998
+        },
+        {
+          "text": " ประโยคที่ 3: ",
+          "language": "th",
+          "duration": 1.76,
+          "startTime": 18.880665999999998,
+          "endTime": 20.640666
+        },
+        {
+          "text": "Thank you very much.",
+          "language": "en",
+          "duration": 1.615333,
+          "startTime": 20.640666,
+          "endTime": 22.255999
+        }
+      ]
+    },
+    {
+      "segmentId": "conclusion",
+      "fileName": "conclusion.wav",
+      "duration": 15.92,
+      "startTime": 285.06333600000005,
+      "endTime": 300.98333600000007,
+      "text": "เยี่ยมมากค่ะ วันนี้คุณได้ฝึกตั้งแต่การจองโต๊ะ ถามเมนูพิเศษ แจ้งความต้องการอาหาร ไปจนถึงการปิดท้ายอย่างสุภาพ กลับไปทบทวนวลีสำคัญอีก 1 รอบ แล้วลองใช้จริงที่ร้านใกล้ BTS หรือห้างที่คุณไปบ่อยนะคะ เจอกันบทหน้าค่ะ",
+      "textPartTimings": [
+        {
+          "text": "เยี่ยมมากค่ะ วันนี้คุณได้ฝึกตั้งแต่การจองโต๊ะ ถามเมนูพิเศษ แจ้งความต้องการอาหาร ไปจนถึงการปิดท้ายอย่างสุภาพ กลับไปทบทวนวลีสำคัญอีก 1 รอบ แล้วลองใช้จริงที่ร้านใกล้ BTS หรือห้างที่คุณไปบ่อยนะคะ เจอกันบทหน้าค่ะ",
+          "language": "th",
+          "duration": 15.92,
+          "startTime": 0,
+          "endTime": 15.92
+        }
+      ]
+    }
+  ],
+  "totalDuration": 300.98333600000007,
+  "generatedAt": "2025-10-11T04:04:19.561Z"
+}

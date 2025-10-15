@@ -53,7 +53,8 @@ jest.config.js
 *.tsbuildinfo
 
 # Backend files
-backend/videos/
+*.zip
+#backend/videos/
 backend/audios/
 backend/logs/
 backend/GEMINI.md

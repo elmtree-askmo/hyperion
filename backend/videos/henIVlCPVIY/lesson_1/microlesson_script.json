@@ -1,0 +1,232 @@
+{
+  "lesson": {
+    "title": "From Lobby to Table: Planning and Dining Out",
+    "titleTh": "From Lobby to Table: Planning and Dining Out",
+    "duration": 660,
+    "learningObjectives": [
+      {
+        "statement": "เรียนรู้การใช้ I'd like to make a reservation. ในสถานการณ์จริงในประเทศไทย",
+        "statementTh": "เรียนรู้การสื่อสารเป็นภาษาอังกฤษในบริบทวัฒนธรรมไทย",
+        "stepByStepExplanation": [
+          "1. เริ่มทักทายและคุยสั้นๆ กับพนักงานที่ล็อบบี้โรงแรม (เช่น Novotel, Centara) เช่น ทักเรื่องการเดินทางด้วย BTS Skytrain/MRT เพื่อสร้างบรรยากาศที่เป็นกันเอง",
+          "2. บอกความต้องการให้ชัดเจนว่าต้องการจองโต๊ะ (reservation) ระบุจำนวนคน เวลา พื้นที่ใกล้จุดหมาย (เช่น ใกล้ Central World หรือ MBK) และช่วงราคาที่ต้องการ",
+          "3. แจ้งข้อจำกัดอาหารก่อน (เช่น มังสวิรัติ กินปลาได้ เผ็ดน้อย) แล้วขอให้พนักงานแนะนำร้าน (recommend) ที่เหมาะสม",
+          "4. ยืนยันรายละเอียดการจองด้วยการสะกดชื่อ เบอร์โทร และสอบถามเงื่อนไข เช่น เวลาเก็บโต๊ะ หรือมีเมนูพิเศษ (daily special) ไหม",
+          "5. จัดการการเดินทางต่อ: ขอให้พนักงานเรียกแท็กซี่/Grab/Bolt ไปที่ร้านอาหาร หรือแจ้งเส้นทางโดย BTS/Airport Rail Link แล้วขอบคุณเพื่อจบการสนทนาอย่างสุภาพ"
+        ],
+        "thaiContextExamples": [
+          {
+            "englishPhrase": "I'd like to make a reservation.",
+            "thaiContext": "ที่ล็อบบี้ Novotel Bangkok Siam Square คุณขอให้พนักงานจองร้านอาหารใกล้ Central World สำหรับ 2 คน เวลา 7 โมงเย็น และขอร้านที่มีตัวเลือกมังสวิรัติและไม่เผ็ดมาก",
+            "situation": "การจองโต๊ะมื้อเย็นหลังเลิกเรียนจาก Chulalongkorn โดยอยากเดินทางด้วย BTS ไปสะดวก",
+            "memoryHook": "I’d like = ฉันต้องการ + make a reservation = ทำการจอง; นึกภาพปากกาเขียนชื่อในสมุดจอง",
+            "pronunciation": "ไอด์ ไลค์ ทู เมค อะ เรเซอร์เวชั่น"
+          },
+          {
+            "englishPhrase": "Could you recommend a restaurant?",
+            "thaiContext": "ที่เคาน์เตอร์ Concierge ของ Centara Grand at CentralWorld คุณขอคำแนะนำร้านที่มีปลาและรสไม่เผ็ดสำหรับเพื่อนจาก Mahidol",
+            "situation": "อยากได้ร้านเงียบๆ สำหรับคุยงานก่อนเดินไป Central World",
+            "memoryHook": "recommend = แนะนำ; นึกถึงคำย่อ “รี-คอม-เมนด์” = รีวิว + คอมเมนต์",
+            "pronunciation": "คุด ยู เรคคะเม็นด อะ เรสเทอรองต์"
+          },
+          {
+            "englishPhrase": "Could you call a taxi?",
+            "thaiContext": "หลังจากจองเสร็จที่ Dusit Thani คุณให้พนักงานเรียกแท็กซี่ไป MBK เพราะฝนตกและ Grab คิวแน่น",
+            "situation": "ต้องไปให้ทันเวลาจอง 6 โมงเย็น",
+            "memoryHook": "call a taxi = โทรเรียกแท็กซี่; นึกภาพมือหนึ่งถือมือถือ อีกมือโบกแท็กซี่",
+            "pronunciation": "คุด ยู คอล อะ แท็กซี่"
+          }
+        ],
+        "memoryHooks": [
+          "จำโครงประโยคสุภาพ: I’d like to + กริยา = ฉันต้องการจะ… เช่น I’d like to make a reservation.",
+          "R-R-R Strategy: Request (บอกความต้องการ) → Reserve (จอง) → Ride (เดินทางไป)",
+          "คำว่า reservation ออกเสียงคล้าย “เร-เซอร์-เว-ชั่น” ให้แบ่งพยางค์ช่วยจำ เร-เซอร์-เว-ชั่น"
+        ],
+        "summaryPoints": [
+          "เริ่มด้วยการทักทายและคุยสั้นๆ เพื่อความเป็นกันเอง",
+          "บอกจำนวนคน เวลา ทำเล และข้อจำกัดอาหารให้ครบถ้วน",
+          "ใช้วลีสุภาพในการขอคำแนะนำและทำการจอง",
+          "ยืนยันรายละเอียดและวางแผนการเดินทางต่อ (แท็กซี่/Grab/BTS)"
+        ]
+      },
+      {
+        "statement": "เรียนรู้การใช้ What's today's special? ในสถานการณ์จริงในประเทศไทย",
+        "statementTh": "เรียนรู้การสื่อสารเป็นภาษาอังกฤษในบริบทวัฒนธรรมไทย",
+        "stepByStepExplanation": [
+          "1. พบพนักงานต้อนรับที่ร้าน: แจ้งว่ามีการจองหรือขอที่นั่งและขอเมนูอย่างสุภาพ จากนั้นเปิดดูเมนู (menu) อย่างรวดเร็วเพื่อดูหมวดหมู่",
+          "2. ถามเมนูพิเศษประจำวัน (daily special) เพื่อได้ตัวเลือกคุ้มค่าและสดใหม่ แล้วเปรียบเทียบกับเมนูหลัก",
+          "3. บอกความต้องการอาหาร: มังสวิรัติ/กินปลาได้/ไม่เผ็ดมาก และถามว่าชุดนั้นมีซุปหรือสลัด (salad) รวมไหม",
+          "4. สั่งเครื่องดื่มให้ชัดเจน เช่น ชาเขียว (green tea) ร้อนหรือเย็น ระดับหวาน และน้ำแข็ง พร้อมขอ “dressing” แยกข้างถ้าสั่งสลัด",
+          "5. ทวนออเดอร์กับพนักงาน สรุปการเลือก และปิดท้ายด้วยคำขอบคุณ เพื่อให้การสั่งอาหารชัดเจนไม่ผิดพลาด"
+        ],
+        "thaiContextExamples": [
+          {
+            "englishPhrase": "What's today's special?",
+            "thaiContext": "ที่ห้องอาหารของ Ibis Bangkok คุณถามพนักงานถึงเมนูพิเศษวันนี้ก่อนตัดสินใจระหว่างชุดปลาย่างกับพาสต้า",
+            "situation": "ต้องการตัวเลือกคุ้มค่าและได้อาหารเร็วก่อนขึ้น BTS Skytrain ต่อ",
+            "memoryHook": "special = พิเศษ; นึกภาพป้ายวันนี้พิเศษหน้าร้าน",
+            "pronunciation": "ว็อตส์ ทูเดซ สเปเชิล"
+          },
+          {
+            "englishPhrase": "I'm vegetarian.",
+            "thaiContext": "ที่ร้านใน Central World คุณแจ้งว่าทานมังสวิรัติและถามว่ามีตัวเลือกที่ไม่ใส่เนื้อสัตว์ไหม",
+            "situation": "ไปทานกับเพื่อนจาก Thammasat ที่มีข้อจำกัดอาหาร",
+            "memoryHook": "vege- = ผัก + -tarian = ผู้ทาน; รวมกันเป็นผู้ที่ทานผัก",
+            "pronunciation": "ไอม์ เวจจิแทเรียน"
+          },
+          {
+            "englishPhrase": "Dressing on the side, please.",
+            "thaiContext": "ที่ Terminal 21 Food Court คุณสั่งสลัดและขอเดรสซิงแยกข้างเพื่อควบคุมรสชาติและความเผ็ด",
+            "situation": "กำลังลดหวานและไม่อยากให้สลัดแฉะ",
+            "memoryHook": "on the side = แยกข้าง; นึกถึงถ้วยซอสเล็กๆ วางข้างจาน",
+            "pronunciation": "เดรสซิง ออน เดอะ ไซด์ พลีส"
+          }
+        ],
+        "memoryHooks": [
+          "จำประโยคถามง่าย: What’s + today’s + special? = เมนูพิเศษของวันนี้คืออะไร",
+          "โครงสร้างบอกข้อจำกัด: I’m + vegetarian / I eat fish / Not too spicy, please.",
+          "สั่งสลัดอย่างมือโปร: ชื่อจาน + dressing on the side เพื่อควบคุมรสและแคลอรี"
+        ],
+        "summaryPoints": [
+          "ถามเมนูพิเศษ (daily special) เพื่อได้ตัวเลือกสดใหม่และคุ้มค่า",
+          "แจ้งข้อจำกัดอาหารให้ชัด เช่น มังสวิรัติ กินปลาได้ หรือเผ็ดน้อย",
+          "สั่งเครื่องดื่มและเครื่องเคียงให้ละเอียด เช่น green tea และสลัดพร้อม dressing แยก",
+          "ทวนออเดอร์ก่อนปิดการสั่งเพื่อป้องกันความผิดพลาด"
+        ]
+      }
+    ],
+    "keyVocabulary": [
+      {
+        "word": "restaurant",
+        "thaiTranslation": "ร้านอาหาร",
+        "memoryHook": "restaurant อ่านว่า เรส-ตอ-รองท์ นึกว่า rest = พัก แล้วต้อง “รองท้อง” ที่ร้านอาหารหลังออกจากโรงแรม",
+        "contextExample": "Let's go to a Japanese restaurant near Siam. - ชวนเพื่อนจากล็อบบี้ Novotel แล้วนั่ง BTS ไป Siam เพื่อกินกลางวันที่ร้านอาหารญี่ปุ่น เช่น Fuji Restaurant ตามแผนในตอนนี้"
+      },
+      {
+        "word": "reservation",
+        "thaiTranslation": "การจองโต๊ะ",
+        "memoryHook": "reservation อ่านว่า รี-เซอร์-เว-ชั่น นึกถึงป้าย “Reserved” บนโต๊ะที่เราจองไว้ล่วงหน้า",
+        "contextExample": "I'd like to make a reservation for two at Fuji Restaurant at Central World. - โทรจากล็อบบี้ Novotel เพื่อทำการจองโต๊ะสองที่ที่ห้าง Central World ก่อนออกไปทานมื้อกลางวัน"
+      },
+      {
+        "word": "recommend",
+        "thaiTranslation": "แนะนำ",
+        "memoryHook": "recommend อ่านว่า เรค-คอม-เมนด์ คล้ายคำว่า “คอมเมนต์” เวลางงๆ ก็ขอให้พนักงานคอมเมนต์/แนะนำเมนูให้เรา",
+        "contextExample": "What do you recommend for someone who doesn't eat meat? - ถึงร้านแล้วบอกว่าไม่กินเนื้อ ให้พนักงานที่ Fuji Restaurant ช่วยแนะนำเมนู เช่น ชุดปลาแซลมอน หรือทางเลือกมังสวิรัติ"
+      },
+      {
+        "word": "spicy",
+        "thaiTranslation": "เผ็ด",
+        "memoryHook": "spicy อ่านว่า สไปซี่ นึกถึง “เผ็ดซี๊ด” น้ำตาไหล ต้องถามก่อนสั่ง",
+        "contextExample": "Is the curry very spicy? - ก่อนสั่งถามระดับความเผ็ด เพราะเพื่อนไม่กินเผ็ด ที่ Terminal 21 Food Court มักมีป้ายบอกความเผ็ด"
+      },
+      {
+        "word": "vegetarian",
+        "thaiTranslation": "มังสวิรัติ",
+        "memoryHook": "vegetarian เวเจทาเรียน มีคำว่า “เวจ (veg)” = ผัก และให้นึกถึงคำว่า “เจ” = ไม่กินเนื้อ",
+        "contextExample": "Do you have a vegetarian option without fish sauce? - ย้ำข้อจำกัดอาหารตอนเลือกเมนูที่ Terminal 21 Food Court หรือร้านญี่ปุ่น ขอแบบมังสวิรัติไม่ใส่น้ำปลาให้ตรงกับความต้องการ"
+      },
+      {
+        "word": "menu",
+        "thaiTranslation": "เมนู",
+        "memoryHook": "เมนู ฟังเหมือน “มี-นู” รายการอาหารที่เราต้องขอมาดูก่อนตัดสินใจ",
+        "contextExample": "May I have the menu, please? - เดินเข้า Fuji Restaurant ที่ Central World แล้วขอเมนูก่อนสั่งชาเขียวและเริ่มสอบถามเมนูพิเศษ"
+      },
+      {
+        "word": "daily special",
+        "thaiTranslation": "เมนูพิเศษประจำวัน",
+        "memoryHook": "daily special = เดลี่ (ทุกวัน) + สเปเชียล (พิเศษ) รวมกันคือเมนูพิเศษที่เปลี่ยนไปในแต่ละวัน",
+        "contextExample": "What is today's daily special? - ถามพนักงานถึงเมนูพิเศษประจำวันตอนมื้อกลางวันที่ Fuji Restaurant เพื่อเปรียบเทียบกับเซ็ตแซลมอน"
+      },
+      {
+        "word": "salad",
+        "thaiTranslation": "สลัด",
+        "memoryHook": "สลัด ให้นึกว่า “สะ-ลัด” ไขมัน เลือกเบา ๆ คู่กับอาหารญี่ปุ่นได้ดี",
+        "contextExample": "Does the set come with soup or salad? - เช็กให้ชัดว่าชุดพิเศษรวมซุปหรือสลัดเหมือนในตอนนี้ จะได้เลือกให้เหมาะกับความเฮลท์ตี้ที่ Fuji Restaurant"
+      },
+      {
+        "word": "dressing",
+        "thaiTranslation": "น้ำสลัด",
+        "memoryHook": "dressing เดรสซิ่ง ให้นึกถึง “เดรส” ชุดของสลัด ราดแล้วสลัดเหมือนได้ใส่ชุด",
+        "contextExample": "Can I get the house dressing on the side? - เพิ่มสลัดและขอให้น้ำสลัดของทางร้านแยกถ้วย ปรับรสเองระหว่างมื้อกลางวันหลังนั่ง BTS ไป Siam"
+      }
+    ],
+    "grammarPoints": [
+      {
+        "structure": "Present Simple for habits, facts, and preferences",
+        "explanation": "Used to talk about routines, general truths, and likes/dislikes.",
+        "thaiExplanation": "ใช้ช่อง V1 เพื่อบอกนิสัย ข้อเท็จจริง และความชอบ เช่น I like…, She works…, Do you…?",
+        "examples": [
+          "Do you eat fish?",
+          "My wife likes spicy food but I do not.",
+          "I prefer short books."
+        ]
+      },
+      {
+        "structure": "Present Continuous (be + V-ing)",
+        "explanation": "Describes actions happening now, around now, or temporary situations.",
+        "thaiExplanation": "ใช้ be + V-ing เพื่อบอกสิ่งที่กำลังเกิดขึ้น/ช่วงเวลานี้ หรือสถานการณ์ชั่วคราว",
+        "examples": [
+          "Are you enjoying your stay at our hotel?",
+          "My wife and I are having a great time.",
+          "What kind of book are you looking for?"
+        ]
+      },
+      {
+        "structure": "Modals for requests/offers/permission (can, may, would)",
+        "explanation": "Use modal + base verb to ask politely, make offers, or ask permission.",
+        "thaiExplanation": "ใช้ can/may/would + V1 ในการขอร้อง เสนอ หรือขออนุญาตอย่างสุภาพ",
+        "examples": [
+          "Can you recommend a nice restaurant?",
+          "May we please have a table for two?",
+          "Would you also like to add a salad on the side, sir?"
+        ]
+      }
+    ],
+    "comprehensionQuestions": [
+      {
+        "question": "คุณจะสั่งอาหารที่ TRUE Coffee เป็นภาษาอังกฤษอย่างไร? ฝึกพูด: 'Could I have ... please?'",
+        "questionTh": "คุณจะสั่งอาหารที่ TRUE Coffee เป็นภาษาอังกฤษอย่างไร?",
+        "expectedAnswer": "Could I have an iced latte and a vegetarian sandwich, please? - ประโยคนี้สุภาพและตรงประเด็นสำหรับการสั่งเครื่องดื่มและอาหาร พร้อมระบุความต้องการแบบมังสวิรัติให้พนักงานเข้าใจ",
+        "context": "สถานการณ์จริง: ที่ TRUE Coffee สาขาในกรุงเทพฯ คุณต้องการกาแฟเย็นและอาหารที่เหมาะกับมังสวิรัติ ใช้สำนวนขออย่างสุภาพและบอกความต้องการชัดเจน"
+      },
+      {
+        "question": "คุณจะพูดอะไรเมื่อช้อปปิ้งที่ Big C? ฝึกพูด: 'Which snacks are not spicy?'",
+        "questionTh": "คุณจะพูดอะไรเมื่อช้อปปิ้งที่ Big C?",
+        "expectedAnswer": "Excuse me, which snacks are not spicy? - ใช้ถามพนักงานเพื่อขอคำแนะนำขนมที่ไม่เผ็ด เหมาะสำหรับผู้ที่ทานเผ็ดไม่มากในบริบทซูเปอร์มาร์เก็ตของไทย",
+        "context": "สถานการณ์จริง: ที่ Big C ราชดำริ คุณอยากซื้อของกินเล่นแต่ไม่เผ็ด จึงขอคำแนะนำจากพนักงาน"
+      },
+      {
+        "question": "คุณจะถามทางไป BTS สยามอย่างไร? ฝึกพูด: 'Excuse me, how can I get to BTS Siam?'",
+        "questionTh": "คุณจะถามทางไป BTS สยามอย่างไร?",
+        "expectedAnswer": "Excuse me, how can I get to BTS Siam? - ประโยคสุภาพสำหรับถามเส้นทางไปสถานีรถไฟฟ้าบีทีเอสสยาม ใช้ได้กับคนพื้นที่หรือ รปภ. แถบสยาม",
+        "context": "สถานการณ์จริง: คุณอยู่บริเวณสยามสแควร์วันแต่หลงทาง ต้องการไป BTS สยามเพื่อเดินทางต่อ"
+      },
+      {
+        "question": "คุณจะถามอะไรที่แผนกต้อนรับโรงแรม Novotel? ฝึกพูด: 'Could you recommend a restaurant and make a reservation?'",
+        "questionTh": "คุณจะถามอะไรที่แผนกต้อนรับโรงแรม Novotel?",
+        "expectedAnswer": "Could you recommend a vegetarian restaurant nearby and make a reservation for 7 pm? Also, could you call a taxi for me? - ขอคำแนะนำร้านอาหารที่มีมังสวิรัติและให้ช่วยจองเวลา 1 ทุ่ม พร้อมทั้งขอให้เรียกแท็กซี่ให้ ครบทั้งการขอคำแนะนำ การจอง และการจัดการเดินทาง",
+        "context": "สถานการณ์จริง: พักที่ Novotel Siam Square อยากทานมื้อเย็นที่มีตัวเลือกมังสวิรัติ ให้แผนกต้อนรับช่วยแนะนำและจอง รวมถึงเรียกแท็กซี่ไปร้าน"
+      },
+      {
+        "question": "คุณจะร้องเรียนเรื่องอาหารที่ Terminal 21 อย่างไร? ฝึกพูด: 'This dish is too spicy.'",
+        "questionTh": "คุณจะร้องเรียนเรื่องอาหารที่ Terminal 21 อย่างไร?",
+        "expectedAnswer": "Excuse me, this dish is too spicy. Could you make it less spicy, please? - ร้องเรียนอย่างสุภาพว่าอาหารเผ็ดเกินไปและขอให้ปรับให้น้อยเผ็ด เหมาะกับบริบทฟู้ดคอร์ทหรือร้านอาหารใน Terminal 21",
+        "context": "สถานการณ์จริง: ทานอาหารที่ Pier 21 (ฟู้ดคอร์ท Terminal 21 อโศก) แล้วรู้สึกเผ็ดเกินไป ต้องการให้ร้านช่วยปรับรส"
+      }
+    ],
+    "originalSegments": [
+      "From Hotel Concierge to Restaurant Seating",
+      "Placing a Restaurant Order Confidently"
+    ]
+  },
+  "seriesInfo": {
+    "seriesTitle": "Everyday English in Real Life: Dining, Errands, and Daily Habits",
+    "seriesTitleTh": "หลักสูตรการเรียนภาษาอังกฤษ: Everyday English in Real Life: Dining, Errands, and Daily Habits",
+    "episodeNumber": 1,
+    "totalEpisodes": 3,
+    "description": "Navigate a full dining journey: speak with a hotel concierge to choose and get to a restaurant, get seated, read the menu, and place an order politely and clearly.",
+    "descriptionTh": "Navigate a full dining journey: speak with a hotel concierge to choose and get to a ร้านอาหาร, get seated, read the menu, and place an order politely and clearly."
+  },
+  "audioUrl": null
+}

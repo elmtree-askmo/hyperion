@@ -1,0 +1,124 @@
+{
+  "flashcards": [
+    {
+      "word": "recommend",
+      "definition": "to suggest that someone or something would be good or suitable for a particular purpose",
+      "thaiDefinition": "แนะนำ ชี้ว่าควรเลือกหรือควรทำสิ่งใดเพราะเหมาะสม เป็นประโยชน์ หรือมีคุณภาพ เช่น แนะนำหนังสือ บริการ หรือวิธีการให้ผู้อื่น",
+      "thaiTranslation": "แนะนำ",
+      "pronunciation": "เรค-คอม-เมนด์",
+      "phonetic": "/ˌrɛkəˈmɛnd/",
+      "memoryHook": "จำว่า เรค-คอม-เมนด์ = เรคคอมเมนต์ นึกภาพเพื่อนพิมพ์คอมเมนต์ในไลน์ว่า ‘แนะนำ!’ ให้ไปอ่านหนังสือที่ชั้น 3 หอสมุดจุฬาฯ",
+      "contextExample": "The librarian at Chulalongkorn University Library recommended a good study spot on the 3rd floor. - บรรณารักษ์ที่หอสมุดจุฬาฯ แนะนำมุมอ่านหนังสือดีๆ ชั้น 3",
+      "partOfSpeech": "verb",
+      "difficulty": "medium"
+    },
+    {
+      "word": "section",
+      "definition": "a distinct part or subdivision of a place, document, or collection",
+      "thaiDefinition": "ส่วนย่อยหรือหมวดหมู่ที่แบ่งแยกไว้อย่างชัดเจน เช่น หมวดหนังสือในห้องสมุด หรือแผนกในห้างสรรพสินค้า",
+      "thaiTranslation": "หมวด",
+      "pronunciation": "เซค-ชั่น",
+      "phonetic": "/ˈsɛkʃən/",
+      "memoryHook": "เดิน Big C ลาดพร้าว เห็นป้าย Section ใหญ่ๆ แบ่งเป็นหมวดชัดเจน จำว่า section คือโซนหรือหมวด",
+      "contextExample": "The fiction section at Thammasat University Library is next to the newspaper shelves. - หมวดนิยายของหอสมุดธรรมศาสตร์อยู่ข้างชั้นหนังสือพิมพ์",
+      "partOfSpeech": "noun",
+      "difficulty": "easy"
+    },
+    {
+      "word": "borrow",
+      "definition": "to take and use something that belongs to someone else with the intention of returning it",
+      "thaiDefinition": "ยืม นำสิ่งของของผู้อื่นไปใช้ชั่วคราวและตั้งใจจะคืนในภายหลัง",
+      "thaiTranslation": "ยืม",
+      "pronunciation": "บอ-โรว์",
+      "phonetic": "/ˈbɑːroʊ/",
+      "memoryHook": "บอ-โรว์ ฟังเหมือน ‘บอก-เรา’ ว่าจะยืมแล้วคืน นึกภาพบอกบรรณารักษ์ที่หอสมุด มข. ว่า ‘ขอยืมครับ เดี๋ยวคืน’",
+      "contextExample": "I borrowed a laptop charger from the staff at Khon Kaen University Library. - ฉันยืมสายชาร์จแล็ปท็อปจากเจ้าหน้าที่หอสมุด มข.",
+      "partOfSpeech": "verb",
+      "difficulty": "easy"
+    },
+    {
+      "word": "check out",
+      "definition": "to borrow an item from a library by having it recorded under your name",
+      "thaiDefinition": "ทำรายการยืมออกหนังสือจากห้องสมุด โดยระบบบันทึกไว้ใต้ชื่อผู้ยืมก่อนนำออกจากห้องสมุด",
+      "thaiTranslation": "ยืมออก (จากห้องสมุด)",
+      "pronunciation": "เชค-เอ๊าต์",
+      "phonetic": "/tʃɛk aʊt/",
+      "memoryHook": "เช็กแล้วออก: เดินไปเครื่องยืมอัตโนมัติที่หอสมุด มช. แตะบัตร ‘ปิ๊บ!’ แล้วเดินออกประตูอย่างเท่",
+      "contextExample": "You can check out up to 5 books at the Chiang Mai University Library using your student card. - ที่หอสมุดมหาวิทยาลัยเชียงใหม่ คุณยืมออกได้สูงสุด 5 เล่มด้วยบัตรนักศึกษา",
+      "partOfSpeech": "phrasal verb",
+      "difficulty": "medium"
+    },
+    {
+      "word": "deposit",
+      "definition": "to put money into a bank account",
+      "thaiDefinition": "นำเงินฝากเข้าบัญชีธนาคาร อาจเป็นเงินสดหรือการโอน เพื่อเพิ่มยอดเงินในบัญชี",
+      "thaiTranslation": "ฝากเงิน",
+      "pronunciation": "ดิ-พอ-สิท",
+      "phonetic": "/dɪˈpɒzɪt/",
+      "memoryHook": "ดิ-พอ-สิท ฟังเหมือน ‘ดี พอสิ!’ พูดกับตัวเองหน้าคิวธนาคารไทยพาณิชย์ที่สยามว่า เงินพอแล้ว ฝากเลย",
+      "contextExample": "I deposited my scholarship money at Bangkok Bank in Siam Paragon after class. - หลังเลิกคลาส ฉันนำทุนการศึกษาไปฝากเงินที่ธนาคารกรุงเทพ สาขาสยามพารากอน",
+      "partOfSpeech": "verb",
+      "difficulty": "easy"
+    },
+    {
+      "word": "PIN",
+      "definition": "a secret number used to confirm your identity when using a bank card or ATM",
+      "thaiDefinition": "รหัสตัวเลขลับสำหรับยืนยันตัวตนเวลาใช้บัตรเอทีเอ็มหรือทำธุรกรรมผ่านตู้/แอปธนาคาร",
+      "thaiTranslation": "รหัสพิน",
+      "pronunciation": "พิน",
+      "phonetic": "/pɪn/",
+      "memoryHook": "พิน นึกถึง ‘เข็มหมุด pin’ ที่ปักเก็บความลับ อย่าให้ใครเห็นรหัสเวลายืนกดตู้ที่ BTS สยาม",
+      "contextExample": "Never share your PIN when using the Krungthai ATM at BTS Siam. - อย่าบอกรหัสพินของคุณเวลาใช้เอทีเอ็มกรุงไทยที่บีทีเอสสยาม",
+      "partOfSpeech": "noun",
+      "difficulty": "easy"
+    },
+    {
+      "word": "account balance",
+      "definition": "the amount of money currently available in your bank account",
+      "thaiDefinition": "ยอดเงินคงเหลือในบัญชี ณ ขณะปัจจุบัน หลังจากคิดเงินเข้าและเงินออกทั้งหมดแล้ว",
+      "thaiTranslation": "ยอดเงินคงเหลือ",
+      "pronunciation": "อะ-เคานต์ บา-แลนซ์",
+      "phonetic": "/əˈkaʊnt ˈbæləns/",
+      "memoryHook": "บา-แลนซ์ เหมือนบาลานซ์การทรงตัว นึกภาพยืนทรงตัวบน BTS ขณะเปิดแอปธนาคารเช็กยอด",
+      "contextExample": "I checked my account balance on the KBank app while waiting at TRUE Coffee, Central World. - ระหว่างรอที่ TRUE Coffee เซ็นทรัลเวิลด์ ฉันเช็กยอดเงินคงเหลือในแอปกสิกร",
+      "partOfSpeech": "noun",
+      "difficulty": "medium"
+    },
+    {
+      "word": "receipt",
+      "definition": "a written or printed document that proves you have paid or received money",
+      "thaiDefinition": "เอกสารหรือสลิปที่ใช้ยืนยันว่ามีการรับเงินหรือจ่ายเงินแล้ว ใช้เป็นหลักฐานทางการเงิน",
+      "thaiTranslation": "ใบเสร็จรับเงิน (สลิป)",
+      "pronunciation": "รี-ซีท",
+      "phonetic": "/rɪˈsiːt/",
+      "memoryHook": "คำนี้มีตัว p แต่ไม่ออกเสียง นึกถึงสลิปยาวๆ ที่ได้หลังฝากเงินที่ SCB หรือเวลาซื้อของที่ 7-Eleven",
+      "contextExample": "The teller at SCB gave me a receipt after I deposited cash at Central Plaza Ladprao. - พนักงานไทยพาณิชย์ออกใบเสร็จให้หลังจากฉันฝากเงินสดที่เซ็นทรัลลาดพร้าว",
+      "partOfSpeech": "noun",
+      "difficulty": "easy"
+    },
+    {
+      "word": "fiction",
+      "definition": "literature that describes imaginary events and people; not factual",
+      "thaiDefinition": "งานเขียนที่แต่งขึ้นจากจินตนาการ ไม่ยึดตามข้อเท็จจริง เช่น นิยาย เรื่องสั้น",
+      "thaiTranslation": "นิยาย",
+      "pronunciation": "ฟิค-ชั่น",
+      "phonetic": "/ˈfɪkʃən/",
+      "memoryHook": "ฟิค-ชั่น คล้ายคำว่า ‘ฟิค’ ที่แฟนคลับไทยใช้ เรียกงานแต่งสนุกๆ นึกถึงอ่านฟิคที่ TRUE Coffee ก่อนขึ้น BTS",
+      "contextExample": "I spent an hour reading Thai fiction at Neilson Hays Library near Silom. - ฉันใช้เวลาชั่วโมงหนึ่งอ่านนิยายไทยที่หอสมุด Neilson Hays ใกล้สีลม",
+      "partOfSpeech": "noun",
+      "difficulty": "medium"
+    },
+    {
+      "word": "mystery",
+      "definition": "a type of story about crimes or strange events that are solved or explained",
+      "thaiDefinition": "แนวเรื่องที่มีปริศนาหรือคดีให้สืบสวน เช่น ใครเป็นคนร้าย หรือเหตุการณ์แปลกประหลาดที่ค่อยๆ เฉลย",
+      "thaiTranslation": "นิยายสืบสวน",
+      "pronunciation": "มิส-เตอ-รี",
+      "phonetic": "/ˈmɪstəri/",
+      "memoryHook": "มิส-เตอ-รี ฟังเหมือน ‘มิสเตอร์-ลี้’ คนลึกลับ แอบถือหนังสือเดินบน BTS อ่านไปลุ้นไป",
+      "contextExample": "I checked out a mystery novel from the Chulalongkorn University Library to read on the BTS Skytrain. - ฉันยืมออกนิยายสืบสวนจากหอสมุดจุฬาฯ ไปอ่านบนรถไฟฟ้า BTS",
+      "partOfSpeech": "noun",
+      "difficulty": "medium"
+    }
+  ]
+}

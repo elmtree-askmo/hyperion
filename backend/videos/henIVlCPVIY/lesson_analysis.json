@@ -1,0 +1,1243 @@
+{
+  "videoId": "henIVlCPVIY",
+  "title": "Everyday English Conversation Practice | 30 Minutes English Listening",
+  "totalDuration": 1997,
+  "language": "english",
+  "targetAudience": "thai_college_students",
+  "analyzedAt": "2025-10-10T11:45:42.218Z",
+  "learningObjectives": [
+    {
+      "id": "obj_1",
+      "title": "Plan and execute a dining outing from hotel to restaurant",
+      "description": "Ask hotel staff for restaurant recommendations that match dietary preferences (e.g., vegetarian, spicy/non-spicy), understand menu items (daily special, soup vs. salad, sides, dressings), make a reservation, arrange a taxi, and confirm pickup time politely.",
+      "difficulty": "intermediate",
+      "estimatedTime": 50,
+      "skills": [
+        "requesting recommendations",
+        "stating dietary preferences and restrictions",
+        "making reservations",
+        "arranging transportation",
+        "confirming times and details",
+        "menu and dressing vocabulary",
+        "polite request forms (could/may/would)"
+      ]
+    },
+    {
+      "id": "obj_2",
+      "title": "Order coffee and handle payment and loyalty points",
+      "description": "Place multi-item takeout orders, choose sizes and milk options, ask health-related option questions, confirm totals with tax, pay by credit card, provide a phone number to add loyalty points, and follow pickup instructions.",
+      "difficulty": "beginner",
+      "estimatedTime": 40,
+      "skills": [
+        "size and milk-option vocabulary",
+        "health-oriented questions",
+        "numbers, prices, and tax",
+        "credit card payment phrases",
+        "pronouncing and confirming phone numbers",
+        "listening for pickup locations"
+      ]
+    },
+    {
+      "id": "obj_3",
+      "title": "Complete basic bank counter transactions",
+      "description": "Interact with bank staff to deposit a check, use a bank card and enter a PIN, request and interpret an account balance receipt, and close the interaction using formal, polite language.",
+      "difficulty": "intermediate",
+      "estimatedTime": 35,
+      "skills": [
+        "banking vocabulary (deposit, PIN, receipt, balance)",
+        "formal politeness strategies",
+        "following step-by-step instructions",
+        "verifying information"
+      ]
+    },
+    {
+      "id": "obj_4",
+      "title": "Find, borrow, and discuss books (and related genres)",
+      "description": "Ask where sections are, follow directions, request and give book recommendations, discuss genres and author preferences (including female authors), check out with a library card, understand return dates, and politely clarify misunderstandings (e.g., when someone is not an employee).",
+      "difficulty": "intermediate",
+      "estimatedTime": 45,
+      "skills": [
+        "genre vocabulary (mystery, adventure, etc.) for books and films",
+        "prepositions and location phrases",
+        "recommendation language (suggesting, accepting, declining)",
+        "polite correction/clarification",
+        "library checkout terminology",
+        "sale/discount language"
+      ]
+    },
+    {
+      "id": "obj_5",
+      "title": "Shop for groceries and make smart quantity/price decisions",
+      "description": "Name common produce and dairy items, interpret sale offers (e.g., 10 for $3), choose appropriate quantities, handle fragile items, and express preferences and compromises when selecting products.",
+      "difficulty": "beginner",
+      "estimatedTime": 40,
+      "skills": [
+        "food vocabulary (produce, eggs, cheese types)",
+        "countable/uncountable nouns and quantities",
+        "comparative pricing and value",
+        "making and responding to suggestions",
+        "safety/handling adjectives (fragile)",
+        "expressing preferences and compromises"
+      ]
+    },
+    {
+      "id": "obj_6",
+      "title": "Describe daily routines and give/accept advice for healthier habits",
+      "description": "Use present simple and time expressions to describe routines; discuss sleep, exercise, meals, and commuting; identify problems (e.g., late nights, skipping breakfast) and propose solutions using advice language (should/consider); practice Q&A repetition to build automatic speaking.",
+      "difficulty": "intermediate",
+      "estimatedTime": 60,
+      "skills": [
+        "time-telling and daily schedule language",
+        "adverbs of frequency",
+        "sequencing actions",
+        "giving and accepting advice (should, consider + gerund)",
+        "negotiating behavior changes",
+        "Q&A repetition for fluency and confidence"
+      ]
+    }
+  ],
+  "prerequisites": [
+    {
+      "id": "prereq_1",
+      "topic": "CEFR A2 English foundations (grammar and core listening)",
+      "level": "basic",
+      "description": "Students should comfortably understand and use present simple and present continuous for routines and current actions; form common questions (Wh- and yes/no) and short answers; use modals for requests and advice (can/could/may/would like/should); handle countable vs. uncountable nouns with quantifiers (some, any, much, many, a few, a little); and use comparatives/superlatives for choices (cheaper/healthier). They should follow slow-to-normal pace audio of everyday dialogues and extract key details (who, what, where, price, time).",
+      "suggestedResources": [
+        "British Council LearnEnglish – Grammar A1–A2: https://learnenglish.britishcouncil.org/grammar",
+        "BBC Learning English – Lower Intermediate Listening: https://www.bbc.co.uk/learningenglish/english/course/lower-intermediate",
+        "ESL Lab (easy level listening): https://www.esl-lab.com/easy/"
+      ]
+    },
+    {
+      "id": "prereq_2",
+      "topic": "Numbers, time, money, and everyday units in English",
+      "level": "basic",
+      "description": "Be able to tell and understand times (6:00, 7:45, noon, midnight), say and hear prices with decimals (e.g., $11.13), and read totals “after tax.” Understand common retail math and phrases: on sale, half price, total, receipt, change. Recognize quantities and packaging units: pot, cup, platter, side, bunch, bag, carton, piece, dozen. State and recognize phone numbers clearly for loyalty points. Know basic PIN security language and steps.",
+      "suggestedResources": [
+        "British Council – Numbers and prices: https://learnenglish.britishcouncil.org/vocabulary/a1-a2-vocabulary/numbers-1-10-1-100-and-beyond",
+        "British Council – Telling the time: https://learnenglishkids.britishcouncil.org/grammar-practice/telling-the-time",
+        "Consumer.gov (Receipts and shopping): https://consumer.gov/shopping-smart"
+      ]
+    },
+    {
+      "id": "prereq_3",
+      "topic": "Polite request and service-encounter language",
+      "level": "basic",
+      "description": "Know standard polite patterns used in hotels, restaurants, cafes, banks, and stores: Could you…? May I…? I’d like…, What do you recommend? Can you arrange…? That will be all. No, thank you. Understand how to accept/decline offers, ask for clarification (Sorry?/Could you repeat that?), and confirm details (So the return date is…; My total is…?). This supports making reservations, ordering, customizing drinks, paying by card, adding loyalty points, and asking staff for directions or help.",
+      "suggestedResources": [
+        "BBC Learning English – How to be polite: https://www.bbc.co.uk/learningenglish/english/course/lower-intermediate/unit-7/session-1",
+        "EngVid – Polite requests in English: https://www.engvid.com/english-lessons/polite-english-requests/",
+        "ESL Fast – Conversations for beginners (service situations): https://eslfast.com/easy/"
+      ]
+    },
+    {
+      "id": "prereq_4",
+      "topic": "Domain vocabulary for common public services and leisure",
+      "level": "basic",
+      "description": "Recognize key words across the lesson contexts: hotel (reservation, staff, taxi), restaurant (menu, daily special, soup/salad, dressing, vegetarian, spicy, reservation), cafe (latte, iced, skim/soy/almond/oat milk, size names), bank (deposit, check/cheque, account balance, receipt, PIN, card reader), library/bookstore (borrow, return date/due date, library card, genre: fiction, mystery, adventure; author, recommendation), grocery (produce, fragile, unit names, on sale), cinema (genres: comedy, romance, action, horror, animated). Familiarity with these terms allows learners to follow and participate in dialogues without constant dictionary use.",
+      "suggestedResources": [
+        "Oxford Learner’s Dictionaries (with examples): https://www.oxfordlearnersdictionaries.com/",
+        "Quizlet – A2 Food & Drink / Shopping / Banking sets (search within Quizlet): https://quizlet.com",
+        "British Council – Vocabulary: Shopping and services: https://learnenglish.britishcouncil.org/vocabulary"
+      ]
+    },
+    {
+      "id": "prereq_5",
+      "topic": "Daily routines, health habits, and giving advice",
+      "level": "basic",
+      "description": "Know routine and health-related vocabulary (wake up, snooze, skip breakfast, fast food, hydrate, exercise, lift weights, ride a bike, pack lunch, hang out, get enough sleep). Be able to sequence events (first, then, after that, by [time]) and give/receive advice using should/shouldn’t and softeners (You could consider…, Maybe try…). Understand cause–effect links for habits (If you sleep earlier, you’ll have more energy).",
+      "suggestedResources": [
+        "British Council – Daily routines: https://learnenglishteens.britishcouncil.org/vocabulary/elementary-vocabulary/routines",
+        "BBC Learning English – Giving advice (should/ought to): https://www.bbc.co.uk/learningenglish/english/course/lower-intermediate/unit-10/session-1",
+        "USDA MyPlate (simple health vocabulary): https://www.myplate.gov/"
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "id": "seg_1",
+      "title": "From Hotel Concierge to Restaurant Seating",
+      "startTime": 0,
+      "endTime": 290,
+      "duration": 290,
+      "content": "Plan a lunch outing from the hotel: state dietary preferences, consider spicy/non-spicy options, choose a Japanese restaurant, make a reservation, and arrange a taxi. Arrive at the restaurant, request a table for two, receive menus, and order green tea.",
+      "keyTopics": [
+        "greetings and small talk at a hotel",
+        "stating dietary preferences (vegetarian, fish, spicy)",
+        "requesting recommendations",
+        "making a reservation",
+        "arranging transportation (taxi)",
+        "restaurant host interaction",
+        "ordering beverages (green tea)"
+      ],
+      "learningObjectives": [
+        "obj_1"
+      ],
+      "difficulty": "beginner",
+      "prerequisites": []
+    },
+    {
+      "id": "seg_2",
+      "title": "Placing a Restaurant Order Confidently",
+      "startTime": 290,
+      "endTime": 570,
+      "duration": 280,
+      "content": "Navigate the full ordering process: ask about the daily special, clarify what is included (soup vs. salad), add a side salad with house dressing, compare choices (daily special vs. salmon platter), accept recommendations, and finalize the order.",
+      "keyTopics": [
+        "daily special inquiry",
+        "soup vs. salad inclusions",
+        "ordering sides and dressings",
+        "weighing options and seeking recommendations",
+        "confirming and closing the order"
+      ],
+      "learningObjectives": [
+        "obj_1"
+      ],
+      "difficulty": "beginner-intermediate",
+      "prerequisites": [
+        "seg_1"
+      ]
+    },
+    {
+      "id": "seg_3",
+      "title": "Finding and Borrowing the Right Book",
+      "startTime": 570,
+      "endTime": 855,
+      "duration": 285,
+      "content": "Ask for a book with action, locate the adventure section, request and evaluate recommendations (length, themes, characters), select a shorter, exciting title, and complete checkout with a library card and return-date reminder.",
+      "keyTopics": [
+        "genre preferences (adventure, action)",
+        "navigating library sections",
+        "assessing book length and interest",
+        "checkout process",
+        "library card and due dates"
+      ],
+      "learningObjectives": [
+        "obj_4"
+      ],
+      "difficulty": "beginner",
+      "prerequisites": [
+        "seg_2"
+      ]
+    },
+    {
+      "id": "seg_4",
+      "title": "Coffee Ordering, Payment, and Loyalty Points",
+      "startTime": 855,
+      "endTime": 1145,
+      "duration": 290,
+      "content": "Order two iced drinks with size and milk choices, discuss healthier milk options, calculate a total with tax, pay by credit card, and add loyalty points using a phone number. Learn pickup logistics for takeout drinks.",
+      "keyTopics": [
+        "sizes and customizations",
+        "milk options (regular, skim, fat-free, almond, soy, oat)",
+        "health considerations",
+        "totals with tax",
+        "credit card payment",
+        "loyalty points via phone number",
+        "pickup instructions"
+      ],
+      "learningObjectives": [
+        "obj_2"
+      ],
+      "difficulty": "intermediate",
+      "prerequisites": [
+        "seg_3"
+      ]
+    },
+    {
+      "id": "seg_5",
+      "title": "Bank Counter Basics and Discussing Mystery Fiction",
+      "startTime": 1145,
+      "endTime": 1425,
+      "duration": 280,
+      "content": "Complete a bank transaction by depositing a check with card and PIN, then request and read an account balance receipt. Transition to a bookstore scenario to locate the fiction section, discuss mystery genre preferences, consider authors (Sherlock Holmes vs. Agatha Christie), and handle a polite misunderstanding with a fellow customer.",
+      "keyTopics": [
+        "bank deposit workflow",
+        "using a card and PIN",
+        "requesting account balance receipt",
+        "bookstore navigation (fiction, mystery)",
+        "author recommendations and preferences",
+        "social cues (identifying staff vs. customer)"
+      ],
+      "learningObjectives": [
+        "obj_3",
+        "obj_4"
+      ],
+      "difficulty": "intermediate",
+      "prerequisites": [
+        "seg_4"
+      ]
+    },
+    {
+      "id": "seg_6",
+      "title": "Smart Grocery Shopping and Choosing Movie Genres",
+      "startTime": 1425,
+      "endTime": 1710,
+      "duration": 285,
+      "content": "Work through a grocery list in the produce and dairy sections, compare sale quantities and prices (e.g., carrots 5 for $2 vs. 10 for $3), avoid overbuying, handle fragile items (eggs), and choose cheese types (mozzarella, cheddar, marble). Then weigh movie genre preferences (comedy, romance, action, animated, horror), consider maturity level, and purchase tickets.",
+      "keyTopics": [
+        "produce selection",
+        "unit price and quantity decisions",
+        "inventory awareness at home",
+        "handling fragile items",
+        "cheese varieties",
+        "genre negotiation (comedy, romance, action, animated, horror)",
+        "buying movie tickets"
+      ],
+      "learningObjectives": [
+        "obj_5",
+        "obj_4"
+      ],
+      "difficulty": "beginner-intermediate",
+      "prerequisites": [
+        "seg_5"
+      ]
+    },
+    {
+      "id": "seg_7",
+      "title": "Daily Routines and Healthier Habit Advice (+ Q&A Practice)",
+      "startTime": 1710,
+      "endTime": 1997,
+      "duration": 287,
+      "content": "Analyze an unhealthy daily routine (late nights, skipping breakfast, candy/soda, fast food) and receive practical advice: earlier bedtime, morning routine adjustments, healthy breakfast, packing lunch, and meeting friends at better times. Contrast with a healthy routine (hydration, exercise, meal prep, biking commute). Conclude with Q&A prompts to reinforce comprehension and fluency through repetition.",
+      "keyTopics": [
+        "describing daily schedules",
+        "sleep hygiene",
+        "morning routines and time management",
+        "healthy eating and meal prep",
+        "exercise and commuting",
+        "giving and accepting advice",
+        "Q&A/repetition practice for fluency"
+      ],
+      "learningObjectives": [
+        "obj_6"
+      ],
+      "difficulty": "intermediate",
+      "prerequisites": [
+        "seg_6"
+      ]
+    }
+  ],
+  "seriesStructure": {
+    "totalSeries": 1,
+    "seriesTitle": "Everyday English in Real Life: Dining, Errands, and Daily Habits",
+    "description": "Build practical English skills for common situations. Across three focused episodes, you will plan and complete a dining outing, handle key errands at the library and bank, and manage day-to-day living with coffee orders, smart grocery shopping, and healthier routines. By the end, you’ll confidently ask for help, make transactions, compare options, and discuss habits and preferences.",
+    "episodes": [
+      {
+        "episodeNumber": 1,
+        "title": "From Lobby to Table: Planning and Dining Out",
+        "description": "Navigate a full dining journey: speak with a hotel concierge to choose and get to a restaurant, get seated, read the menu, and place an order politely and clearly.",
+        "segments": [
+          "seg_1",
+          "seg_2"
+        ],
+        "estimatedTime": 11,
+        "objectives": [
+          "obj_1"
+        ]
+      },
+      {
+        "episodeNumber": 2,
+        "title": "Errands That Matter: Library and Bank Confidence",
+        "description": "Find and borrow the right book, ask staff for recommendations, discuss genres (including mystery fiction), and complete basic transactions at a bank counter with clarity.",
+        "segments": [
+          "seg_3",
+          "seg_5"
+        ],
+        "estimatedTime": 11,
+        "objectives": [
+          "obj_3",
+          "obj_4"
+        ]
+      },
+      {
+        "episodeNumber": 3,
+        "title": "Daily Living: Coffee, Groceries, and Healthy Routines",
+        "description": "Order coffee and handle payment and loyalty points, make smart quantity/price decisions at the grocery store, and describe daily routines while giving and accepting advice for healthier habits.",
+        "segments": [
+          "seg_4",
+          "seg_6",
+          "seg_7"
+        ],
+        "estimatedTime": 16,
+        "objectives": [
+          "obj_2",
+          "obj_5",
+          "obj_6"
+        ]
+      }
+    ],
+    "learningPath": [
+      "From Lobby to Table: Planning and Dining Out",
+      "Errands That Matter: Library and Bank Confidence",
+      "Daily Living: Coffee, Groceries, and Healthy Routines"
+    ],
+    "estimatedTotalTime": 38
+  },
+  "vocabulary": [
+    {
+      "word": "restaurant",
+      "definition": "a place where you can buy and eat meals",
+      "thaiTranslation": "ร้านอาหาร",
+      "difficulty": "basic",
+      "partOfSpeech": "noun",
+      "exampleSentence": "welcome to our restaurant",
+      "phonetic": "/ˈrɛst(ə)rɑːnt/",
+      "frequency": 6,
+      "segments": [
+        "seg_1",
+        "seg_2"
+      ]
+    },
+    {
+      "word": "reservation",
+      "definition": "an arrangement to keep a table, seat, or room for you",
+      "thaiTranslation": "การจอง",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "I can make a reservation for you now",
+      "phonetic": "/ˌrɛzərˈveɪʃən/",
+      "frequency": 1,
+      "segments": [
+        "seg_1"
+      ]
+    },
+    {
+      "word": "recommend",
+      "definition": "to say that something is good and suggest it",
+      "thaiTranslation": "แนะนำ",
+      "difficulty": "intermediate",
+      "partOfSpeech": "verb",
+      "exampleSentence": "can you recommend a nice restaurant",
+      "phonetic": "/ˌrɛkəˈmɛnd/",
+      "frequency": 2,
+      "segments": [
+        "seg_1",
+        "seg_3",
+        "seg_5"
+      ]
+    },
+    {
+      "word": "spicy",
+      "definition": "having a strong, hot taste",
+      "thaiTranslation": "เผ็ด",
+      "difficulty": "basic",
+      "partOfSpeech": "adjective",
+      "exampleSentence": "my wife likes spicy food but I do not",
+      "phonetic": "/ˈspaɪsi/",
+      "frequency": 3,
+      "segments": [
+        "seg_1"
+      ]
+    },
+    {
+      "word": "vegetarian",
+      "definition": "a person who does not eat meat",
+      "thaiTranslation": "มังสวิรัติ",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "my wife is a vegetarian",
+      "phonetic": "/ˌvɛdʒəˈtɛriən/",
+      "frequency": 1,
+      "segments": [
+        "seg_1"
+      ]
+    },
+    {
+      "word": "menu",
+      "definition": "a list of food and drinks at a restaurant",
+      "thaiTranslation": "เมนู",
+      "difficulty": "basic",
+      "partOfSpeech": "noun",
+      "exampleSentence": "their menu includes rice and fish",
+      "phonetic": "/ˈmɛnjuː/",
+      "frequency": 1,
+      "segments": [
+        "seg_2"
+      ]
+    },
+    {
+      "word": "daily special",
+      "definition": "a dish featured or offered at a special price for that day",
+      "thaiTranslation": "เมนูพิเศษประจำวัน",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "I will have the daily special",
+      "phonetic": "/ˈdeɪli ˈspɛʃəl/",
+      "frequency": 4,
+      "segments": [
+        "seg_2"
+      ]
+    },
+    {
+      "word": "salad",
+      "definition": "a cold dish of mixed vegetables, often with dressing",
+      "thaiTranslation": "สลัด",
+      "difficulty": "basic",
+      "partOfSpeech": "noun",
+      "exampleSentence": "May I order a salad on the side",
+      "phonetic": "/ˈsæləd/",
+      "frequency": 4,
+      "segments": [
+        "seg_2"
+      ]
+    },
+    {
+      "word": "dressing",
+      "definition": "a sauce added to salads",
+      "thaiTranslation": "น้ำสลัด",
+      "difficulty": "basic",
+      "partOfSpeech": "noun",
+      "exampleSentence": "what kind of dressing would you like",
+      "phonetic": "/ˈdrɛsɪŋ/",
+      "frequency": 2,
+      "segments": [
+        "seg_2"
+      ]
+    },
+    {
+      "word": "section",
+      "definition": "a part or area of a place or group",
+      "thaiTranslation": "ส่วน/หมวด/แผนก",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "can you show me where the adventure section is",
+      "phonetic": "/ˈsɛkʃən/",
+      "frequency": 5,
+      "segments": [
+        "seg_3",
+        "seg_5",
+        "seg_6"
+      ]
+    },
+    {
+      "word": "borrow",
+      "definition": "to take something for a time and return it",
+      "thaiTranslation": "ยืม",
+      "difficulty": "basic",
+      "partOfSpeech": "verb",
+      "exampleSentence": "you can choose any of these books to borrow",
+      "phonetic": "/ˈbɑːroʊ/",
+      "frequency": 1,
+      "segments": [
+        "seg_3"
+      ]
+    },
+    {
+      "word": "check out",
+      "definition": "to borrow a book from a library by recording it",
+      "thaiTranslation": "ยืมออก (จากห้องสมุด)",
+      "difficulty": "intermediate",
+      "partOfSpeech": "phrasal verb",
+      "exampleSentence": "I can check it out for you now",
+      "phonetic": "/tʃɛk aʊt/",
+      "frequency": 2,
+      "segments": [
+        "seg_3"
+      ]
+    },
+    {
+      "word": "deposit",
+      "definition": "to put money or a check into a bank account",
+      "thaiTranslation": "ฝาก (เงิน/เช็ค)",
+      "difficulty": "intermediate",
+      "partOfSpeech": "verb",
+      "exampleSentence": "I want to deposit a check",
+      "phonetic": "/dɪˈpɑːzɪt/",
+      "frequency": 2,
+      "segments": [
+        "seg_5"
+      ]
+    },
+    {
+      "word": "PIN",
+      "definition": "a secret number used to access your bank card",
+      "thaiTranslation": "รหัสพิน",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "please enter your PIN personal identification number into the card reader",
+      "phonetic": "/pɪn/",
+      "frequency": 1,
+      "segments": [
+        "seg_5"
+      ]
+    },
+    {
+      "word": "account balance",
+      "definition": "the amount of money in your bank account",
+      "thaiTranslation": "ยอดเงินคงเหลือในบัญชี",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "I also want to find out what my account balance is",
+      "phonetic": "/əˈkaʊnt ˈbæl.əns/",
+      "frequency": 2,
+      "segments": [
+        "seg_5"
+      ]
+    },
+    {
+      "word": "receipt",
+      "definition": "a printed paper that shows you paid",
+      "thaiTranslation": "ใบเสร็จ",
+      "difficulty": "basic",
+      "partOfSpeech": "noun",
+      "exampleSentence": "I will print out your account balance on a receipt",
+      "phonetic": "/rɪˈsiːt/",
+      "frequency": 1,
+      "segments": [
+        "seg_5"
+      ]
+    },
+    {
+      "word": "fiction",
+      "definition": "stories about imaginary events; not true",
+      "thaiTranslation": "เรื่องแต่ง/นวนิยาย",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "do you know where the fiction section is",
+      "phonetic": "/ˈfɪkʃən/",
+      "frequency": 2,
+      "segments": [
+        "seg_3",
+        "seg_5"
+      ]
+    },
+    {
+      "word": "mystery",
+      "definition": "a story genre about solving a crime or puzzle",
+      "thaiTranslation": "เรื่องลึกลับ/แนวสืบสวน",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "these days I'm really interested in mystery fiction",
+      "phonetic": "/ˈmɪstəri/",
+      "frequency": 5,
+      "segments": [
+        "seg_5",
+        "seg_6"
+      ]
+    },
+    {
+      "word": "romance",
+      "definition": "a love story or feelings of love",
+      "thaiTranslation": "โรแมนติก/เรื่องรัก",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "I prefer romance and action",
+      "phonetic": "/roʊˈmæns/",
+      "frequency": 3,
+      "segments": [
+        "seg_6"
+      ]
+    },
+    {
+      "word": "routine",
+      "definition": "the usual way you do things every day",
+      "thaiTranslation": "กิจวัตรประจำวัน",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "they are talking about their daily routine activities",
+      "phonetic": "/ruːˈtiːn/",
+      "frequency": 2,
+      "segments": [
+        "seg_7"
+      ]
+    },
+    {
+      "word": "alarm",
+      "definition": "an alarm clock signal that wakes you",
+      "thaiTranslation": "นาฬิกาปลุก/สัญญาณปลุก",
+      "difficulty": "basic",
+      "partOfSpeech": "noun",
+      "exampleSentence": "my alarm goes off at 6",
+      "phonetic": "/əˈlɑːrm/",
+      "frequency": 2,
+      "segments": [
+        "seg_7"
+      ]
+    },
+    {
+      "word": "snooze",
+      "definition": "a short sleep; also the button that delays an alarm",
+      "thaiTranslation": "งีบ/ปุ่มเลื่อนปลุก",
+      "difficulty": "intermediate",
+      "partOfSpeech": "noun",
+      "exampleSentence": "I usually hit the snooze",
+      "phonetic": "/snuːz/",
+      "frequency": 1,
+      "segments": [
+        "seg_7"
+      ]
+    },
+    {
+      "word": "skip",
+      "definition": "to not do something you usually do",
+      "thaiTranslation": "ข้าม/งด",
+      "difficulty": "basic",
+      "partOfSpeech": "verb",
+      "exampleSentence": "I usually skip breakfast",
+      "phonetic": "/skɪp/",
+      "frequency": 1,
+      "segments": [
+        "seg_7"
+      ]
+    },
+    {
+      "word": "fast food",
+      "definition": "food that is quick to prepare and usually not very healthy",
+      "thaiTranslation": "อาหารจานด่วน",
+      "difficulty": "basic",
+      "partOfSpeech": "noun",
+      "exampleSentence": "I usually go and get some fast food with some friends",
+      "phonetic": "/ˌfæst ˈfuːd/",
+      "frequency": 3,
+      "segments": [
+        "seg_7"
+      ]
+    },
+    {
+      "word": "healthy",
+      "definition": "good for your body; making you strong",
+      "thaiTranslation": "ดีต่อสุขภาพ",
+      "difficulty": "basic",
+      "partOfSpeech": "adjective",
+      "exampleSentence": "then you will have enough time to eat a healthy breakfast before you head out to the bus stop",
+      "phonetic": "/ˈhɛlθi/",
+      "frequency": 4,
+      "segments": [
+        "seg_4",
+        "seg_7"
+      ]
+    }
+  ],
+  "grammarPoints": [
+    {
+      "id": "gram_1",
+      "structure": "Present Simple for habits, facts, and preferences",
+      "description": "Used to talk about routines, general truths, and likes/dislikes.",
+      "difficulty": "basic",
+      "examples": [
+        "Do you eat fish?",
+        "My wife likes spicy food but I do not.",
+        "I prefer short books."
+      ],
+      "thaiExplanation": "ใช้ช่อง V1 เพื่อบอกนิสัย ข้อเท็จจริง และความชอบ เช่น I like…, She works…, Do you…?",
+      "commonMistakes": [
+        "ลืมเติม s กับประธานเอกพจน์บุรุษที่ 3 (He/She/It) เช่น He like spicy food.",
+        "ใช้ Present Continuous แทน Present Simple กับนิสัย เช่น I am liking coffee.",
+        "ลืมช่วย do/does ในประโยคคำถาม/ปฏิเสธ เช่น You eat fish?"
+      ],
+      "segments": [
+        "seg_1",
+        "seg_2",
+        "seg_3",
+        "seg_4",
+        "seg_5",
+        "seg_6",
+        "seg_7"
+      ]
+    },
+    {
+      "id": "gram_2",
+      "structure": "Present Continuous (be + V-ing)",
+      "description": "Describes actions happening now, around now, or temporary situations.",
+      "difficulty": "basic",
+      "examples": [
+        "Are you enjoying your stay at our hotel?",
+        "My wife and I are having a great time.",
+        "What kind of book are you looking for?"
+      ],
+      "thaiExplanation": "ใช้ be + V-ing เพื่อบอกสิ่งที่กำลังเกิดขึ้น/ช่วงเวลานี้ หรือสถานการณ์ชั่วคราว",
+      "commonMistakes": [
+        "ลืมกริยา be (am/is/are) เช่น I going to work.",
+        "ใช้รูป be ผิดกับประธาน เช่น She are…",
+        "ใช้ Present Continuous กับความชอบถาวร เช่น I am preferring short books."
+      ],
+      "segments": [
+        "seg_1",
+        "seg_3",
+        "seg_5",
+        "seg_6"
+      ]
+    },
+    {
+      "id": "gram_3",
+      "structure": "Modals for requests/offers/permission (can, may, would)",
+      "description": "Use modal + base verb to ask politely, make offers, or ask permission.",
+      "difficulty": "basic",
+      "examples": [
+        "Can you recommend a nice restaurant?",
+        "May we please have a table for two?",
+        "Would you also like to add a salad on the side, sir?"
+      ],
+      "thaiExplanation": "ใช้ can/may/would + V1 ในการขอร้อง เสนอ หรือขออนุญาตอย่างสุภาพ",
+      "commonMistakes": [
+        "ใส่ to หลัง modal เช่น Can you to recommend…",
+        "ใช้กริยาช่องผิดหลัง modal เช่น May I ordering…",
+        "สลับลำดับคำในคำถาม เช่น You can recommend…?"
+      ],
+      "segments": [
+        "seg_1",
+        "seg_2",
+        "seg_3",
+        "seg_4",
+        "seg_5"
+      ]
+    },
+    {
+      "id": "gram_4",
+      "structure": "Would like vs. Want (polite requests)",
+      "description": "Would like is more polite/formal than want; both use to + verb for actions.",
+      "difficulty": "basic",
+      "examples": [
+        "I would like to order two takeout drinks.",
+        "What would you like to order?",
+        "I want to deposit a check."
+      ],
+      "thaiExplanation": "would like สุภาพกว่า want. โครงสร้าง: would like + noun / would like to + V1; want + noun / want to + V1",
+      "commonMistakes": [
+        "ลืม to เช่น I would like order…",
+        "ใช้ want ในบริบทที่เป็นทางการมากเกินไป",
+        "ซ้ำกริยา เช่น I would like to have to order…"
+      ],
+      "segments": [
+        "seg_1",
+        "seg_2",
+        "seg_3",
+        "seg_4",
+        "seg_5"
+      ]
+    },
+    {
+      "id": "gram_5",
+      "structure": "There is/There are (existence and introducing topics)",
+      "description": "Used to say something exists or to introduce new items in conversation.",
+      "difficulty": "basic",
+      "examples": [
+        "There is an excellent Japanese restaurant downtown.",
+        "There are some spicy dishes and some non-spicy dishes.",
+        "Is there anything else that you need?"
+      ],
+      "thaiExplanation": "ใช้บอกว่ามี/มีอยู่: เอกพจน์ใช้ there is, พหูพจน์ใช้ there are",
+      "commonMistakes": [
+        "ใช้ is/are ไม่ตรงกับคำนาม เช่น There is many dishes.",
+        "ใช้ have แทน there is/are เช่น There have a restaurant.",
+        "ลืม any/anything ในประโยคคำถาม/ปฏิเสธ"
+      ],
+      "segments": [
+        "seg_1",
+        "seg_2",
+        "seg_3",
+        "seg_6"
+      ]
+    },
+    {
+      "id": "gram_6",
+      "structure": "Quantifiers and containers (countable/uncountable nouns)",
+      "description": "Use quantity words and container nouns for amounts with countable/uncountable items.",
+      "difficulty": "basic",
+      "examples": [
+        "May we please have a pot of green tea?",
+        "Let's grab a bunch of bananas and one bag of apples.",
+        "Can you grab one carton of eggs from the shelf?"
+      ],
+      "thaiExplanation": "คำบอกปริมาณและหน่วยบรรจุ เช่น a pot of tea, a bag of apples ใช้ of เชื่อมหน่วยกับสิ่งของ",
+      "commonMistakes": [
+        "ใช้ many กับนามนับไม่ได้ เช่น many milk (ควรใช้ much milk)",
+        "ลืม of หลังหน่วย เช่น a bag apples",
+        "ทำให้นามนับไม่ได้เป็นพหูพจน์ เช่น milks (ยกเว้นความหมายชนิด/แก้ว)"
+      ],
+      "segments": [
+        "seg_2",
+        "seg_4",
+        "seg_6"
+      ]
+    },
+    {
+      "id": "gram_7",
+      "structure": "Adverbs of frequency and time expressions",
+      "description": "Frequency adverbs show how often an action happens; common time phrases show when.",
+      "difficulty": "basic",
+      "examples": [
+        "I usually wake up at about 6 o' in the morning.",
+        "I sometimes hang out with friends.",
+        "I often stop by the store to pick up fresh food for dinner."
+      ],
+      "thaiExplanation": "คำบอกความถี่ (always, often, usually, sometimes, never) วางก่อนกริยาหลักและหลัง be; วลีเวลาเช่น in the morning, at 10:00",
+      "commonMistakes": [
+        "วางตำแหน่งคำบอกความถี่ผิด เช่น I wake up usually…",
+        "สับสน at/in/on สำหรับเวลา เช่น at morning (ควร in the morning)",
+        "ใช้สองตัวซ้อนกันเกินจำเป็น เช่น always often"
+      ],
+      "segments": [
+        "seg_7"
+      ]
+    },
+    {
+      "id": "gram_8",
+      "structure": "Question forms (Yes/No, WH-, and with be/modals)",
+      "description": "Correct auxiliary usage and word order in questions.",
+      "difficulty": "basic",
+      "examples": [
+        "Is this your first time visiting our restaurant?",
+        "What kind of food do you and your wife want to eat?",
+        "How far is the bus stop from your home?"
+      ],
+      "thaiExplanation": "คำถามใช้อินเวอร์ชัน: be/aux + ประธาน + กริยา; ใช้ do/does กับกริยาทั่วไป และ modal + V1",
+      "commonMistakes": [
+        "ลืม do/does ใน WH- questions เช่น What you want?",
+        "ใส่คำช่วยซ้ำ เช่น Do you are…?",
+        "ลำดับคำผิด เช่น You are where?"
+      ],
+      "segments": [
+        "seg_1",
+        "seg_2",
+        "seg_3",
+        "seg_4",
+        "seg_5",
+        "seg_7"
+      ]
+    },
+    {
+      "id": "gram_9",
+      "structure": "Suggestions and advice (should/could/consider + V-ing, imperatives)",
+      "description": "Use should/could for advice; consider + -ing for suggestions; base verb for imperatives.",
+      "difficulty": "intermediate",
+      "examples": [
+        "You should go to bed sooner.",
+        "Should we buy 10 carrots instead of five?",
+        "Consider asking them to meet you after work."
+      ],
+      "thaiExplanation": "ให้คำแนะนำ: should/could + V1; consider + V-ing; คำสั่ง/คำแนะนำตรงๆ ใช้กริยาช่อง 1 เช่น Please follow me.",
+      "commonMistakes": [
+        "ใส่ to หลัง should/could เช่น should to go",
+        "ลืมเติม -ing หลัง consider เช่น consider ask",
+        "ใช้ประโยคคำสั่งไม่ใส่ please ในบริบททางการ ทำให้ไม่สุภาพ"
+      ],
+      "segments": [
+        "seg_1",
+        "seg_3",
+        "seg_4",
+        "seg_5",
+        "seg_6",
+        "seg_7"
+      ]
+    },
+    {
+      "id": "gram_10",
+      "structure": "Future forms: will vs. be going to",
+      "description": "Will for instant decisions, offers, promises; be going to for plans/intentions or predictions with evidence.",
+      "difficulty": "basic",
+      "examples": [
+        "I will arrange for a taxi to pick you and your wife up at noon.",
+        "I will be back with a pot of green tea.",
+        "Now you are going to listen to a conversation..."
+      ],
+      "thaiExplanation": "will ใช้เมื่อตัดสินใจ/เสนอทันที; be going to ใช้สำหรับแผนหรือสิ่งที่กำลังจะเกิด",
+      "commonMistakes": [
+        "ลืม verb to be ใน going to เช่น I going to…",
+        "ใช้ will ทุกกรณีแม้เป็นแผนที่วางไว้แล้ว",
+        "ใช้ปัจจุบันธรรมดาแทนอนาคตโดยไม่ใส่บริบทเวลา"
+      ],
+      "segments": [
+        "seg_1",
+        "seg_7"
+      ]
+    },
+    {
+      "id": "gram_11",
+      "structure": "Present Perfect (have/has + V3) for experience/results",
+      "description": "Connects past actions to the present; often used without a specific past time.",
+      "difficulty": "intermediate",
+      "examples": [
+        "I have read them before and I did not find them too interesting.",
+        "I have actually never read any of her novels.",
+        "The points have been added."
+      ],
+      "thaiExplanation": "ใช้ have/has + V3 เพื่อบอกประสบการณ์หรือผลลัพธ์ที่มีผลถึงปัจจุบัน ไม่ใช้กับเวลาเฉพาะในอดีต (เช่น yesterday, last year)",
+      "commonMistakes": [
+        "ใช้กับเวลาที่แน่ชัดในอดีต เช่น I have read it last year.",
+        "ลืม have/has เช่น She never read… (ควร has never read)",
+        "ใช้ V2 แทน V3 เช่น have went"
+      ],
+      "segments": [
+        "seg_3",
+        "seg_5"
+      ]
+    },
+    {
+      "id": "gram_12",
+      "structure": "Passive voice (be + past participle)",
+      "description": "Focuses on the receiver of the action; the doer is unknown or unimportant.",
+      "difficulty": "intermediate",
+      "examples": [
+        "Your PIN was accepted.",
+        "Your drinks will be ready in a few minutes.",
+        "I believe it is located near the back of the store."
+      ],
+      "thaiExplanation": "โครงสร้าง be + V3 ใช้เมื่อต้องการเน้นผู้ถูกกระทำ หรือไม่ทราบ/ไม่สำคัญว่าใครทำ",
+      "commonMistakes": [
+        "ลืมกริยา be เช่น Your PIN accepted.",
+        "ใช้รูปกริยาผิด (ไม่ใช่ V3) เช่น is locate",
+        "ใส่ by-ผู้กระทำโดยไม่จำเป็นในทุกกรณี"
+      ],
+      "segments": [
+        "seg_2",
+        "seg_3",
+        "seg_5"
+      ]
+    },
+    {
+      "id": "gram_13",
+      "structure": "Common phrasal verbs",
+      "description": "Multi-word verbs that change meaning; some are separable with objects.",
+      "difficulty": "intermediate",
+      "examples": [
+        "I can check it out for you now.",
+        "…hang out with my friends.",
+        "I will arrange for a taxi to pick you and your wife up at noon."
+      ],
+      "thaiExplanation": "กริยาวลี (verb + คำบุพบท/วิเศษณ์) เช่น check out, hang out, pick up บางตัวคั่นกรรมได้ (pick you up)",
+      "commonMistakes": [
+        "วางกรรมผิดตำแหน่งใน phrasal verb ที่คั่นได้ เช่น pick up you",
+        "แปลตรงตัว ทำให้ความหมายผิด",
+        "ลืมส่วนประกอบ (particle) เช่น check it"
+      ],
+      "segments": [
+        "seg_3"
+      ]
+    },
+    {
+      "id": "gram_14",
+      "structure": "Prepositions of time and place (at/in/on; to/near/after)",
+      "description": "Use correct prepositions with times and locations.",
+      "difficulty": "basic",
+      "examples": [
+        "I will arrange for a taxi to pick you and your wife up at noon.",
+        "He gets back home after midnight.",
+        "Perhaps you can only see your friends on the weekend."
+      ],
+      "thaiExplanation": "เวลา: at (จุดเวลา) in (เดือน/ช่วงเวลา) on (วัน/วันที่); สถานที่: to (ไปยัง), near (ใกล้), at (จุดเฉพาะ)",
+      "commonMistakes": [
+        "ใช้ at แทน in/on เช่น at the morning (ควร in the morning)",
+        "ลืม to กับ go/come เช่น go the store",
+        "ใช้ on/in สลับกันกับวันและเดือน"
+      ],
+      "segments": [
+        "seg_1",
+        "seg_3",
+        "seg_5",
+        "seg_6",
+        "seg_7"
+      ]
+    }
+  ],
+  "culturalContexts": [
+    {
+      "id": "culture_1",
+      "topic": "Restaurant service and etiquette",
+      "description": "How customers interact with servers and order meals in Western sit-down restaurants.",
+      "culturalNotes": [
+        "Servers often guide you to a table, present menus, offer drinks, and return to take orders.",
+        "Menus commonly feature a 'daily special,' and mains may come with soup or salad; salad dressings (e.g., house, ranch) are chosen by the guest.",
+        "Guests are expected to state preferences clearly and can ask for recommendations or modifications.",
+        "Reservations are common for popular restaurants.",
+        "In the US/Canada, tipping (15–20% at sit-down restaurants) is customary."
+      ],
+      "thaiContext": "Thai restaurants may be less interactive with servers and tipping is not always expected (though service charge may be added in some venues). Side salads and choosing dressings are less central in Thai dining.",
+      "practicalTips": [
+        "Use clear requests: \"Could you recommend a non-spicy dish?\" \"I'd like the daily special with the house dressing, please.\"",
+        "Check local tipping norms before paying.",
+        "If you need a reservation, say: \"Could I make a reservation for 12:00 noon?\""
+      ],
+      "segments": [
+        "seg_1",
+        "seg_2"
+      ]
+    },
+    {
+      "id": "culture_2",
+      "topic": "Hotel concierge and guest services",
+      "description": "Concierge staff help guests with local recommendations, reservations, and transport.",
+      "culturalNotes": [
+        "Concierges commonly arrange taxis, book restaurants, and suggest suitable places based on dietary needs.",
+        "\"Downtown\" refers to the city center/business district.",
+        "Time precision matters; 'noon' means exactly 12:00 pm."
+      ],
+      "thaiContext": "Thai hotels offer similar help, but the specific role/title 'concierge' may be more prominent in Western hotels. Tipping concierges is more common in North America than in Thailand.",
+      "practicalTips": [
+        "State needs clearly: \"My wife is vegetarian; we prefer non-spicy options.\"",
+        "Carry the destination address to show a taxi/ride-share driver.",
+        "Ask: \"Do I need a reservation? Could you book it for me?\""
+      ],
+      "segments": [
+        "seg_1"
+      ]
+    },
+    {
+      "id": "culture_3",
+      "topic": "Dietary labels and spice levels",
+      "description": "Common Western dietary identities and how restaurants respond.",
+      "culturalNotes": [
+        "In Western contexts, 'vegetarian' typically excludes fish; people who eat fish are 'pescatarian.'",
+        "Spice levels are often described as mild/medium/hot, and many cuisines offer both spicy and non-spicy options.",
+        "Staff routinely ask about allergies and restrictions."
+      ],
+      "thaiContext": "In Thai contexts, 'mangsaweerat' may still include fish sauce/shrimp paste, while 'jay' excludes all animal products. Clarification is crucial abroad where definitions are strict.",
+      "practicalTips": [
+        "Say: \"I'm pescatarian (I eat fish but no other meat).\"",
+        "Confirm ingredients: \"Does this contain fish sauce or shellfish?\"",
+        "Specify heat: \"Mild spice, please.\""
+      ],
+      "segments": [
+        "seg_1"
+      ]
+    },
+    {
+      "id": "culture_4",
+      "topic": "Pricing, tax, payment, and loyalty programs",
+      "description": "How prices, taxes, and payment methods work in North American-style retail and cafes.",
+      "culturalNotes": [
+        "Displayed prices often do not include sales tax; the final price is higher at checkout.",
+        "Customers frequently pay by credit/debit card; contactless is common.",
+        "Loyalty programs may add points via a phone number or app; staff may ask for your number at the counter."
+      ],
+      "thaiContext": "Thailand typically shows final prices inclusive of VAT. Sharing a phone number at checkout is less routine, and loyalty programs are often app-based.",
+      "practicalTips": [
+        "Ask: \"Is tax included?\" if unsure.",
+        "Be ready to enter your PIN and keep your card secure.",
+        "If privacy is a concern, show your phone number on your screen rather than saying it loudly."
+      ],
+      "segments": [
+        "seg_4"
+      ]
+    },
+    {
+      "id": "culture_5",
+      "topic": "Coffee culture and customization",
+      "description": "Ordering customized drinks with various milk and sweetness options.",
+      "culturalNotes": [
+        "Size labels vary (small/medium/large/extra-large); iced drinks are common year-round.",
+        "Milk choices include dairy (whole/2%/skim/fat-free) and non-dairy (almond/soy/oat).",
+        "Non-dairy choices are often linked to lactose intolerance, vegan diets, or taste; syrups add sweetness/flavor."
+      ],
+      "thaiContext": "Thai cafes increasingly offer non-dairy milks, but naming and default sweetness can differ; 'less sweet' is a frequent Thai preference.",
+      "practicalTips": [
+        "Order format: \"A medium iced vanilla latte with regular milk, less sweet, please.\"",
+        "If dieting, ask for skim milk and minimal syrup.",
+        "Clarify: lactose-free dairy is not the same as non-dairy."
+      ],
+      "segments": [
+        "seg_4"
+      ]
+    },
+    {
+      "id": "culture_6",
+      "topic": "Library vs. bookstore norms",
+      "description": "How borrowing from libraries differs from buying in bookstores, and social interactions inside stores.",
+      "culturalNotes": [
+        "Libraries lend books free with a library card; due dates (e.g., 3 weeks) apply; renewals may be possible.",
+        "Bookstores sell books; staff often have name tags or uniforms.",
+        "Casual conversations with other customers are common, but they are not employees."
+      ],
+      "thaiContext": "Public library use varies in Thailand; bookstores are more familiar. Mistaking a friendly customer for staff can happen in both contexts.",
+      "practicalTips": [
+        "Before asking for help, check: \"Excuse me, do you work here?\"",
+        "Get a library card with ID and proof of address if staying long-term.",
+        "Note return deadlines to avoid fines or blocks (policies vary; some libraries have no late fees)."
+      ],
+      "segments": [
+        "seg_3",
+        "seg_5"
+      ]
+    },
+    {
+      "id": "culture_7",
+      "topic": "Banking etiquette and checks",
+      "description": "In-person bank transactions and privacy norms.",
+      "culturalNotes": [
+        "Tellers may ask for your bank card and have you enter your PIN into a card reader.",
+        "Paper checks are still used and can be deposited at the counter or via ATM/app.",
+        "Privacy is expected: shield your PIN; stand a respectful distance behind others in line."
+      ],
+      "thaiContext": "Thai students often use PromptPay/mobile transfers; paper checks are less common. PIN privacy norms are similar.",
+      "practicalTips": [
+        "Say: \"I'd like to deposit a check and check my account balance, please.\"",
+        "Cover the keypad with your hand when entering your PIN.",
+        "Bring ID if requested and keep receipts for records."
+      ],
+      "segments": [
+        "seg_5"
+      ]
+    },
+    {
+      "id": "culture_8",
+      "topic": "Grocery shopping habits and product categories",
+      "description": "Supermarket layout, promotions, and common items.",
+      "culturalNotes": [
+        "Stores often start with a produce section; promotions like '5 for $2' encourage bulk buying.",
+        "Eggs are treated as fragile and usually refrigerated in North America due to washing practices.",
+        "Cheese varieties (cheddar, mozzarella, marble) are common staples."
+      ],
+      "thaiContext": "Thai supermarkets and wet markets differ; eggs are commonly unrefrigerated in Thailand. Cheese has become more available but remains less central in daily cooking.",
+      "practicalTips": [
+        "Check unit prices to know if a deal is truly cheaper.",
+        "Buy only what you can use to reduce waste.",
+        "Handle eggs carefully and refrigerate them if required locally."
+      ],
+      "segments": [
+        "seg_6"
+      ]
+    },
+    {
+      "id": "culture_9",
+      "topic": "Daily routines, wellness, and work culture",
+      "description": "Self-improvement focus on sleep, exercise, commuting, and meal prep.",
+      "culturalNotes": [
+        "Morning exercise (running, yoga, weights) and biking to work are common wellness choices in many Western cities.",
+        "Packing lunch is seen as healthy and economical; fast food is acknowledged but viewed as less healthy.",
+        "Using a 'snooze' button and discussing screen time habits are common lifestyle topics."
+      ],
+      "thaiContext": "Bangkok traffic, heat, and infrastructure may limit biking; night social life can push bedtimes late. University/work lunch culture varies, often with easy access to street food.",
+      "practicalTips": [
+        "Adopt changes gradually: earlier bedtime, simple packed lunch 2–3 days/week.",
+        "Use public transit/bike when safe and practical; check local bike lanes.",
+        "Replace sugary morning snacks with fruit, yogurt, or nuts."
+      ],
+      "segments": [
+        "seg_7"
+      ]
+    },
+    {
+      "id": "culture_10",
+      "topic": "Communication style and politeness",
+      "description": "Direct yet friendly English interactions with service workers and strangers.",
+      "culturalNotes": [
+        "Frequent use of 'please,' 'thank you,' and friendly phrases like 'sure thing,' 'no problem,' 'have a great day.'",
+        "First names are common; 'sir/ma'am' used for politeness in service settings.",
+        "Clear, assertive statements of preferences are expected and not considered rude."
+      ],
+      "thaiContext": "Thai communication often emphasizes indirectness and kreng jai; honorifics/particles (krap/ka) convey politeness. Small talk with strangers may be less direct.",
+      "practicalTips": [
+        "Frame requests clearly: \"I'd like X, please\" rather than hinting.",
+        "Add simple politeness markers and a friendly tone.",
+        "Practice brief small talk (weather, weekend plans) to build rapport."
+      ],
+      "segments": [
+        "seg_1",
+        "seg_2",
+        "seg_3",
+        "seg_4",
+        "seg_5"
+      ]
+    }
+  ],
+  "metadata": {
+    "originalVideoLength": 1997,
+    "targetSegmentLength": 300,
+    "actualSegments": 7,
+    "averageSegmentLength": 285,
+    "vocabularyCount": 25,
+    "grammarPointsCount": 14,
+    "culturalContextsCount": 10
+  }
+}

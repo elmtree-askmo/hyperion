@@ -1,0 +1,516 @@
+{
+  "audioSegments": [
+    {
+      "id": "intro",
+      "text": "สวัสดีค่ะ ยินดีต้อนรับสู่คอร์ส Everyday English in Real Life ตอนที่ 2: Errands That Matter: Library and Bank Confidence วันนี้เราจะฝึกพูดประโยคจริงที่ใช้ได้ทันที เช่น Could you recommend a good mystery book? และอีกประโยคสำคัญคือ I'd like to deposit cash. เตรียมตัววอร์มเสียง หายใจลึกๆ แล้วพูดตามให้ชัด ฟังจังหวะขึ้นลงของประโยคไปพร้อมกันนะ",
+      "textParts": [
+        {
+          "text": "สวัสดีค่ะ ยินดีต้อนรับสู่คอร์ส Everyday English in Real Life ตอนที่ 2: Errands That Matter: Library and Bank Confidence วันนี้เราจะฝึกพูดประโยคจริงที่ใช้ได้ทันที เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "Could you recommend a good mystery book?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " และอีกประโยคสำคัญคือ ",
+          "language": "th"
+        },
+        {
+          "text": "I'd like to deposit cash.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เตรียมตัววอร์มเสียง หายใจลึกๆ แล้วพูดตามให้ชัด ฟังจังหวะขึ้นลงของประโยคไปพร้อมกันนะ",
+          "language": "th"
+        }
+      ],
+      "description": "เกริ่นนำบทเรียน ชี้เป้าหมายการฝึกพูดทั้งเรื่องห้องสมุดและธนาคาร พร้อมชวนผู้เรียนพูดตาม",
+      "screenElement": "title_card",
+      "visualDescription": "Warm host greeting with animated icons of a book and a bank card appearing on screen.",
+      "backgroundImageDescription": "Contemporary classroom at a Bangkok university with glass windows showing the skyline around Siam; Thai posters on the wall and students with notebooks and phones."
+    },
+    {
+      "id": "learning_objective1",
+      "text": "เป้าหมายที่ 1: ใช้ประโยคสุภาพเพื่อทำธุระที่ห้องสมุด/ร้านหนังสือในไทย ได้แก่ Could you recommend a good mystery book? เพื่อขอคำแนะนำ, Where is the fiction section? เพื่อถามทางไปหมวดนิยาย และ Can I check out this book? เพื่อทำรายการยืมหนังสือให้ถูกขั้นตอน",
+      "textParts": [
+        {
+          "text": "เป้าหมายที่ 1: ใช้ประโยคสุภาพเพื่อทำธุระที่ห้องสมุด/ร้านหนังสือในไทย ได้แก่ ",
+          "language": "th"
+        },
+        {
+          "text": "Could you recommend a good mystery book?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เพื่อขอคำแนะนำ, ",
+          "language": "th"
+        },
+        {
+          "text": "Where is the fiction section?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เพื่อถามทางไปหมวดนิยาย และ ",
+          "language": "th"
+        },
+        {
+          "text": "Can I check out this book?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เพื่อทำรายการยืมหนังสือให้ถูกขั้นตอน",
+          "language": "th"
+        }
+      ],
+      "description": "อธิบายเป้าหมายด้านการสื่อสารในห้องสมุด/ร้านหนังสือ เน้นมารยาทและขั้นตอนยืม",
+      "screenElement": "objective_card",
+      "visualDescription": "Checklist of goals appears with book icons and arrows pointing to library sections.",
+      "backgroundImageDescription": "Inside Chulalongkorn University main library: a help desk with a Thai librarian wearing a name badge, clear Thai-English signage for sections, and neat book aisles."
+    },
+    {
+      "id": "learning_objective2",
+      "text": "เป้าหมายที่ 2: สื่อสารที่ธนาคาร/ตู้ฝากเงินในห้างอย่างปลอดภัย ได้แก่ I'd like to deposit cash. เพื่อบอกความต้องการฝากเงินสด, Can I get an account balance receipt? เพื่อขอใบเสร็จพร้อมยอดคงเหลือ และ I need to enter my PIN. เพื่อย้ำขั้นตอนใส่รหัสอย่างปลอดภัย",
+      "textParts": [
+        {
+          "text": "เป้าหมายที่ 2: สื่อสารที่ธนาคาร/ตู้ฝากเงินในห้างอย่างปลอดภัย ได้แก่ ",
+          "language": "th"
+        },
+        {
+          "text": "I'd like to deposit cash.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เพื่อบอกความต้องการฝากเงินสด, ",
+          "language": "th"
+        },
+        {
+          "text": "Can I get an account balance receipt?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เพื่อขอใบเสร็จพร้อมยอดคงเหลือ และ ",
+          "language": "th"
+        },
+        {
+          "text": "I need to enter my PIN.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เพื่อย้ำขั้นตอนใส่รหัสอย่างปลอดภัย",
+          "language": "th"
+        }
+      ],
+      "description": "อธิบายเป้าหมายด้านการทำธุรกรรมฝากเงิน พร้อมเน้นความปลอดภัยของ PIN และการขอหลักฐาน",
+      "screenElement": "objective_card",
+      "visualDescription": "Simple bank icons: a cash note, a receipt, and a shield for security.",
+      "backgroundImageDescription": "MBK Center bank branch interior with Thai bank branding, queue system, counters, and an adjacent deposit-enabled ATM kiosk."
+    },
+    {
+      "id": "vocab_recommend",
+      "text": "คำศัพท์: recommend — แปลว่า แนะนำ ใช้ตอนอยากให้เจ้าหน้าที่ช่วยเลือกหนังสือ ตัวอย่างประโยคคือ Can you recommend a short action book? พูดสุภาพ ชัดเจน แล้วบอกแนวที่ชอบด้วยจะยิ่งได้คำแนะนำตรงใจ",
+      "textParts": [
+        {
+          "text": "คำศัพท์: recommend — แปลว่า แนะนำ ใช้ตอนอยากให้เจ้าหน้าที่ช่วยเลือกหนังสือ ตัวอย่างประโยคคือ ",
+          "language": "th"
+        },
+        {
+          "text": "Can you recommend a short action book?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " พูดสุภาพ ชัดเจน แล้วบอกแนวที่ชอบด้วยจะยิ่งได้คำแนะนำตรงใจ",
+          "language": "th"
+        }
+      ],
+      "description": "อธิบายคำว่า recommend พร้อมตัวอย่างการใช้เพื่อขอคำแนะนำหนังสือ",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "recommend",
+      "visualDescription": "The word ‘recommend’ appears with a thumbs-up icon and a librarian pointing to books.",
+      "backgroundImageDescription": "Help desk at a Thai public library like TK Park CentralWorld with friendly staff and colorful genre signs in Thai and English."
+    },
+    {
+      "id": "vocab_section",
+      "text": "คำศัพท์: section — แปลว่า หมวด/โซน ใช้ถามทางไปชั้นวางที่ต้องการ เช่น Where is the fiction section? เหมาะมากตอนอยู่ร้านหนังสือหรือห้องสมุดใหญ่ๆ",
+      "textParts": [
+        {
+          "text": "คำศัพท์: section — แปลว่า หมวด/โซน ใช้ถามทางไปชั้นวางที่ต้องการ เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "Where is the fiction section?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เหมาะมากตอนอยู่ร้านหนังสือหรือห้องสมุดใหญ่ๆ",
+          "language": "th"
+        }
+      ],
+      "description": "อธิบายคำว่า section และวิธีใช้ถามหาหมวดนิยาย",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "section",
+      "visualDescription": "The word ‘section’ with aisle signs labeled by genre, an arrow pointing to ‘Fiction’.",
+      "backgroundImageDescription": "Large bookstore in CentralWorld with clear overhead aisle signs for genres; Thai shoppers browsing shelves."
+    },
+    {
+      "id": "vocab_fiction",
+      "text": "คำศัพท์: fiction — แปลว่า นิยาย ใช้บอกประเภทหนังสือที่เป็นเรื่องแต่ง เช่น Is the fiction section on the second floor? เหมาะเมื่ออยากหานิยายเร็วๆ",
+      "textParts": [
+        {
+          "text": "คำศัพท์: fiction — แปลว่า นิยาย ใช้บอกประเภทหนังสือที่เป็นเรื่องแต่ง เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "Is the fiction section on the second floor?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เหมาะเมื่ออยากหานิยายเร็วๆ",
+          "language": "th"
+        }
+      ],
+      "description": "แนะนำคำว่า fiction เพื่อใช้ระบุหมวดนิยายในร้านหนังสือ/ห้องสมุด",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "fiction",
+      "visualDescription": "The word ‘fiction’ next to a stack of popular novels and a sign indicating stories.",
+      "backgroundImageDescription": "Second-floor book section view at a Bangkok mall bookstore with Thai-English signage and wooden bookshelves."
+    },
+    {
+      "id": "vocab_mystery",
+      "text": "คำศัพท์: mystery — แปลว่า นิยายสืบสวน ใช้เวลาขอแนวมีปริศนา เช่น Do you have any mystery novels for beginners? เป็นการระบุแนวชัดเจนเพื่อให้พนักงานช่วยหาได้ไว",
+      "textParts": [
+        {
+          "text": "คำศัพท์: mystery — แปลว่า นิยายสืบสวน ใช้เวลาขอแนวมีปริศนา เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "Do you have any mystery novels for beginners?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เป็นการระบุแนวชัดเจนเพื่อให้พนักงานช่วยหาได้ไว",
+          "language": "th"
+        }
+      ],
+      "description": "อธิบายคำว่า mystery พร้อมตัวอย่างการถามหานิยายสืบสวน",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "mystery",
+      "visualDescription": "The word ‘mystery’ appears with a magnifying glass and a detective hat over books.",
+      "backgroundImageDescription": "Cozy reading corner at a Thai library with posters of Sherlock Holmes in Thai and English and a magnifying glass prop."
+    },
+    {
+      "id": "vocab_borrow",
+      "text": "คำศัพท์: borrow — แปลว่า ยืม ใช้กับการยืมหนังสือจากห้องสมุด เช่น Can I borrow this book with my library card? จำไว้ว่าที่ร้านหนังสือคือซื้อ ไม่ใช่ borrow",
+      "textParts": [
+        {
+          "text": "คำศัพท์: borrow — แปลว่า ยืม ใช้กับการยืมหนังสือจากห้องสมุด เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "Can I borrow this book with my library card?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " จำไว้ว่าที่ร้านหนังสือคือซื้อ ไม่ใช่ borrow",
+          "language": "th"
+        }
+      ],
+      "description": "ชี้ความต่างระหว่างยืมจากห้องสมุดกับการซื้อจากร้านหนังสือ",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "borrow",
+      "visualDescription": "The word ‘borrow’ with an icon of a library card and a checkout stamp.",
+      "backgroundImageDescription": "Library checkout counter at Thammasat University with barcode scanners, due date slips, and Thai signage for returns."
+    },
+    {
+      "id": "vocab_check_out",
+      "text": "คำศัพท์: check out — แปลว่า ยืมออก (จากห้องสมุด) ใช้ตอนทำรายการที่เคาน์เตอร์ เช่น I'd like to check out these two books. บอกจำนวนเล่มให้ชัดและเช็กวันกำหนดคืน",
+      "textParts": [
+        {
+          "text": "คำศัพท์: check out — แปลว่า ยืมออก (จากห้องสมุด) ใช้ตอนทำรายการที่เคาน์เตอร์ เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "I'd like to check out these two books.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " บอกจำนวนเล่มให้ชัดและเช็กวันกำหนดคืน",
+          "language": "th"
+        }
+      ],
+      "description": "ย้ำการใช้ check out ในบริบทห้องสมุดและการแจ้งจำนวนเล่ม",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "check out",
+      "visualDescription": "The phrase ‘check out’ displayed next to a due date slip and barcode scanner.",
+      "backgroundImageDescription": "Mahidol University library checkout area with Thai labels on counters, a small printer for due date receipts, and neat stacks of books."
+    },
+    {
+      "id": "vocab_deposit",
+      "text": "คำศัพท์: deposit — แปลว่า ฝากเงิน ใช้ที่ธนาคารหรือตู้ฝากเงิน เช่น I'd like to deposit cash. พูดชัดเจนแล้วระบุจำนวนเงินกับบัญชีให้ถูกต้อง",
+      "textParts": [
+        {
+          "text": "คำศัพท์: deposit — แปลว่า ฝากเงิน ใช้ที่ธนาคารหรือตู้ฝากเงิน เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "I'd like to deposit cash.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " พูดชัดเจนแล้วระบุจำนวนเงินกับบัญชีให้ถูกต้อง",
+          "language": "th"
+        }
+      ],
+      "description": "สอนคำว่า deposit สำหรับการทำธุรกรรมฝากเงินสด",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "deposit",
+      "visualDescription": "The word ‘deposit’ with a cash icon entering a bank building symbol.",
+      "backgroundImageDescription": "Counter of Bangkok Bank branch inside a mall like CentralWorld with Thai staff in uniform, queue number display, and cash trays."
+    },
+    {
+      "id": "vocab_receipt",
+      "text": "คำศัพท์: receipt — แปลว่า ใบเสร็จ/สลิป ใช้ขอหลักฐานหลังฝากเงิน เช่น Can I get an account balance receipt? ตรวจชื่อบัญชี เวลาทำรายการ และยอดคงเหลือบนสลิปทุกครั้ง",
+      "textParts": [
+        {
+          "text": "คำศัพท์: receipt — แปลว่า ใบเสร็จ/สลิป ใช้ขอหลักฐานหลังฝากเงิน เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "Can I get an account balance receipt?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " ตรวจชื่อบัญชี เวลาทำรายการ และยอดคงเหลือบนสลิปทุกครั้ง",
+          "language": "th"
+        }
+      ],
+      "description": "อธิบายการขอใบเสร็จที่แสดงยอดคงเหลือเพื่อเป็นหลักฐาน",
+      "screenElement": "vocabulary_card",
+      "vocabWord": "receipt",
+      "visualDescription": "The word ‘receipt’ alongside a printed slip with numbers and a small bank logo.",
+      "backgroundImageDescription": "ATM deposit machine near BTS Siam with a printed slip emerging; Thai-language interface on screen."
+    },
+    {
+      "id": "grammar_present_simple",
+      "text": "ไวยากรณ์ 1: Present Simple ใช้บอกนิสัย ความชอบ และข้อเท็จจริง โครงสร้างง่ายๆ คือประธาน + V1 เช่น Do you eat fish? หรือ I prefer short books. ใช้เวลาเล่าความชอบเรื่องแนวหนังสือหรือความยาวที่อ่านสบาย",
+      "textParts": [
+        {
+          "text": "ไวยากรณ์ 1: Present Simple ใช้บอกนิสัย ความชอบ และข้อเท็จจริง โครงสร้างง่ายๆ คือประธาน + V1 เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "Do you eat fish?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " หรือ ",
+          "language": "th"
+        },
+        {
+          "text": "I prefer short books.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " ใช้เวลาเล่าความชอบเรื่องแนวหนังสือหรือความยาวที่อ่านสบาย",
+          "language": "th"
+        }
+      ],
+      "description": "อธิบายการใช้ Present Simple เพื่อพูดถึงความชอบและข้อเท็จจริง",
+      "screenElement": "grammar_card",
+      "visualDescription": "Timeline graphic with simple present highlighted; examples appear as sticky notes.",
+      "backgroundImageDescription": "Whiteboard in a Thai university classroom with markers and simple English tense charts, Thai notes in the margins."
+    },
+    {
+      "id": "grammar_present_continuous",
+      "text": "ไวยากรณ์ 2: Present Continuous ใช้ be + V-ing เพื่อบอกสิ่งที่กำลังทำอยู่ เช่น What kind of book are you looking for? ใช้ได้ตอนกำลังเลือกหนังสืออยู่ที่ชั้นวาง ช่วยให้การสนทนาดูเป็นธรรมชาติ",
+      "textParts": [
+        {
+          "text": "ไวยากรณ์ 2: Present Continuous ใช้ be + V-ing เพื่อบอกสิ่งที่กำลังทำอยู่ เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "What kind of book are you looking for?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " ใช้ได้ตอนกำลังเลือกหนังสืออยู่ที่ชั้นวาง ช่วยให้การสนทนาดูเป็นธรรมชาติ",
+          "language": "th"
+        }
+      ],
+      "description": "อธิบายการใช้ Present Continuous สำหรับสถานการณ์ที่กำลังเกิดขึ้น เช่นกำลังหาหนังสือ",
+      "screenElement": "grammar_card",
+      "visualDescription": "Animated shopper scanning shelves; the -ing form is highlighted near the character.",
+      "backgroundImageDescription": "Bookshelves at a Thai mall bookstore with customers browsing; soft warm lighting and clear category signs."
+    },
+    {
+      "id": "grammar_modals",
+      "text": "ไวยากรณ์ 3: Modals เพื่อขอร้อง/ขออนุญาตอย่างสุภาพ ใช้ can/may/would + V1 เช่น Can you recommend a good mystery book? และ May I borrow this book? ใช้โทนเสียงนุ่มนวลและใส่ please ถ้าต้องการเพิ่มความสุภาพ",
+      "textParts": [
+        {
+          "text": "ไวยากรณ์ 3: Modals เพื่อขอร้อง/ขออนุญาตอย่างสุภาพ ใช้ can/may/would + V1 เช่น ",
+          "language": "th"
+        },
+        {
+          "text": "Can you recommend a good mystery book?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " และ ",
+          "language": "th"
+        },
+        {
+          "text": "May I borrow this book?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " ใช้โทนเสียงนุ่มนวลและใส่ please ถ้าต้องการเพิ่มความสุภาพ",
+          "language": "th"
+        }
+      ],
+      "description": "สอนการใช้ modal verbs เพื่อขอความช่วยเหลือหรือขออนุญาตอย่างสุภาพ",
+      "screenElement": "grammar_card",
+      "visualDescription": "Polite speech bubbles with can/may/would highlighted; a smiling staff icon.",
+      "backgroundImageDescription": "Customer service corner in a Thai department store with staff in uniform and bilingual signs encouraging polite requests."
+    },
+    {
+      "id": "practice_library_recommend",
+      "text": "ฝึกพูดสถานการณ์ห้องสมุด: คุณอยู่ที่หอสมุดกลาง จุฬาฯ อยากอ่านสืบสวนไม่หนามาก ให้พูดว่า Could you recommend a good mystery book? ลองพูดตามสองครั้ง แล้วเติมรายละเอียดความยาวหรือผู้แต่งที่ชอบเป็นภาษาไทยต่อท้ายได้",
+      "textParts": [
+        {
+          "text": "ฝึกพูดสถานการณ์ห้องสมุด: คุณอยู่ที่หอสมุดกลาง จุฬาฯ อยากอ่านสืบสวนไม่หนามาก ให้พูดว่า ",
+          "language": "th"
+        },
+        {
+          "text": "Could you recommend a good mystery book?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " ลองพูดตามสองครั้ง แล้วเติมรายละเอียดความยาวหรือผู้แต่งที่ชอบเป็นภาษาไทยต่อท้ายได้",
+          "language": "th"
+        }
+      ],
+      "description": "แบบฝึกพูดเพื่อขอคำแนะนำหนังสือที่ห้องสมุดในสถานการณ์จริง",
+      "screenElement": "practice_card",
+      "visualDescription": "Role-play prompt with a librarian character and a student holding a notebook.",
+      "backgroundImageDescription": "Chulalongkorn University library entrance with Thai signage, students walking in uniforms, and a help desk nearby."
+    },
+    {
+      "id": "practice_find_section",
+      "text": "ฝึกถามทางที่ร้านหนังสือ CentralWorld: อยากไปโซนนิยาย ให้ถามพนักงานว่า Where is the fiction section? พูดชัดคำว่า fiction และ section จากนั้นชี้ไปที่ป้ายหมวดเพื่อยืนยันอีกครั้ง",
+      "textParts": [
+        {
+          "text": "ฝึกถามทางที่ร้านหนังสือ CentralWorld: อยากไปโซนนิยาย ให้ถามพนักงานว่า ",
+          "language": "th"
+        },
+        {
+          "text": "Where is the fiction section?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " พูดชัดคำว่า fiction และ section จากนั้นชี้ไปที่ป้ายหมวดเพื่อยืนยันอีกครั้ง",
+          "language": "th"
+        }
+      ],
+      "description": "ฝึกการออกเสียงและการใช้ประโยคถามทางไปหมวดนิยายในร้านหนังสือ",
+      "screenElement": "practice_card",
+      "visualDescription": "A store clerk points toward an aisle sign while a learner practices the line.",
+      "backgroundImageDescription": "CentralWorld bookstore interior with overhead signs, Thai shoppers, and a visible information counter."
+    },
+    {
+      "id": "practice_bank_deposit",
+      "text": "ฝึกทำธุรกรรมฝากเงิน: ที่สาขาธนาคารใน MBK ให้บอกพนักงานว่า I'd like to deposit cash. หลังทำรายการ เสริมคำขอหลักฐานว่า Can I get an account balance receipt? และหากใช้ตู้ฝากเงินให้พูดกับเพื่อนว่า I need to enter my PIN. เพื่อบอกให้รอสักครู่",
+      "textParts": [
+        {
+          "text": "ฝึกทำธุรกรรมฝากเงิน: ที่สาขาธนาคารใน MBK ให้บอกพนักงานว่า ",
+          "language": "th"
+        },
+        {
+          "text": "I'd like to deposit cash.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " หลังทำรายการ เสริมคำขอหลักฐานว่า ",
+          "language": "th"
+        },
+        {
+          "text": "Can I get an account balance receipt?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " และหากใช้ตู้ฝากเงินให้พูดกับเพื่อนว่า ",
+          "language": "th"
+        },
+        {
+          "text": "I need to enter my PIN.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " เพื่อบอกให้รอสักครู่",
+          "language": "th"
+        }
+      ],
+      "description": "สถานการณ์ฝึกพูดที่ธนาคารและตู้ฝากเงิน พร้อมคำขอใบเสร็จและการรักษาความปลอดภัยของรหัส",
+      "screenElement": "practice_card",
+      "visualDescription": "ATM kiosk scene with a learner shielding the keypad and a printed receipt appearing.",
+      "backgroundImageDescription": "MBK Center banking area: a blue-themed Thai bank ATM row with deposit slots, customers queuing, and Thai-English instructions on screens."
+    },
+    {
+      "id": "conclusion",
+      "text": "เยี่ยมมาก วันนี้คุณได้ฝึกทั้งการถามหาโซนหนังสือ ขอคำแนะนำ ยืมออก และการฝากเงินพร้อมขอใบเสร็จ ทบทวนวนอีกหนึ่งรอบ โดยพูดว่า Could you recommend a good mystery book? และปิดท้ายด้วย I'd like to deposit cash. แล้วลองนำไปใช้จริงที่ TK Park หรือธนาคารในห้างใกล้บ้านนะ เจอกันบทถัดไปค่ะ",
+      "textParts": [
+        {
+          "text": "เยี่ยมมาก วันนี้คุณได้ฝึกทั้งการถามหาโซนหนังสือ ขอคำแนะนำ ยืมออก และการฝากเงินพร้อมขอใบเสร็จ ทบทวนวนอีกหนึ่งรอบ โดยพูดว่า ",
+          "language": "th"
+        },
+        {
+          "text": "Could you recommend a good mystery book?",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " และปิดท้ายด้วย ",
+          "language": "th"
+        },
+        {
+          "text": "I'd like to deposit cash.",
+          "language": "en",
+          "speakingRate": 0.8
+        },
+        {
+          "text": " แล้วลองนำไปใช้จริงที่ TK Park หรือธนาคารในห้างใกล้บ้านนะ เจอกันบทถัดไปค่ะ",
+          "language": "th"
+        }
+      ],
+      "description": "สรุปบทเรียนและชวนผู้เรียนนำประโยคไปใช้จริงในชีวิตประจำวัน",
+      "screenElement": "conclusion_card",
+      "visualDescription": "Closing screen with a friendly wave and checklist ticks turning green.",
+      "backgroundImageDescription": "Evening view of CentralWorld skywalk with students heading to BTS; soft city lights and Thai signs create an authentic Bangkok vibe."
+    }
+  ]
+}

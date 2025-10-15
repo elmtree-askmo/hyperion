@@ -1,0 +1,112 @@
+{
+  "flashcards": [
+    {
+      "word": "restaurant",
+      "definition": "a place where people pay to sit and eat meals that are cooked and served on the premises",
+      "thaiDefinition": "สถานที่ให้บริการอาหารและเครื่องดื่ม ลูกค้านั่งทานในร้าน อาหารปรุงและเสิร์ฟโดยพนักงานภายในสถานที่ อาจมีบริการสั่งกลับบ้านหรือเดลิเวอรีด้วย",
+      "thaiTranslation": "ร้านอาหาร",
+      "pronunciation": "เรส-เตอ-รองต์",
+      "phonetic": "/ˈrɛst(ə)rɒnt/",
+      "memoryHook": "เรส-เตอ-รองต์ ฟังเหมือน \"เรส-เท่อ-ร้อนท์\" นึกภาพเดินหาอาหารที่ CentralWorld คนแน่นจน \"ร้อน\" ใจ รีบเข้าร้านอาหารทันที",
+      "contextExample": "Let's meet at a Thai restaurant near BTS Siam after class. - ไปเจอกันที่ร้านอาหารไทยใกล้ BTS สยามหลังเลิกเรียน",
+      "partOfSpeech": "noun",
+      "difficulty": "easy"
+    },
+    {
+      "word": "reservation",
+      "definition": "an arrangement made in advance to have a seat, table, room, etc. kept for you",
+      "thaiDefinition": "การจองล่วงหน้าเพื่อให้สถานที่ ที่นั่ง หรือโต๊ะถูกเก็บไว้ให้ตามเวลาและจำนวนคนที่ต้องการ โดยมักต้องให้ชื่อและเบอร์ติดต่อ",
+      "thaiTranslation": "การจองโต๊ะ",
+      "pronunciation": "เร-เซอ-เว-ชั่น",
+      "phonetic": "/ˌrɛzəˈveɪʃən/",
+      "memoryHook": "เร-เซอ-เว-ชั่น นึกถึงคำว่า \"รีเซิร์ฟ\" เวลาโทรไปบอกร้านว่า “ช่วยสำรองโต๊ะให้หน่อย” เหมือนกดจองผ่านแอป LINE MAN Wongnai ก่อนถึงร้าน",
+      "contextExample": "I made a reservation for 7 PM at Somboon Seafood, CentralWorld. - ฉันจองโต๊ะไว้หนึ่งทุ่มที่สมบูรณ์โภชนา เซ็นทรัลเวิลด์",
+      "partOfSpeech": "noun",
+      "difficulty": "medium"
+    },
+    {
+      "word": "recommend",
+      "definition": "to suggest that someone or something would be good or suitable for a particular purpose",
+      "thaiDefinition": "แนะนำสิ่งที่คิดว่าเหมาะสมหรือดี เพื่อช่วยให้ผู้อื่นตัดสินใจเลือกสินค้า บริการ เมนู หรือวิธีการ",
+      "thaiTranslation": "แนะนำ",
+      "pronunciation": "เรค-คอม-เมนด์",
+      "phonetic": "/ˌrɛkəˈmɛnd/",
+      "memoryHook": "เรค-คอม-เมนด์ ฟังเหมือน \"เลขคอมเมนต์\" นึกถึงคะแนนรีวิวใน Pantip/Google Maps ที่เพื่อนใช้ช่วย \"แนะนำ\" ร้านอร่อย",
+      "contextExample": "Can you recommend a drink at True Coffee near BTS Ari? - ช่วยแนะนำเครื่องดื่มที่ True Coffee ใกล้ BTS อารีย์หน่อย",
+      "partOfSpeech": "verb",
+      "difficulty": "medium"
+    },
+    {
+      "word": "spicy",
+      "definition": "having a strong, hot flavor from spices or chili",
+      "thaiDefinition": "มีรสเผ็ดจากพริกหรือเครื่องเทศ ทำให้รู้สึกร้อนลิ้น มีระดับได้ตั้งแต่เผ็ดน้อยจนเผ็ดมาก",
+      "thaiTranslation": "เผ็ด",
+      "pronunciation": "สไป-ซี่",
+      "phonetic": "/ˈspaɪsi/",
+      "memoryHook": "สไป-ซี่ นึกถึงส้มตำแซ่บๆ หน้า BTS หมอชิต เผ็ดจนต้องวิ่งซื้อชาเขียวเย็นดับไฟ",
+      "contextExample": "Is the tom yum at Terminal 21 food court very spicy? - ต้มยำที่ฟู้ดคอร์ท Terminal 21 เผ็ดมากไหม",
+      "partOfSpeech": "adjective",
+      "difficulty": "easy"
+    },
+    {
+      "word": "vegetarian",
+      "definition": "a person who does not eat meat or fish, or a diet that does not include meat or fish",
+      "thaiDefinition": "ผู้ที่งดกินเนื้อสัตว์และปลา (บางแบบยังรับประทานนมหรือไข่ได้) และยังใช้เรียกอาหารที่ไม่ใส่เนื้อสัตว์ด้วย",
+      "thaiTranslation": "มังสวิรัติ",
+      "pronunciation": "เว-จิ-แท-เรียน",
+      "phonetic": "/ˌvɛdʒɪˈtɛəriən/",
+      "memoryHook": "เว-จิ-แท-เรียน นึกถึงเทศกาลกินเจที่เยาวราช ร้านผักสารพัดเมนู เห็นคำนี้ในเมนูคือแบบไม่ใส่เนื้อสัตว์",
+      "contextExample": "Do you have vegetarian options at MK in CentralWorld? - ที่ MK เซ็นทรัลเวิลด์มีตัวเลือกมังสวิรัติไหม",
+      "partOfSpeech": "noun/adjective",
+      "difficulty": "medium"
+    },
+    {
+      "word": "menu",
+      "definition": "a list of dishes available in a restaurant",
+      "thaiDefinition": "รายการอาหารและเครื่องดื่มที่ร้านมีขาย พร้อมราคาและคำอธิบาย บางร้านมีรูปภาพหรือรหัสเมนู และอาจเป็นแบบ QR e-menu",
+      "thaiTranslation": "เมนู",
+      "pronunciation": "เม-นู",
+      "phonetic": "/ˈmɛnjuː/",
+      "memoryHook": "เม-นู ฟังเหมือน \"มีหนู\" แต่จริงๆ คือมีรายการอาหาร เปิดเมนูแล้วเลือกจานโปรดได้เลย",
+      "contextExample": "Could we have two menus, please? We're sitting by the window at After You, Siam Square One. - ขอเมนูสองเล่มครับ/ค่ะ เรานั่งติดหน้าต่างที่ After You สยามสแควร์วัน",
+      "partOfSpeech": "noun",
+      "difficulty": "easy"
+    },
+    {
+      "word": "daily special",
+      "definition": "a dish or set of dishes that a restaurant offers at a special price or only on that day",
+      "thaiDefinition": "เมนูพิเศษที่ทำเฉพาะวันนั้น บางครั้งมีส่วนลดหรือใช้วัตถุดิบพิเศษ และอาจไม่อยู่ในเมนูหลัก",
+      "thaiTranslation": "เมนูพิเศษประจำวัน",
+      "pronunciation": "เด-ลี่ สเป-เชิล",
+      "phonetic": "/ˈdeɪli ˈspɛʃəl/",
+      "memoryHook": "เด-ลี่ สเป-เชิล นึกถึงป้ายชอล์กหน้าร้านที่ Central Plaza เขียนว่า วันนี้พิเศษ! เมนูเปลี่ยนทุกวัน ต้องรีบลอง",
+      "contextExample": "What is the daily special at Greyhound Café in EmQuartier today? - วันนี้เมนูพิเศษประจำวันที่ Greyhound Café เอ็มควอเทียร์คืออะไร",
+      "partOfSpeech": "noun",
+      "difficulty": "medium"
+    },
+    {
+      "word": "salad",
+      "definition": "a cold dish of mixed vegetables, often with dressing",
+      "thaiDefinition": "อาหารจานเย็นหรืออุณหภูมิห้องที่ผสมผักหลากชนิด อาจใส่โปรตีนอย่างไก่ ปลาไข่ต้ม ถั่ว หรือธัญพืช และมักราดน้ำสลัด",
+      "thaiTranslation": "สลัด",
+      "pronunciation": "แซ-หลัด",
+      "phonetic": "/ˈsæləd/",
+      "memoryHook": "สลัด อ่านว่า แซ-หลัด นึกถึงสลัดบาร์ที่ Big C ราชดำริ ตักผักแล้วชั่งน้ำหนักจ่ายเงิน",
+      "contextExample": "I ordered a salad with grilled chicken at Food Loft, Central Chidlom. - ฉันสั่งสลัดไก่ย่างที่ฟู้ดลอฟท์ เซ็นทรัลชิดลม",
+      "partOfSpeech": "noun",
+      "difficulty": "easy"
+    },
+    {
+      "word": "dressing",
+      "definition": "a sauce, often made with oil and vinegar, added to salads for flavor",
+      "thaiDefinition": "ซอสราดสลัดเพื่อเพิ่มรสชาติ เช่น แบบใส (น้ำมันมะกอก+น้ำส้มสายชู) แบบครีมมี่ (ซีซาร์ งาญี่ปุ่น) หรือสูตรอื่นๆ",
+      "thaiTranslation": "น้ำสลัด",
+      "pronunciation": "เดรส-ซิ่ง",
+      "phonetic": "/ˈdrɛsɪŋ/",
+      "memoryHook": "เดรส-ซิ่ง นึกถึงคำว่า \"เดรส\" เสื้อผ้าที่ทำให้ชุดสวย น้ำสลัดก็ราดให้สลัด \"แต่งตัว\" น่ากินก่อนลงมือ",
+      "contextExample": "Do you want sesame dressing or Caesar at Salad Factory, Ari? - ที่ Salad Factory อารีย์ จะเอาน้ำสลัดงาหรือซีซาร์ดี",
+      "partOfSpeech": "noun",
+      "difficulty": "medium"
+    }
+  ]
+}
