@@ -13,11 +13,20 @@
 }
 
 .practice-pause-backdrop {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: grayscale(0.8) blur(4px) brightness(0.7);
+  -webkit-backdrop-filter: grayscale(0.8) blur(4px) brightness(0.7);
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
 .practice-pause-content {
   position: relative;
+  z-index: 2;
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
   border-radius: 24px;
   padding: 32px;
