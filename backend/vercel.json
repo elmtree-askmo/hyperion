@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/main.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/videos/(.*)",
+      "dest": "/videos/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "dist/main.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "dist/main.js": {
+      "memory": 3008,
+      "maxDuration": 60
+    }
+  },
+  "outputDirectory": "dist"
+}
