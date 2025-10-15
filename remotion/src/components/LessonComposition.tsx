@@ -3,7 +3,7 @@
  * Orchestrates all lesson segments with synchronized timing
  */
 import React from 'react';
-import { AbsoluteFill, Composition, Sequence, staticFile } from 'remotion';
+import { AbsoluteFill, Sequence, staticFile } from 'remotion';
 import { TitleCard } from './TitleCard';
 import { VocabularyCard } from './VocabularyCard';
 import { GrammarCard } from './GrammarCard';
@@ -65,7 +65,7 @@ interface LessonData {
 export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
   lessonData,
 }) => {
-  const { lesson, flashcards, audioSegments } = lessonData;
+  const { lesson, flashcards } = lessonData;
   const { segmentBasedTiming } = lesson;
   const fps = VIDEO_CONFIG.fps;
 
@@ -116,11 +116,6 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
         const flashcard = segment.vocabWord
           ? flashcards.find((f) => f.word === segment.vocabWord)
           : null;
-
-        // Find background image description
-        const audioSegment = audioSegments.find(
-          (as) => as.id === segment.screenElement.replace('_card', ''),
-        );
 
         // Use staticFile with path relative to public directory
         // Public dir is set to backend/ directory

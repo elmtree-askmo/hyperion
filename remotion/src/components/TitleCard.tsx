@@ -3,8 +3,8 @@
  * Displays lesson title with animated entrance
  */
 import React from 'react';
-import { AbsoluteFill, Audio, Img, useCurrentFrame } from 'remotion';
-import { theme, VIDEO_CONFIG } from '../styles/theme';
+import { AbsoluteFill, Audio, Img } from 'remotion';
+import { theme } from '../styles/theme';
 import { useFadeIn, useSlideIn, useScaleIn } from '../utils/animation';
 
 interface TitleCardProps {
@@ -24,7 +24,6 @@ export const TitleCard: React.FC<TitleCardProps> = ({
   audioUrl,
   backgroundImage,
 }) => {
-  const frame = useCurrentFrame();
   const slideIn = useSlideIn(0);
   const fadeIn = useFadeIn(10, 20);
   const scale = useScaleIn(5);

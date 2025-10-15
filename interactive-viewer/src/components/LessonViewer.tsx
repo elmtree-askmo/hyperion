@@ -9,6 +9,9 @@ import { LessonComposition } from '../../../remotion/src/components/LessonCompos
 import { VIDEO_CONFIG } from '../../../remotion/src/styles/theme';
 import './LessonViewer.css';
 
+// Get API base URL from environment variable or use default
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
 export const LessonViewer: React.FC = () => {
   const {
     lessonData,
@@ -78,8 +81,8 @@ export const LessonViewer: React.FC = () => {
         try {
           // Load both files to get title and thumbnail
           const [microlessonResponse, synchronizedResponse] = await Promise.all([
-            fetch(`/videos/${currentVideoId}/lesson_${i}/microlesson_script.json`),
-            fetch(`/videos/${currentVideoId}/lesson_${i}/final_synchronized_lesson.json`),
+            fetch(`${API_BASE_URL}/videos/${currentVideoId}/lesson_${i}/microlesson_script.json`),
+            fetch(`${API_BASE_URL}/videos/${currentVideoId}/lesson_${i}/final_synchronized_lesson.json`),
           ]);
           
           let title = `Episode ${i}`;
@@ -550,7 +553,7 @@ export const LessonViewer: React.FC = () => {
   return (
     <div className="lesson-viewer">
       {/* Debug Panel Toggle Button (Only in development) */}
-      {process.env.NODE_ENV === 'development' && (
+      {import.meta.env.DEV && (
         <button
           onClick={() => setShowDebugPanel(!showDebugPanel)}
           style={{
@@ -580,7 +583,7 @@ export const LessonViewer: React.FC = () => {
       )}
 
       {/* Debug Panel (Only in development) */}
-      {process.env.NODE_ENV === 'development' && showDebugPanel && (
+      {import.meta.env.DEV && showDebugPanel && (
         <div style={{
           position: 'fixed',
           bottom: 80,

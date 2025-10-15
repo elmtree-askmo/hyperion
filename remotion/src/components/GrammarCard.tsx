@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { AbsoluteFill, Audio, Img, useCurrentFrame, useVideoConfig } from 'remotion';
-import { theme, VIDEO_CONFIG } from '../styles/theme';
+import { theme } from '../styles/theme';
 import { useFadeIn, useSlideIn } from '../utils/animation';
 
 interface TextPart {

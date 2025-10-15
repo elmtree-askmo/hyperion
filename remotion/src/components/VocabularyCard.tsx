@@ -3,8 +3,8 @@
  * Displays vocabulary word with definition, pronunciation, and examples
  */
 import React from 'react';
-import { AbsoluteFill, Audio, Img, useCurrentFrame } from 'remotion';
-import { theme, VIDEO_CONFIG } from '../styles/theme';
+import { AbsoluteFill, Audio, Img } from 'remotion';
+import { theme } from '../styles/theme';
 import { useFadeIn, useSlideIn, useScaleIn } from '../utils/animation';
 
 interface VocabularyCardProps {
@@ -23,14 +23,11 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({
   word,
   thaiTranslation,
   pronunciation,
-  definition,
   thaiDefinition,
   memoryHook,
-  contextExample,
   audioUrl,
   backgroundImage,
 }) => {
-  const frame = useCurrentFrame();
   const fadeIn = useFadeIn(0, 20);
   const slideIn = useSlideIn(5);
   const scale = useScaleIn(10);

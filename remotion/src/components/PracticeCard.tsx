@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { AbsoluteFill, Audio, Img, useCurrentFrame, useVideoConfig } from 'remotion';
-import { theme, VIDEO_CONFIG } from '../styles/theme';
+import { theme } from '../styles/theme';
 import { useFadeIn, useSlideIn } from '../utils/animation';
 
 interface TextPart {
@@ -42,7 +42,6 @@ export const PracticeCard: React.FC<PracticeCardProps> = ({
   const { fps } = useVideoConfig();
   const fadeIn = useFadeIn(0, 20);
   const slideIn = useSlideIn(5);
-  const currentTimeInSeconds = frame / fps;
 
   // Helper function to estimate duration for each text part based on character count and speaking rate
   const estimatePartDuration = (part: TextPart): number => {

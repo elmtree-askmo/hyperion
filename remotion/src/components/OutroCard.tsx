@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { AbsoluteFill, Audio, Img } from 'remotion';
-import { theme, VIDEO_CONFIG } from '../styles/theme';
+import { theme } from '../styles/theme';
 import { useFadeIn, useSlideIn, useScaleIn } from '../utils/animation';
 
 interface OutroCardProps {

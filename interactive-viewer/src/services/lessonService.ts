@@ -1,12 +1,18 @@
-import { LessonData } from '../types/lesson';
+import { LessonData } from "../types/lesson";
+
+// Get API base URL from environment variable or use default
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
 /**
  * Load lesson data from the backend or local files
  */
-export async function loadLessonData(videoId: string, lessonId: string): Promise<LessonData> {
+export async function loadLessonData(
+  videoId: string,
+  lessonId: string
+): Promise<LessonData> {
   try {
     // Try to load from API first
-    const apiUrl = `/api/v1/video-transform/lessons/${videoId}/${lessonId}`;
+    const apiUrl = `${API_BASE_URL}/api/v1/video-transform/lessons/${videoId}/${lessonId}`;
     const response = await fetch(apiUrl);
 
     if (response.ok) {
@@ -14,7 +20,7 @@ export async function loadLessonData(videoId: string, lessonId: string): Promise
       return transformLessonData(data);
     }
   } catch (error) {
-    console.warn('API not available, loading from local files:', error);
+    console.warn("API not available, loading from local files:", error);
   }
 
   // Fallback: Load from local files
@@ -22,11 +28,18 @@ export async function loadLessonData(videoId: string, lessonId: string): Promise
     const lessonDataPath = `/videos/${videoId}/${lessonId}`;
 
     // Load all required files
-    const [microlessonScript, flashcards, audioSegments, finalSynchronizedLesson] = await Promise.all([
+    const [
+      microlessonScript,
+      flashcards,
+      audioSegments,
+      finalSynchronizedLesson,
+    ] = await Promise.all([
       fetch(`${lessonDataPath}/microlesson_script.json`).then((r) => r.json()),
       fetch(`${lessonDataPath}/flashcards.json`).then((r) => r.json()),
       fetch(`${lessonDataPath}/audio_segments.json`).then((r) => r.json()),
-      fetch(`${lessonDataPath}/final_synchronized_lesson.json`).then((r) => r.json()),
+      fetch(`${lessonDataPath}/final_synchronized_lesson.json`).then((r) =>
+        r.json()
+      ),
     ]);
 
     return transformLessonData({
@@ -36,8 +49,8 @@ export async function loadLessonData(videoId: string, lessonId: string): Promise
       finalSynchronizedLesson,
     });
   } catch (error) {
-    console.error('Failed to load lesson data:', error);
-    throw new Error('Could not load lesson data from any source');
+    console.error("Failed to load lesson data:", error);
+    throw new Error("Could not load lesson data from any source");
   }
 }
 
@@ -45,13 +58,19 @@ export async function loadLessonData(videoId: string, lessonId: string): Promise
  * Transform raw lesson data into the format expected by the app
  */
 function transformLessonData(rawData: any): LessonData {
-  const { microlessonScript, flashcards, audioSegments, finalSynchronizedLesson } = rawData;
+  const {
+    microlessonScript,
+    flashcards,
+    audioSegments,
+    finalSynchronizedLesson,
+  } = rawData;
 
   const lesson = microlessonScript.lesson;
   const seriesInfo = microlessonScript.seriesInfo;
 
   // Build segment timing from finalSynchronizedLesson if available
-  const segmentBasedTiming = finalSynchronizedLesson?.lesson?.segmentBasedTiming || [];
+  const segmentBasedTiming =
+    finalSynchronizedLesson?.lesson?.segmentBasedTiming || [];
 
   return {
     lesson: {
@@ -74,15 +93,17 @@ function transformLessonData(rawData: any): LessonData {
  */
 export async function getAvailableLessons(videoId: string): Promise<string[]> {
   try {
-    const response = await fetch(`/api/v1/video-transform/lessons/${videoId}`);
+    const response = await fetch(
+      `${API_BASE_URL}/api/v1/video-transform/lessons/${videoId}`
+    );
     if (response.ok) {
       const data = await response.json();
       return data.lessons || [];
     }
   } catch (error) {
-    console.warn('Could not fetch available lessons:', error);
+    console.warn("Could not fetch available lessons:", error);
   }
 
   // Fallback: return common lesson names
-  return ['lesson_1', 'lesson_2', 'lesson_3'];
+  return ["lesson_1", "lesson_2", "lesson_3"];
 }
