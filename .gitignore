@@ -54,6 +54,7 @@ jest.config.js
 
 # Backend files
 *.zip
+*.mp4
 #backend/videos/
 backend/audios/
 backend/logs/
