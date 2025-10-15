@@ -174,8 +174,8 @@ export const LessonViewer: React.FC = () => {
       if (Math.abs(currentTime - lastCheckedTime) < 0.2) return;
       
       // Cooldown period after pausing - prevent immediate re-trigger
-      // If we just paused within the last 3 seconds, skip checking
-      if (lastPausedTime > 0 && currentTime - lastPausedTime < 3) {
+      // If we just paused within the last 1.5 seconds, skip checking
+      if (lastPausedTime > 0 && currentTime - lastPausedTime < 1.5) {
         return;
       }
       
@@ -202,11 +202,15 @@ export const LessonViewer: React.FC = () => {
           const absoluteStartTime = segment.startTime + timing.startTime;
           const absoluteEndTime = segment.startTime + timing.endTime;
 
-          // Check if we just passed the end of the English phrase
-          // Wait for phrase to finish playing before pausing
+          // Check if we're currently playing this English phrase (not after it ends)
+          // Trigger pause slightly before the end to show overlay while still on the phrase
+          const pauseTriggerTime = absoluteEndTime - 0.3; // 300ms before end
+          const isInPhrase = currentTime >= absoluteStartTime && currentTime <= absoluteEndTime;
+          const shouldTriggerPause = currentTime >= pauseTriggerTime && currentTime < absoluteEndTime;
+          
           if (
-            currentTime >= absoluteEndTime &&
-            currentTime <= absoluteEndTime + 0.5 &&
+            isInPhrase &&
+            shouldTriggerPause &&
             !userProgress.practicedPhrases.includes(timing.text)
           ) {
             // Debug log
@@ -214,12 +218,12 @@ export const LessonViewer: React.FC = () => {
               phrase: timing.text,
               currentTime: currentTime.toFixed(2),
               phraseWindow: `${absoluteStartTime.toFixed(2)} - ${absoluteEndTime.toFixed(2)}`,
+              pauseTriggerTime: pauseTriggerTime.toFixed(2),
               segment: segment.screenElement,
               isPlaying,
             });
 
-            // Pause immediately without seeking
-            // This ensures audio has finished playing
+            // Pause immediately at current position to show overlay while phrase is visible
             playerRef.pause();
             setIsPlaying(false);
             setCurrentPracticePhrase(timing.text);
@@ -469,8 +473,9 @@ export const LessonViewer: React.FC = () => {
             
             playerRef.seekTo(startFrame);
             
-            // Reset last paused time to allow re-triggering after replay
-            setLastPausedTime(0);
+            // Reset cooldown timer to allow re-triggering after replay finishes
+            // Use phrase start time as reference to allow cooldown to work properly
+            setLastPausedTime(phraseStartTime - 2);
             
             // Close the overlay and play
             setIsPracticePaused(false);
