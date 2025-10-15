@@ -258,7 +258,7 @@ export const LessonViewer: React.FC = () => {
       const currentTime = currentFrame / VIDEO_CONFIG.fps;
 
       // Cooldown period after pausing - prevent immediate re-trigger
-      if (lastVocabPausedTime > 0 && currentTime - lastVocabPausedTime < 2) {
+      if (lastVocabPausedTime > 0 && currentTime - lastVocabPausedTime < 1.5) {
         return;
       }
 
@@ -276,21 +276,22 @@ export const LessonViewer: React.FC = () => {
 
         // Skip if user just clicked to jump (using ref for immediate check)
         // "*" means skip all detection (user is manually navigating)
-        if (justClickedVocabRef.current === segment.vocabWord || 
-            justClickedVocabRef.current === "*") continue;
+        if (justClickedVocabRef.current === "*") continue;
 
-        // Check if we just passed the end of the vocabulary card
-        // Wait for card to finish completely before pausing
-        // This ensures audio is fully played, even if background transitions
-        if (
-          currentTime >= segment.endTime &&
-          currentTime <= segment.endTime + 0.5
-        ) {
+        // Check if we're currently IN this vocabulary card segment
+        // Trigger pause slightly before the end to show overlay while still displaying the card
+        const pauseTriggerTime = segment.endTime - 0.3; // 300ms before end
+        const isInSegment = currentTime >= segment.startTime && currentTime <= segment.endTime;
+        const shouldTriggerPause = currentTime >= pauseTriggerTime && currentTime < segment.endTime;
+        
+        if (isInSegment && shouldTriggerPause) {
           // Debug log
           console.log('📚 Vocabulary pause triggered:', {
             word: segment.vocabWord,
             currentTime: currentTime.toFixed(2),
+            segmentStart: segment.startTime.toFixed(2),
             segmentEnd: segment.endTime.toFixed(2),
+            pauseTriggerTime: pauseTriggerTime.toFixed(2),
             segment: segment.screenElement,
             isPlaying,
           });
@@ -299,8 +300,7 @@ export const LessonViewer: React.FC = () => {
           const flashcard = lessonData.flashcards.find(f => f.word === segment.vocabWord);
           
           if (flashcard) {
-            // Pause immediately without seeking
-            // This ensures audio has finished playing completely
+            // Pause immediately at current position to show overlay while card is visible
             playerRef.pause();
             setIsPlaying(false);
             setCurrentVocabularyWord(segment.vocabWord);
@@ -513,8 +513,9 @@ export const LessonViewer: React.FC = () => {
         const startFrame = Math.round(segment.startTime * VIDEO_CONFIG.fps);
         playerRef.seekTo(startFrame);
         
-        // Reset cooldown to allow re-triggering after replay
-        setLastVocabPausedTime(0);
+        // Reset the cooldown timer to allow re-triggering after replay finishes
+        // Use segment start time as reference to allow cooldown to work properly
+        setLastVocabPausedTime(segment.startTime - 2);
         
         // Close the overlay and play
         setIsVocabularyPaused(false);
