@@ -15,6 +15,7 @@ import { GeminiImageService } from './services/gemini-image.service';
 import { ProxyConfigService } from './services/proxy-config.service';
 import { FlashcardsService } from './services/flashcards.service';
 import { RemotionVideoService } from './services/remotion-video.service';
+import { StorageService } from './services/storage.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([VideoJob])],
@@ -22,6 +23,7 @@ import { RemotionVideoService } from './services/remotion-video.service';
   providers: [
     ProxyConfigService,
     LLMConfigService,
+    StorageService,
     VideoTransformService,
     YouTubeService,
     LangChainContentAnalysisService,
@@ -34,6 +36,6 @@ import { RemotionVideoService } from './services/remotion-video.service';
     FlashcardsService,
     RemotionVideoService,
   ],
-  exports: [VideoTransformService],
+  exports: [VideoTransformService, StorageService],
 })
 export class VideoTransformModule {}

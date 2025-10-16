@@ -5,6 +5,7 @@ import { VideoTransformService } from './video-transform.service';
 import { CreateVideoJobDto } from './dto/create-video-job.dto';
 import { VideoJobQueryDto } from './dto/video-job-query.dto';
 import { RemotionVideoService } from './services/remotion-video.service';
+import { StorageService } from './services/storage.service';
 import { GenerateVideoDto, VideoGenerationResponseDto } from './dto/generate-video.dto';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -15,6 +16,7 @@ export class VideoTransformController {
   constructor(
     private readonly videoTransformService: VideoTransformService,
     private readonly remotionVideoService: RemotionVideoService,
+    private readonly storageService: StorageService,
   ) {}
 
   @Post()
@@ -59,21 +61,21 @@ export class VideoTransformController {
   @ApiResponse({ status: 404, description: 'Lesson not found.' })
   async getLessonData(@Param('videoId') videoId: string, @Param('lessonId') lessonId: string) {
     try {
-      const lessonDir = path.join(process.cwd(), 'videos', videoId, lessonId);
+      // Use storage-agnostic paths (works for both local and cloud storage)
+      const lessonBasePath = `${videoId}/${lessonId}`;
 
-      // Check if lesson directory exists
-      try {
-        await fs.access(lessonDir);
-      } catch {
+      // Check if main lesson file exists
+      const microlessonExists = await this.storageService.fileExists(`${lessonBasePath}/microlesson_script.json`);
+      if (!microlessonExists) {
         throw new NotFoundException(`Lesson ${lessonId} not found for video ${videoId}`);
       }
 
-      // Load all required files
+      // Load all required files using StorageService
       const [microlessonScript, flashcards, audioSegments, finalSynchronizedLesson] = await Promise.allSettled([
-        this.readJsonFile(path.join(lessonDir, 'microlesson_script.json')),
-        this.readJsonFile(path.join(lessonDir, 'flashcards.json')),
-        this.readJsonFile(path.join(lessonDir, 'audio_segments.json')),
-        this.readJsonFile(path.join(lessonDir, 'final_synchronized_lesson.json')),
+        this.readJsonFileFromStorage(`${lessonBasePath}/microlesson_script.json`),
+        this.readJsonFileFromStorage(`${lessonBasePath}/flashcards.json`),
+        this.readJsonFileFromStorage(`${lessonBasePath}/audio_segments.json`),
+        this.readJsonFileFromStorage(`${lessonBasePath}/final_synchronized_lesson.json`),
       ]);
 
       // Build response with available data
@@ -256,7 +258,17 @@ export class VideoTransformController {
   }
 
   /**
-   * Helper method to read and parse JSON file
+   * Helper method to read and parse JSON file from storage (local or cloud)
+   */
+  private async readJsonFileFromStorage(filePath: string): Promise<any> {
+    const buffer = await this.storageService.readFile(filePath);
+    const content = buffer.toString('utf-8');
+    return JSON.parse(content);
+  }
+
+  /**
+   * Helper method to read and parse JSON file from local filesystem (deprecated)
+   * @deprecated Use readJsonFileFromStorage instead
    */
   private async readJsonFile(filePath: string): Promise<any> {
     const content = await fs.readFile(filePath, 'utf-8');
