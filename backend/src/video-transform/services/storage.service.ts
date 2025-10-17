@@ -87,7 +87,9 @@ export class StorageService {
       case 'r2':
         // For cloud storage, construct the public URL
         const baseUrl = process.env.STORAGE_PUBLIC_URL || `https://${this.config.bucket}.${this.config.endpoint}`;
-        return `${baseUrl}/${filePath}`;
+        // Include basePath if it's set and not empty
+        const fullPath = this.config.basePath && this.config.basePath !== path.join(process.cwd(), 'videos') ? `${this.config.basePath}/${filePath}` : filePath;
+        return `${baseUrl}/${fullPath}`;
 
       case 'vercel-blob':
         // Vercel Blob Storage uses its own URL structure

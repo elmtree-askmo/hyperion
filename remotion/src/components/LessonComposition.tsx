@@ -117,16 +117,21 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
           ? flashcards.find((f) => f.word === segment.vocabWord)
           : null;
 
-        // Use staticFile with path relative to public directory
-        // Public dir is set to backend/ directory
-        // Audio URLs from JSON are like "/videos/..." which maps to "backend/videos/..."
-        // So we just need to remove the leading slash
+        // Handle both local paths and remote URLs (S3, CDN, etc.)
+        // If URL starts with http:// or https://, use it directly
+        // Otherwise, treat as local path and use staticFile()
+        const isRemoteUrl = (url: string) => url.startsWith('http://') || url.startsWith('https://');
+        
         const audioUrl = segment.audioUrl
-          ? staticFile(segment.audioUrl.replace(/^\//, ''))
+          ? isRemoteUrl(segment.audioUrl)
+            ? segment.audioUrl // Use S3/CDN URL directly
+            : staticFile(segment.audioUrl.replace(/^\//, '')) // Local file
           : undefined;
 
         const backgroundImage = segment.backgroundUrl
-          ? staticFile(segment.backgroundUrl.replace(/^\//, ''))
+          ? isRemoteUrl(segment.backgroundUrl)
+            ? segment.backgroundUrl // Use S3/CDN URL directly
+            : staticFile(segment.backgroundUrl.replace(/^\//, '')) // Local file
           : undefined;
 
         // Render appropriate component based on screen element type

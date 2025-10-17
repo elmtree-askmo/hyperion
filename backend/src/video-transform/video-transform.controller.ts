@@ -49,8 +49,66 @@ export class VideoTransformController {
   }
 
   /**
+   * Get episodes metadata for a video (PUBLIC ENDPOINT - No Auth Required)
+   * Returns title, thumbnail, and duration for all episodes
+   * IMPORTANT: Must be before lessons/:videoId/:lessonId to avoid route conflicts
+   */
+  @Get('lessons/:videoId/episodes')
+  @ApiOperation({ summary: 'Get episodes metadata for interactive viewer' })
+  @ApiResponse({
+    status: 200,
+    description: 'Episodes metadata retrieved successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Video not found.' })
+  async getEpisodesMetadata(@Param('videoId') videoId: string) {
+    return this.videoTransformService.getEpisodesMetadata(videoId);
+  }
+
+  /**
+   * Get list of available lessons for a video (PUBLIC ENDPOINT - No Auth Required)
+   * IMPORTANT: Must be before lessons/:videoId/:lessonId to avoid route conflicts
+   */
+  @Get('lessons/:videoId')
+  @ApiOperation({ summary: 'Get list of available lessons for a video' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lessons list retrieved successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Video not found.' })
+  async getAvailableLessons(@Param('videoId') videoId: string) {
+    try {
+      const videosDir = path.join(process.cwd(), 'videos', videoId);
+
+      // Check if video directory exists
+      try {
+        await fs.access(videosDir);
+      } catch {
+        throw new NotFoundException(`Video ${videoId} not found`);
+      }
+
+      // Read all directories that start with "lesson_"
+      const entries = await fs.readdir(videosDir, { withFileTypes: true });
+      const lessons = entries
+        .filter((entry) => entry.isDirectory() && entry.name.startsWith('lesson_'))
+        .map((entry) => entry.name)
+        .sort();
+
+      return {
+        videoId,
+        lessons,
+        count: lessons.length,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new BadRequestException('Failed to retrieve lessons');
+    }
+  }
+
+  /**
    * Get complete lesson data for interactive viewer (PUBLIC ENDPOINT - No Auth Required)
-   * Must be before :id routes to avoid conflicts
+   * IMPORTANT: Must be after specific routes like /episodes to avoid conflicts
    */
   @Get('lessons/:videoId/:lessonId')
   @ApiOperation({ summary: 'Get complete lesson data for interactive viewer' })
@@ -97,7 +155,9 @@ export class VideoTransformController {
       }
 
       if (finalSynchronizedLesson.status === 'fulfilled') {
-        response.finalSynchronizedLesson = finalSynchronizedLesson.value;
+        // Transform local URLs to storage URLs (supports both local and S3)
+        const transformedLesson = this.transformLessonUrls(finalSynchronizedLesson.value, videoId, lessonId);
+        response.finalSynchronizedLesson = transformedLesson;
       }
 
       // Check if we have at least the basic data
@@ -111,48 +171,6 @@ export class VideoTransformController {
         throw error;
       }
       throw new BadRequestException('Failed to retrieve lesson data');
-    }
-  }
-
-  /**
-   * Get list of available lessons for a video (PUBLIC ENDPOINT - No Auth Required)
-   * Must be before :id routes to avoid conflicts
-   */
-  @Get('lessons/:videoId')
-  @ApiOperation({ summary: 'Get list of available lessons for a video' })
-  @ApiResponse({
-    status: 200,
-    description: 'Lessons list retrieved successfully.',
-  })
-  @ApiResponse({ status: 404, description: 'Video not found.' })
-  async getAvailableLessons(@Param('videoId') videoId: string) {
-    try {
-      const videosDir = path.join(process.cwd(), 'videos', videoId);
-
-      // Check if video directory exists
-      try {
-        await fs.access(videosDir);
-      } catch {
-        throw new NotFoundException(`Video ${videoId} not found`);
-      }
-
-      // Read all directories that start with "lesson_"
-      const entries = await fs.readdir(videosDir, { withFileTypes: true });
-      const lessons = entries
-        .filter((entry) => entry.isDirectory() && entry.name.startsWith('lesson_'))
-        .map((entry) => entry.name)
-        .sort();
-
-      return {
-        videoId,
-        lessons,
-        count: lessons.length,
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new BadRequestException('Failed to retrieve lessons');
     }
   }
 
@@ -255,6 +273,38 @@ export class VideoTransformController {
   @ApiResponse({ status: 404, description: 'Video job not found.' })
   async getVideoGenerationStatus(@Param('id') id: string, @Request() req: any) {
     return this.videoTransformService.getVideoGenerationStatus(id, req.user.id);
+  }
+
+  /**
+   * Helper method to transform URLs in synchronized lesson data
+   * Converts local /videos/ paths to storage-appropriate URLs (local or S3)
+   */
+  private transformLessonUrls(lessonData: any, videoId: string, lessonId: string): any {
+    if (!lessonData?.lesson?.segmentBasedTiming) {
+      return lessonData;
+    }
+
+    // Deep clone to avoid mutating original data
+    const transformed = JSON.parse(JSON.stringify(lessonData));
+
+    // Transform each segment's URLs
+    transformed.lesson.segmentBasedTiming = transformed.lesson.segmentBasedTiming.map((segment: any) => {
+      // Transform audioUrl if it starts with /videos/
+      if (segment.audioUrl && segment.audioUrl.startsWith('/videos/')) {
+        const relativePath = segment.audioUrl.replace('/videos/', '');
+        segment.audioUrl = this.storageService.getPublicUrl(relativePath);
+      }
+
+      // Transform backgroundUrl if it starts with /videos/
+      if (segment.backgroundUrl && segment.backgroundUrl.startsWith('/videos/')) {
+        const relativePath = segment.backgroundUrl.replace('/videos/', '');
+        segment.backgroundUrl = this.storageService.getPublicUrl(relativePath);
+      }
+
+      return segment;
+    });
+
+    return transformed;
   }
 
   /**

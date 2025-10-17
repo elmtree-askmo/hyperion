@@ -12,6 +12,11 @@ import './LessonViewer.css';
 // Get API base URL from environment variable or use default
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
+// Generate a placeholder thumbnail SVG for a given episode number
+const generatePlaceholderThumbnail = (episodeNumber: number): string => {
+  return `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23ddd" width="100" height="100"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EEpisode ${episodeNumber}%3C/text%3E%3C/svg%3E`;
+};
+
 export const LessonViewer: React.FC = () => {
   const {
     lessonData,
@@ -64,73 +69,46 @@ export const LessonViewer: React.FC = () => {
     lessonData.lesson.segmentBasedTiming.length - 1
   ]?.endTime || 300;
 
-  // Load episodes metadata
+  // Load episodes metadata using the new API
   useEffect(() => {
     const loadEpisodesMetadata = async () => {
-      if (!lessonData) return;
+      if (!currentVideoId) return;
       
-      const episodes: Array<{
-        episodeNumber: number;
-        title: string;
-        titleTh: string;
-        thumbnail: string;
-        duration: number;
-      }> = [];
-
-      for (let i = 1; i <= lessonData.lesson.totalEpisodes; i++) {
-        try {
-          // Load both files to get title and thumbnail
-          const [microlessonResponse, synchronizedResponse] = await Promise.all([
-            fetch(`${API_BASE_URL}/videos/${currentVideoId}/lesson_${i}/microlesson_script.json`),
-            fetch(`${API_BASE_URL}/videos/${currentVideoId}/lesson_${i}/final_synchronized_lesson.json`),
-          ]);
-          
-          let title = `Episode ${i}`;
-          let titleTh = `บทที่ ${i}`;
-          let thumbnail = '/videos/placeholder-thumbnail.jpg';
-          let duration = 300;
-
-          if (microlessonResponse.ok) {
-            const microlessonData = await microlessonResponse.json();
-            title = microlessonData.lesson.title || title;
-            titleTh = microlessonData.lesson.titleTh || titleTh;
-          }
-
-          if (synchronizedResponse.ok) {
-            const synchronizedData = await synchronizedResponse.json();
-            const firstSegment = synchronizedData.lesson.segmentBasedTiming?.[0];
-            thumbnail = firstSegment?.backgroundUrl || thumbnail;
-            const lastSegment = synchronizedData.lesson.segmentBasedTiming?.[
-              synchronizedData.lesson.segmentBasedTiming.length - 1
-            ];
-            duration = lastSegment?.endTime || duration;
-          }
-
-          episodes.push({
-            episodeNumber: i,
-            title,
-            titleTh,
-            thumbnail,
-            duration,
-          });
-        } catch (error) {
-          console.warn(`Could not load metadata for lesson_${i}:`, error);
-          // Fallback data
-          episodes.push({
-            episodeNumber: i,
-            title: `Episode ${i}`,
-            titleTh: `บทที่ ${i}`,
-            thumbnail: '/videos/placeholder-thumbnail.jpg',
+      try {
+        // Use the dedicated episodes metadata API endpoint
+        const response = await fetch(`${API_BASE_URL}/api/v1/video-transform/lessons/${currentVideoId}/episodes`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          setEpisodesMetadata(data.episodes || []);
+        } else {
+          console.warn('Failed to load episodes metadata from API');
+          // Fallback: generate basic metadata with default 3 episodes
+          const fallbackEpisodes = Array.from({ length: 3 }, (_, i) => ({
+            episodeNumber: i + 1,
+            title: `Episode ${i + 1}`,
+            titleTh: `บทที่ ${i + 1}`,
+            thumbnail: generatePlaceholderThumbnail(i + 1),
             duration: 300,
-          });
+          }));
+          setEpisodesMetadata(fallbackEpisodes);
         }
+      } catch (error) {
+        console.error('Error loading episodes metadata:', error);
+        // Fallback: generate basic metadata with default 3 episodes
+        const fallbackEpisodes = Array.from({ length: 3 }, (_, i) => ({
+          episodeNumber: i + 1,
+          title: `Episode ${i + 1}`,
+          titleTh: `บทที่ ${i + 1}`,
+          thumbnail: generatePlaceholderThumbnail(i + 1),
+          duration: 300,
+        }));
+        setEpisodesMetadata(fallbackEpisodes);
       }
-      
-      setEpisodesMetadata(episodes);
     };
 
     loadEpisodesMetadata();
-  }, [lessonData, currentVideoId]);
+  }, [currentVideoId]); // Only depend on currentVideoId to avoid duplicate requests
 
   // Auto-pause when encountering interactive segment
   useEffect(() => {
@@ -1030,7 +1008,11 @@ export const LessonViewer: React.FC = () => {
                     alt={episode.title}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = '/videos/placeholder-thumbnail.jpg';
+                      const placeholderUrl = generatePlaceholderThumbnail(episode.episodeNumber);
+                      // Prevent infinite loop: only set fallback if not already a data URI
+                      if (!target.src.startsWith('data:')) {
+                        target.src = placeholderUrl;
+                      }
                     }}
                   />
                   <div className="episode-number-badge">{episode.episodeNumber}</div>

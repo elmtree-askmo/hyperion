@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { StorageService } from './storage.service';
 
 interface TextPartTiming {
   text: string;
@@ -61,6 +62,8 @@ interface MicrolessonScript {
 export class SynchronizedLessonService {
   private readonly logger = new Logger(SynchronizedLessonService.name);
   private readonly videosDir = path.join(process.cwd(), 'videos');
+
+  constructor(private readonly storageService: StorageService) {}
 
   async generateSynchronizedLessonForEpisode(videoId: string, episodeNumber: number): Promise<void> {
     const lessonDir = path.join(this.videosDir, videoId, `lesson_${episodeNumber.toString()}`);
@@ -222,13 +225,17 @@ export class SynchronizedLessonService {
 
     // If the last part is "lesson_X" format, it's an episode directory
     const lessonMatch = /^lesson_(\d+)$/.exec(lastPart);
+    let filePath: string;
     if (lessonMatch) {
       const episodeNumber = lessonMatch[1];
-      return `/videos/${videoId}/lesson_${episodeNumber}/lesson_segments/${fileName}`;
+      filePath = `${videoId}/lesson_${episodeNumber}/lesson_segments/${fileName}`;
     } else {
       // Legacy single microlesson structure
-      return `/videos/${videoId}/lesson_segments/${fileName}`;
+      filePath = `${videoId}/lesson_segments/${fileName}`;
     }
+
+    // Use StorageService to get the public URL (supports both local and S3)
+    return this.storageService.getPublicUrl(filePath);
   }
 
   private getVideoIdFromPath(lessonDir: string): string {
@@ -252,13 +259,17 @@ export class SynchronizedLessonService {
 
     // If the last part is "lesson_X" format, it's an episode directory
     const lessonMatch = /^lesson_(\d+)$/.exec(lastPart);
+    let filePath: string;
     if (lessonMatch) {
       const episodeNumber = lessonMatch[1];
-      return `/videos/${videoId}/lesson_${episodeNumber}/lesson_segments/${segmentId}.png`;
+      filePath = `${videoId}/lesson_${episodeNumber}/lesson_segments/${segmentId}.png`;
     } else {
       // Legacy single microlesson structure
-      return `/videos/${videoId}/lesson_segments/${segmentId}.png`;
+      filePath = `${videoId}/lesson_segments/${segmentId}.png`;
     }
+
+    // Use StorageService to get the public URL (supports both local and S3)
+    return this.storageService.getPublicUrl(filePath);
   }
 
   private async saveSynchronizedLesson(videoDir: string, synchronizedLesson: SynchronizedLesson): Promise<void> {

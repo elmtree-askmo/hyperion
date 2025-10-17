@@ -54,12 +54,6 @@ async function bootstrap() {
     logger,
   });
 
-  // Serve static files from videos directory
-  // __dirname in compiled code is dist/src, so we need to go up twice to reach project root
-  app.useStaticAssets(join(__dirname, '..', '..', 'videos'), {
-    prefix: '/videos/',
-  });
-
   // Security middleware
   app.use(helmet());
   app.use(compression());

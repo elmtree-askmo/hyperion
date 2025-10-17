@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { VideoJob, JobStatus, VideoGenerationStatus } from './entities/video-job.entity';
 import { CreateVideoJobDto } from './dto/create-video-job.dto';
 import { VideoJobQueryDto } from './dto/video-job-query.dto';
+import { EpisodeMetadataDto, EpisodesMetadataResponseDto } from './dto/episodes-metadata.dto';
 import { YouTubeService } from './services/youtube.service';
 import { LangChainContentAnalysisService } from './services/langchain-content-analysis.service';
 import { MicrolessonScriptService } from './services/microlesson-script.service';
@@ -13,6 +14,7 @@ import { SynchronizedLessonService } from './services/synchronized-lesson.servic
 import { GeminiImageService } from './services/gemini-image.service';
 import { FlashcardsService } from './services/flashcards.service';
 import { RemotionVideoService } from './services/remotion-video.service';
+import { StorageService } from './services/storage.service';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -31,6 +33,7 @@ export class VideoTransformService {
     private readonly geminiImageService: GeminiImageService,
     private readonly flashcardsService: FlashcardsService,
     private readonly remotionVideoService: RemotionVideoService,
+    private readonly storageService: StorageService,
   ) {}
 
   async createVideoJob(createVideoJobDto: CreateVideoJobDto, userId: string): Promise<VideoJob> {
@@ -357,5 +360,128 @@ export class VideoTransformService {
       totalLessons: videoJob.videoGenerationData?.totalLessons,
       completedLessons: videoJob.videoGenerationData?.completedLessons,
     };
+  }
+
+  /**
+   * Get episodes metadata for a video
+   * Retrieves title, thumbnail, and duration for all episodes
+   */
+  async getEpisodesMetadata(videoId: string): Promise<EpisodesMetadataResponseDto> {
+    try {
+      // Try to discover lessons by attempting to load them (works for both local and S3)
+      // We'll try lessons 1-10 and collect the ones that exist
+      const episodes: EpisodeMetadataDto[] = [];
+      const maxLessonsToTry = 10;
+
+      for (let lessonNumber = 1; lessonNumber <= maxLessonsToTry; lessonNumber++) {
+        const lessonDir = `lesson_${lessonNumber}`;
+        const lessonBasePath = `${videoId}/${lessonDir}`;
+
+        // Check if microlesson_script.json exists for this lesson
+        const microlessonPath = `${lessonBasePath}/microlesson_script.json`;
+        const exists = await this.storageService.fileExists(microlessonPath);
+
+        if (!exists) {
+          // If lesson N doesn't exist, assume there are no more lessons
+          break;
+        }
+
+        // Initialize default values
+        let title = `Episode ${lessonNumber}`;
+        let titleTh = `บทที่ ${lessonNumber}`;
+        let thumbnail = this.storageService.getPublicUrl(`${lessonBasePath}/placeholder.png`);
+        let duration = 300;
+
+        try {
+          // Load microlesson_script.json for title
+          const microlessonData = await this.readJsonFileFromStorage(microlessonPath);
+          if (microlessonData?.lesson?.title) {
+            title = microlessonData.lesson.title;
+          }
+          if (microlessonData?.lesson?.titleTh) {
+            titleTh = microlessonData.lesson.titleTh;
+          }
+
+          // Load final_synchronized_lesson.json for thumbnail and duration
+          const synchronizedPath = `${lessonBasePath}/final_synchronized_lesson.json`;
+          const synchronizedExists = await this.storageService.fileExists(synchronizedPath);
+
+          if (synchronizedExists) {
+            const synchronizedData = await this.readJsonFileFromStorage(synchronizedPath);
+
+            if (synchronizedData?.lesson?.segmentBasedTiming) {
+              const segments = synchronizedData.lesson.segmentBasedTiming;
+
+              // Get thumbnail from first segment
+              // Transform URL if it's a local path (for backward compatibility)
+              if (segments[0]?.backgroundUrl) {
+                const bgUrl = segments[0].backgroundUrl;
+                // If it's a local path starting with /videos/, transform it
+                if (bgUrl.startsWith('/videos/')) {
+                  const relativePath = bgUrl.replace('/videos/', '');
+                  thumbnail = this.storageService.getPublicUrl(relativePath);
+                } else {
+                  // Already a public URL or external URL
+                  thumbnail = bgUrl;
+                }
+              }
+
+              // Get duration from last segment
+              if (segments.length > 0) {
+                const lastSegment = segments[segments.length - 1];
+                if (lastSegment?.endTime) {
+                  duration = lastSegment.endTime;
+                }
+              }
+            }
+          }
+        } catch (error) {
+          this.logger.warn(`Could not load complete metadata for lesson_${lessonNumber}:`, error.message);
+          // Continue with default values
+        }
+
+        episodes.push({
+          episodeNumber: lessonNumber,
+          title,
+          titleTh,
+          thumbnail,
+          duration,
+        });
+      }
+
+      if (episodes.length === 0) {
+        throw new NotFoundException(`No lessons found for video ${videoId}`);
+      }
+
+      return {
+        videoId,
+        totalEpisodes: episodes.length,
+        episodes,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      this.logger.error(`Failed to retrieve episodes metadata for video ${videoId}:`, error.message);
+      throw new BadRequestException('Failed to retrieve episodes metadata');
+    }
+  }
+
+  /**
+   * Helper method to read JSON file from storage (local or cloud)
+   */
+  private async readJsonFileFromStorage(filePath: string): Promise<any> {
+    const buffer = await this.storageService.readFile(filePath);
+    const content = buffer.toString('utf-8');
+    return JSON.parse(content);
+  }
+
+  /**
+   * Helper method to read JSON file from local filesystem (deprecated)
+   * @deprecated Use readJsonFileFromStorage instead
+   */
+  private async readJsonFile(filePath: string): Promise<any> {
+    const content = await fs.promises.readFile(filePath, 'utf-8');
+    return JSON.parse(content);
   }
 }

@@ -34,7 +34,8 @@ const App: React.FC = () => {
     };
 
     loadLesson();
-  }, [currentVideoId, currentLessonId, setLessonData, resetProgress, setVideoEnded]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentVideoId, currentLessonId]); // Only depend on IDs to avoid duplicate requests
 
   if (loading) {
     return (

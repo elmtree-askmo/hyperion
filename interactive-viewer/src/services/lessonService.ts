@@ -9,7 +9,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 export async function loadLessonData(
   videoId: string,
   lessonId: string
-): Promise<LessonData> {
+): Promise<LessonData | undefined> {
   try {
     // Try to load from API first
     const apiUrl = `${API_BASE_URL}/api/v1/video-transform/lessons/${videoId}/${lessonId}`;
@@ -23,35 +23,7 @@ export async function loadLessonData(
     console.warn("API not available, loading from local files:", error);
   }
 
-  // Fallback: Load from local files
-  try {
-    const lessonDataPath = `/videos/${videoId}/${lessonId}`;
-
-    // Load all required files
-    const [
-      microlessonScript,
-      flashcards,
-      audioSegments,
-      finalSynchronizedLesson,
-    ] = await Promise.all([
-      fetch(`${lessonDataPath}/microlesson_script.json`).then((r) => r.json()),
-      fetch(`${lessonDataPath}/flashcards.json`).then((r) => r.json()),
-      fetch(`${lessonDataPath}/audio_segments.json`).then((r) => r.json()),
-      fetch(`${lessonDataPath}/final_synchronized_lesson.json`).then((r) =>
-        r.json()
-      ),
-    ]);
-
-    return transformLessonData({
-      microlessonScript,
-      flashcards: flashcards.flashcards,
-      audioSegments: audioSegments.segments,
-      finalSynchronizedLesson,
-    });
-  } catch (error) {
-    console.error("Failed to load lesson data:", error);
-    throw new Error("Could not load lesson data from any source");
-  }
+  return undefined;
 }
 
 /**
@@ -106,4 +78,38 @@ export async function getAvailableLessons(videoId: string): Promise<string[]> {
 
   // Fallback: return common lesson names
   return ["lesson_1", "lesson_2", "lesson_3"];
+}
+
+/**
+ * Episode metadata structure
+ */
+export interface EpisodeMetadata {
+  episodeNumber: number;
+  title: string;
+  titleTh: string;
+  thumbnail: string;
+  duration: number;
+}
+
+/**
+ * Get episodes metadata for a video
+ * Returns title, thumbnail, and duration for all episodes
+ */
+export async function getEpisodesMetadata(
+  videoId: string
+): Promise<EpisodeMetadata[]> {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/v1/video-transform/lessons/${videoId}/episodes`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data.episodes || [];
+    }
+  } catch (error) {
+    console.warn("Could not fetch episodes metadata:", error);
+  }
+
+  // Fallback: return empty array
+  return [];
 }
