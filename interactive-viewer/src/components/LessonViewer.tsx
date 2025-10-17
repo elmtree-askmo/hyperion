@@ -663,7 +663,13 @@ export const LessonViewer: React.FC = () => {
               <Player
                 ref={setPlayerRef}
                 component={LessonComposition}
-                inputProps={{ lessonData }}
+                inputProps={{
+                  lessonData: {
+                    lesson: lessonData.lesson,
+                    flashcards: lessonData.flashcards || [],
+                    audioSegments: lessonData.audioSegments || [],
+                  }
+                }}
                 durationInFrames={Math.ceil(totalDuration * VIDEO_CONFIG.fps)}
                 fps={VIDEO_CONFIG.fps}
                 compositionWidth={VIDEO_CONFIG.width}
