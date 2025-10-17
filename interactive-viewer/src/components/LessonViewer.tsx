@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Player } from '@remotion/player';
 import { InteractiveFlashcard } from './InteractiveFlashcard';
 import { InteractivePractice } from './InteractivePractice';
 import { PracticePauseOverlay } from './PracticePauseOverlay';
 import { VocabularyPauseOverlay } from './VocabularyPauseOverlay';
 import { useLessonStore } from '../store/lessonStore';
-import { LessonComposition } from '../../../remotion/src/components/LessonComposition';
-import { VIDEO_CONFIG } from '../../../remotion/src/styles/theme';
+import { LessonComposition } from '../remotion/components/LessonComposition';
+import { VIDEO_CONFIG } from '../remotion/styles/theme';
 import './LessonViewer.css';
 
 // Get API base URL from environment variable or use default
@@ -68,6 +68,15 @@ export const LessonViewer: React.FC = () => {
   const totalDuration = lessonData?.lesson.segmentBasedTiming[
     lessonData.lesson.segmentBasedTiming.length - 1
   ]?.endTime || 300;
+
+  // Memoize inputProps for Player to avoid re-creating the object
+  const playerInputProps = useMemo(() => ({
+    lessonData: {
+      lesson: lessonData.lesson,
+      flashcards: lessonData.flashcards || [],
+      audioSegments: lessonData.audioSegments || [],
+    }
+  }), [lessonData]);
 
   // Load episodes metadata using the new API
   useEffect(() => {
@@ -663,13 +672,7 @@ export const LessonViewer: React.FC = () => {
               <Player
                 ref={setPlayerRef}
                 component={LessonComposition}
-                inputProps={{
-                  lessonData: {
-                    lesson: lessonData.lesson,
-                    flashcards: lessonData.flashcards || [],
-                    audioSegments: lessonData.audioSegments || [],
-                  }
-                }}
+                inputProps={playerInputProps}
                 durationInFrames={Math.ceil(totalDuration * VIDEO_CONFIG.fps)}
                 fps={VIDEO_CONFIG.fps}
                 compositionWidth={VIDEO_CONFIG.width}

@@ -4,11 +4,12 @@
   "description": "Interactive lesson viewer using Remotion Player",
   "private": true,
   "scripts": {
+    "predev": "npm run sync-remotion",
     "dev": "vite",
+    "prebuild": "npm run sync-remotion",
     "build": "vite build",
-    "build:check": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "type-check": "tsc --noEmit"
+    "sync-remotion": "rm -rf src/remotion && cp -r ../remotion/src src/remotion && echo '✅ Synced remotion components'"
   },
   "dependencies": {
     "react": "^18.3.1",

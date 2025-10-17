@@ -21,12 +21,16 @@ hyperion/
 │   └── package.json
 ├── interactive-viewer/   # React frontend for lesson viewing
 │   ├── src/             # Source code
+│   └── package.json     # See: interactive-viewer/README.md
+├── remotion/            # Remotion video generation (shared components)
+│   ├── src/             # Video components (source of truth)
 │   └── package.json
-├── remotion/            # Remotion video generation
-│   ├── src/             # Video components
-│   └── package.json
-└── docs/                # Project documentation
+├── docs/                # Project documentation
+├── ARCHITECTURE.md      # Technical architecture details
+└── vercel.json          # Vercel deployment config
 ```
+
+> **Note:** `interactive-viewer` uses components from `remotion/` via automatic build-time sync. See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
 
 ## ✨ Key Features
 
@@ -296,9 +300,31 @@ This project is proprietary software. All rights reserved.
 - NestJS for backend framework
 - React for frontend framework
 
+## 📚 Documentation
+
+### Getting Started
+
+- [interactive-viewer/README.md](interactive-viewer/README.md) - Interactive Viewer setup and usage
+- [backend/README.backend.md](backend/README.backend.md) - Backend API documentation
+- [remotion/README.md](remotion/README.md) - Remotion video generation
+
+### Architecture & Deployment
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Remotion components sharing architecture
+- [vercel.json](vercel.json) - Vercel deployment configuration
+
+### Feature Documentation
+
+- [docs/DATABASE.md](docs/DATABASE.md) - Database schema and migrations
+- [docs/MIXED_LANGUAGE_TTS.md](docs/MIXED_LANGUAGE_TTS.md) - Mixed language text-to-speech
+- [docs/VIDEO_GENERATION_SUMMARY.md](docs/VIDEO_GENERATION_SUMMARY.md) - Video processing pipeline
+- [docs/FLASHCARDS_QUICKSTART.md](docs/FLASHCARDS_QUICKSTART.md) - Flashcard system
+- [docs/INTERACTIVE_PRACTICE_FEATURE.md](docs/INTERACTIVE_PRACTICE_FEATURE.md) - Practice exercises
+- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) - Common issues and solutions
+
 ## 📧 Support
 
-For issues, questions, or contributions, please refer to the documentation in the `docs/` directory or contact the development team.
+For issues, questions, or contributions, please refer to the documentation above or contact the development team.
 
 ---
 

@@ -60,3 +60,6 @@ backend/GEMINI.md
 
 # Credentials
 .credentials/
+
+# Interactive Viewer - synced remotion components (copied from ../remotion/src)
+interactive-viewer/src/remotion/

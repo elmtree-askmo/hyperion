@@ -1,231 +1,113 @@
 # Interactive Lesson Viewer
 
-An interactive web application for viewing and interacting with language learning lessons. Built with React, Remotion Player, and Framer Motion.
+React application for viewing and interacting with language learning lessons using Remotion Player.
 
-## Features
-
-### 🎬 Episode Navigation
-
-- **Right Sidebar**: Beautiful episode browser with thumbnails and titles
-- **Episode Cards**: Rich preview of each episode including:
-  - Thumbnail image from the lesson
-  - English and Thai titles
-  - Episode duration
-  - Episode number badge
-  - Playing indicator for current episode
-- **Quick Navigation**: Click any episode card to instantly switch
-- **Visual Feedback**: Current episode is highlighted with special styling
-- **Responsive Design**: Adapts to mobile with grid layout at bottom
-
-### 🎥 Video Mode
-
-- Watch lessons with synchronized animations and audio
-- **Interactive Flashcards**: Click to reveal vocabulary cards with:
-  - Word pronunciation and phonetic spelling
-  - Thai translation and definition
-  - Memory hooks and context examples
-  - Flip animation to see front/back
-  - Expandable details panel
-- **Auto-pause**: Video automatically pauses when reaching interactive segments
-- **Sidebar Navigation**: Quick jump to any vocabulary word in the lesson
-- **Progress Tracking**: See which flashcards you've already revealed
-
-### ✍️ Practice Mode
-
-- Complete comprehension questions and exercises
-- **Interactive Practice Cards**:
-  - Read context and situation
-  - Type your answer in a text area
-  - View hints and expected answers
-  - See model answers after submission
-- **Vocabulary Review**: Access all flashcards in an interactive gallery
-- Track completed practices
-
-### 📊 Progress Tracking
-
-- Visual progress bar showing completion
-- Flashcards completed counter
-- Practices completed counter
-- Persistent progress during session
-
-## Technology Stack
-
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Remotion Player** - Video playback with React compositions
-- **Framer Motion** - Smooth animations
-- **Zustand** - State management
-- **Vite** - Build tool and dev server
-
-## Getting Started
-
-### Installation
+## 🚀 Quick Start
 
 ```bash
-cd interactive-viewer
+# Development
 npm install
+npm run dev       # Starts on http://localhost:3001
+
+# Production
+npm run build
+npm run preview   # Preview production build
 ```
 
-### Development
+## 📦 Available Scripts
+
+| Command                 | Description                       | Auto-syncs Remotion  |
+| ----------------------- | --------------------------------- | -------------------- |
+| `npm run dev`           | Start development server          | ✅ Yes               |
+| `npm run build`         | Build for production              | ✅ Yes               |
+| `npm run preview`       | Preview production build          | No (use after build) |
+| `npm run sync-remotion` | Manually sync remotion components | -                    |
+
+## 🔧 Architecture
+
+This app uses Remotion components from `../remotion/src/`. They are **automatically synced** before `dev` and `build` commands via npm hooks.
+
+**Important:**
+
+- ✅ Edit Remotion components in `remotion/src/`
+- ❌ Don't edit `src/remotion/` (auto-synced, gitignored)
+
+See [ARCHITECTURE.md](../ARCHITECTURE.md) and [QUICK_START.md](../QUICK_START.md) for details.
+
+## 🐛 Troubleshooting
+
+### "No video config found" error
 
 ```bash
+npm run sync-remotion
 npm run dev
 ```
 
-The app will be available at `http://localhost:3001`
+### Changes in remotion/ not reflected
 
-### Build
-
-```bash
-npm run build
-```
-
-### Preview Production Build
+Restart dev server (auto-syncs on start):
 
 ```bash
-npm run preview
+# Ctrl+C then
+npm run dev
 ```
 
-## Architecture
+## 📚 Documentation
 
-### Directory Structure
+- [QUICK_START.md](../QUICK_START.md) - Quick reference guide
+- [ARCHITECTURE.md](../ARCHITECTURE.md) - Detailed architecture
+- [VERCEL_DEPLOYMENT.md](../docs/VERCEL_DEPLOYMENT.md) - Deployment guide
 
-```
-interactive-viewer/
-├── src/
-│   ├── components/         # React components
-│   │   ├── InteractiveFlashcard.tsx   # Flashcard with flip animation
-│   │   ├── InteractivePractice.tsx    # Practice exercise component
-│   │   └── LessonViewer.tsx           # Main viewer with player
-│   ├── store/             # Zustand state management
-│   │   └── lessonStore.ts
-│   ├── services/          # API and data services
-│   │   └── lessonService.ts
-│   ├── types/             # TypeScript type definitions
-│   │   └── lesson.ts
-│   ├── styles/            # Global styles
-│   │   └── global.css
-│   ├── App.tsx            # Root component
-│   └── main.tsx           # Entry point
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── index.html
-```
+## 🛠 Tech Stack
 
-### State Management
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Remotion Player** - Video player
+- **Zustand** - State management
+- **Framer Motion** - Animations
 
-The app uses Zustand for state management with the following key state:
-
-- `lessonData`: Current lesson content
-- `currentTime`: Video playback time
-- `isPlaying`: Video playback state
-- `interactiveSegments`: List of interactive elements with timing
-- `activeSegment`: Current interactive segment at playback time
-- `userProgress`: Tracking of completed flashcards and practices
-
-### Data Loading
-
-The app loads lesson data from two sources:
-
-1. **API Endpoint** (preferred): `/api/video-transform/lessons/:videoId/:lessonId`
-2. **Static Files** (fallback): `/videos/:videoId/:lessonId/` directory
-
-Required files:
-
-- `microlesson_script.json` - Lesson structure and content
-- `flashcards.json` - Vocabulary flashcards
-- `audio_segments.json` - Audio timing information
-- `final_synchronized_lesson.json` - Synchronized timing data
-
-## Usage
-
-### Video Mode
-
-1. Click the "📺 Video Mode" button
-2. Watch the lesson video
-3. When a vocabulary word appears, the video auto-pauses
-4. Click on the flashcard to reveal the translation
-5. Click "Show More Details" to see memory hooks and examples
-6. Click "Continue Lesson" to resume the video
-7. Use the sidebar to jump to specific vocabulary words
-
-### Practice Mode
-
-1. Click the "✍️ Practice Mode" button
-2. Read the context and question
-3. Type your answer in the text area
-4. Click "💡 Show Hint" if you need help
-5. Click "Submit Answer" when ready
-6. Review the model answer
-7. Scroll down to review all vocabulary flashcards
-
-### Keyboard Shortcuts
-
-- **Space**: Play/Pause video
-- **Double-click**: Enter fullscreen
-- **Ctrl+Enter**: Submit practice answer
-
-## Customization
-
-### Styling
-
-Colors and themes can be customized in:
-
-- `src/styles/global.css` - Global styles
-- `src/components/*.css` - Component-specific styles
-
-### Animations
-
-Animation timings can be adjusted in:
-
-- `src/components/InteractiveFlashcard.tsx` - Flashcard flip duration
-- `src/components/InteractivePractice.tsx` - Practice reveal animations
-- `src/components/LessonViewer.tsx` - Overlay transitions
-
-## Integration with Backend
-
-### API Endpoints
-
-The app expects the following API endpoints:
-
-#### Get Lesson Data
+## 📁 Project Structure
 
 ```
-GET /api/video-transform/lessons/:videoId/:lessonId
+src/
+├── components/          # React components
+│   ├── LessonViewer.tsx
+│   └── ...
+├── remotion/           # Synced from ../remotion/src (gitignored)
+│   ├── components/
+│   ├── styles/
+│   └── utils/
+├── services/           # API services
+├── store/              # Zustand store
+└── types/              # TypeScript types
 ```
 
-Response:
+## 🌐 Environment Variables
 
-```json
-{
-  "microlessonScript": { ... },
-  "flashcards": [ ... ],
-  "audioSegments": [ ... ],
-  "finalSynchronizedLesson": { ... }
-}
+```env
+VITE_API_URL=http://localhost:3000  # Backend API URL (optional)
 ```
 
-#### List Available Lessons
+## 📦 Dependencies
 
+- `remotion@^4.0.0` - Remotion core
+- `@remotion/player@^4.0.0` - Video player component
+- `react@^18.3.1` - React framework
+- `zustand@^4.5.0` - State management
+- `framer-motion@^11.0.0` - Animation library
+
+## 🚢 Deployment
+
+Deployed to Vercel. See [../vercel.json](../vercel.json) for configuration.
+
+```bash
+git push origin main  # Auto-deploys to Vercel
 ```
-GET /api/video-transform/lessons/:videoId
-```
 
-Response:
+## 📝 Notes
 
-```json
-{
-  "lessons": ["lesson_1", "lesson_2", "lesson_3"]
-}
-```
-
-## Browser Support
-
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-
-## License
-
-Proprietary
+- Uses shared Remotion components via build-time copy
+- Syncing is automatic via npm hooks (`predev`, `prebuild`)
+- Original components are in `../remotion/src/`
+- Backend uses the same components for MP4 rendering
