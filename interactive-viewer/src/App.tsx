@@ -22,9 +22,13 @@ const App: React.FC = () => {
         setLoading(true);
         setError(null);
         const data = await loadLessonData(currentVideoId, currentLessonId);
-        setLessonData(data);
-        resetProgress(); // Reset progress when loading new lesson
-        setVideoEnded(false); // Reset video ended state
+        if (data) {
+          setLessonData(data);
+          resetProgress(); // Reset progress when loading new lesson
+          setVideoEnded(false); // Reset video ended state
+        } else {
+          setError('No lesson data available');
+        }
         setLoading(false);
       } catch (err) {
         console.error('Failed to load lesson:', err);

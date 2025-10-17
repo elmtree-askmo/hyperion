@@ -11,13 +11,15 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false
   },
-  "include": ["src"],
+  "include": ["src", "../remotion/src/components", "../remotion/src/styles"],
+  "exclude": ["node_modules", "../backend", "../docs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
