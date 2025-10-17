@@ -17,9 +17,9 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "skipDefaultLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "../backend", "../docs", "../remotion"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "exclude": ["node_modules", "../backend", "../docs", "../remotion"]
 }
