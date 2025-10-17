@@ -192,15 +192,13 @@ export const LessonViewer: React.FC = () => {
           const absoluteStartTime = segment.startTime + timing.startTime;
           const absoluteEndTime = segment.startTime + timing.endTime;
 
-          // Check if we're currently playing this English phrase (not after it ends)
-          // Trigger pause slightly before the end to show overlay while still on the phrase
-          const pauseTriggerTime = absoluteEndTime - 0.3; // 300ms before end
-          const isInPhrase = currentTime >= absoluteStartTime && currentTime <= absoluteEndTime;
-          const shouldTriggerPause = currentTime >= pauseTriggerTime && currentTime < absoluteEndTime;
+          // Check if we've just reached or passed the end of this English phrase
+          // Trigger pause right at the end when the phrase finishes playing
+          const pauseTriggerTime = absoluteEndTime - 0.05; // Trigger 50ms before end to catch it reliably
+          const hasPhraseJustEnded = currentTime >= pauseTriggerTime && currentTime <= absoluteEndTime + 0.2;
           
           if (
-            isInPhrase &&
-            shouldTriggerPause &&
+            hasPhraseJustEnded &&
             !userProgress.practicedPhrases.includes(timing.text)
           ) {
             // Debug log
@@ -272,13 +270,12 @@ export const LessonViewer: React.FC = () => {
         // "*" means skip all detection (user is manually navigating)
         if (justClickedVocabRef.current === "*") continue;
 
-        // Check if we're currently IN this vocabulary card segment
-        // Trigger pause slightly before the end to show overlay while still displaying the card
-        const pauseTriggerTime = segment.endTime - 0.3; // 300ms before end
-        const isInSegment = currentTime >= segment.startTime && currentTime <= segment.endTime;
-        const shouldTriggerPause = currentTime >= pauseTriggerTime && currentTime < segment.endTime;
+        // Check if we've just reached or passed the end of this vocabulary card segment
+        // Trigger pause right at the end when the card finishes displaying
+        const pauseTriggerTime = segment.endTime - 0.05; // Trigger 50ms before end to catch it reliably
+        const hasSegmentJustEnded = currentTime >= pauseTriggerTime && currentTime <= segment.endTime + 0.2;
         
-        if (isInSegment && shouldTriggerPause) {
+        if (hasSegmentJustEnded) {
           // Debug log
           console.log('📚 Vocabulary pause triggered:', {
             word: segment.vocabWord,
