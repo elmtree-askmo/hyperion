@@ -11,30 +11,49 @@ export const loadLessonDataFromAPI = async (
   lessonId: string
 ) => {
   const API_BASE_URL = process.env.API_URL || "http://localhost:3000";
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/video-transform/lessons/${videoId}/${lessonId}`
-  );
+  const url = `${API_BASE_URL}/api/v1/video-transform/lessons/${videoId}/${lessonId}`;
 
-  if (!response.ok) {
-    throw new Error(`Failed to load lesson data: ${response.statusText}`);
-  }
+  console.log("[loadLessonData] Fetching from:", url);
 
-  const data = await response.json();
+  try {
+    const response = await fetch(url);
 
-  return {
-    lessonData: {
-      lesson: {
-        title: data.microlessonScript.lesson.title,
-        titleTh: data.microlessonScript.lesson.titleTh,
-        episodeNumber: data.microlessonScript.seriesInfo.episodeNumber,
-        totalEpisodes: data.microlessonScript.seriesInfo.totalEpisodes,
-        segmentBasedTiming:
-          data.finalSynchronizedLesson.lesson.segmentBasedTiming,
+    console.log("[loadLessonData] Response status:", response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("[loadLessonData] Error response:", errorText);
+      throw new Error(
+        `Failed to load lesson data: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+    console.log("[loadLessonData] Data received:", {
+      hasMicrolesson: !!data.microlessonScript,
+      hasFinalLesson: !!data.finalSynchronizedLesson,
+      segmentCount:
+        data.finalSynchronizedLesson?.lesson?.segmentBasedTiming?.length || 0,
+    });
+
+    return {
+      lessonData: {
+        lesson: {
+          title: data.microlessonScript.lesson.title,
+          titleTh: data.microlessonScript.lesson.titleTh,
+          episodeNumber: data.microlessonScript.seriesInfo.episodeNumber,
+          totalEpisodes: data.microlessonScript.seriesInfo.totalEpisodes,
+          segmentBasedTiming:
+            data.finalSynchronizedLesson.lesson.segmentBasedTiming,
+        },
+        flashcards: data.flashcards,
+        audioSegments: data.audioSegments,
       },
-      flashcards: data.flashcards,
-      audioSegments: data.audioSegments,
-    },
-  };
+    };
+  } catch (error) {
+    console.error("[loadLessonData] Failed to load:", error);
+    throw error;
+  }
 };
 
 /**

@@ -59,8 +59,31 @@ async function bootstrap() {
   app.use(compression());
 
   // CORS configuration
+  const corsOrigins = process.env.CORS_ORIGIN?.split(',') || [
+    'http://localhost:3000', // Backend
+    'http://localhost:3001', // Interactive Viewer
+    'http://localhost:3002', // Remotion Preview
+  ];
+
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, Postman, etc.)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      // In development, allow all localhost
+      if (process.env.NODE_ENV !== 'production' && origin.includes('localhost')) {
+        return callback(null, true);
+      }
+
+      // Check against allowed origins
+      if (corsOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
