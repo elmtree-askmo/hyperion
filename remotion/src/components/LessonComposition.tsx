@@ -107,7 +107,7 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
   }
 
   return (
-    <>
+    <AbsoluteFill>
       {segmentBasedTiming.map((segment, index) => {
         const startFrame = Math.round(segment.startTime * fps);
         const durationInFrames = Math.round(segment.duration * fps);
@@ -247,7 +247,7 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
           </Sequence>
         );
       })}
-    </>
+    </AbsoluteFill>
   );
 };
 
