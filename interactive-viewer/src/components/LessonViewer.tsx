@@ -402,11 +402,22 @@ export const LessonViewer: React.FC = () => {
   };
 
   const handlePracticeContinue = () => {
+    setIsPracticePaused(false);
+    setCurrentPracticePhrase(null);
+    
+    if (playerRef) {
+      playerRef.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handleMarkPracticed = () => {
     // Mark as practiced to prevent re-triggering
     if (currentPracticePhrase) {
       completePracticePhrase(currentPracticePhrase);
     }
     
+    // Close the overlay and continue playing
     setIsPracticePaused(false);
     setCurrentPracticePhrase(null);
     
@@ -732,13 +743,26 @@ export const LessonViewer: React.FC = () => {
 
               {/* Practice Pause Overlay */}
               {isPracticePaused && currentPracticePhrase && (
-                <PracticePauseOverlay
-                  phrase={currentPracticePhrase}
-                  thaiTranslation={undefined}
-                  onContinue={handlePracticeContinue}
-                  onReplay={handlePracticeReplay}
-                  isPracticed={userProgress.practicedPhrases.includes(currentPracticePhrase)}
-                />
+                <div 
+                  className="practice-pause-overlay-wrapper"
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 9999,
+                  }}
+                >
+                  <PracticePauseOverlay
+                    phrase={currentPracticePhrase}
+                    thaiTranslation={undefined}
+                    onContinue={handlePracticeContinue}
+                    onMarkPracticed={handleMarkPracticed}
+                    onReplay={handlePracticeReplay}
+                    isPracticed={userProgress.practicedPhrases.includes(currentPracticePhrase)}
+                  />
+                </div>
               )}
 
               {/* Vocabulary Pause Overlay - Now uses InteractiveFlashcard */}
