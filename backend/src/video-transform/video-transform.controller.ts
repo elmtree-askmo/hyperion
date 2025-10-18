@@ -7,6 +7,8 @@ import { VideoJobQueryDto } from './dto/video-job-query.dto';
 import { RemotionVideoService } from './services/remotion-video.service';
 import { StorageService } from './services/storage.service';
 import { GenerateVideoDto, VideoGenerationResponseDto } from './dto/generate-video.dto';
+import { ValidatePracticeAnswerDto, ValidatePracticeAnswerResponseDto } from './dto/validate-practice-answer.dto';
+import { PracticeValidationService } from './services/practice-validation.service';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -17,6 +19,7 @@ export class VideoTransformController {
     private readonly videoTransformService: VideoTransformService,
     private readonly remotionVideoService: RemotionVideoService,
     private readonly storageService: StorageService,
+    private readonly practiceValidationService: PracticeValidationService,
   ) {}
 
   @Post()
@@ -273,6 +276,22 @@ export class VideoTransformController {
   @ApiResponse({ status: 404, description: 'Video job not found.' })
   async getVideoGenerationStatus(@Param('id') id: string, @Request() req: any) {
     return this.videoTransformService.getVideoGenerationStatus(id, req.user.id);
+  }
+
+  /**
+   * Validate practice exercise answer using LLM (PUBLIC ENDPOINT - No Auth Required)
+   * Used by interactive viewer practice mode
+   */
+  @Post('validate-practice-answer')
+  @ApiOperation({ summary: 'Validate practice exercise answer with LLM' })
+  @ApiResponse({
+    status: 200,
+    description: 'Answer validated successfully.',
+    type: ValidatePracticeAnswerResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
+  async validatePracticeAnswer(@Body() validateDto: ValidatePracticeAnswerDto): Promise<ValidatePracticeAnswerResponseDto> {
+    return this.practiceValidationService.validateAnswer(validateDto);
   }
 
   /**

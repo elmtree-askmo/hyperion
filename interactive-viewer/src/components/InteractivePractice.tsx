@@ -9,6 +9,16 @@ interface InteractivePracticeProps {
   completed: boolean;
 }
 
+interface ValidationResult {
+  isCorrect: boolean;
+  feedbackTh: string;
+  feedbackEn: string;
+  evaluation?: string;
+}
+
+// Get API base URL from environment variable or use default
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
 export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
   question,
   onComplete,
@@ -17,11 +27,52 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
   const [userAnswer, setUserAnswer] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(completed);
   const [showHint, setShowHint] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (userAnswer.trim()) {
-      setIsSubmitted(true);
-      onComplete(userAnswer);
+      setIsValidating(true);
+      
+      try {
+        // Call backend API to validate answer
+        const response = await fetch(`${API_BASE_URL}/api/v1/video-transform/validate-practice-answer`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            context: question.context,
+            question: question.question,
+            expectedAnswer: question.expectedAnswer,
+            userAnswer: userAnswer,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to validate answer');
+        }
+
+        const result: ValidationResult = await response.json();
+        setValidationResult(result);
+        setIsSubmitted(true);
+        
+        // Only mark as complete if answer is correct
+        if (result.isCorrect) {
+          onComplete(userAnswer);
+        }
+      } catch (error) {
+        console.error('Error validating answer:', error);
+        // Fallback: show error message
+        setValidationResult({
+          isCorrect: false,
+          feedbackTh: 'เกิดข้อผิดพลาดในการตรวจสอบคำตอบ กรุณาลองใหม่อีกครั้ง',
+          feedbackEn: 'An error occurred while checking your answer. Please try again.',
+        });
+        setIsSubmitted(false);
+      } finally {
+        setIsValidating(false);
+      }
     }
   };
 
@@ -29,6 +80,12 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
     if (e.key === 'Enter' && e.ctrlKey) {
       handleSubmit();
     }
+  };
+
+  const handleTryAgain = () => {
+    setIsSubmitted(false);
+    setValidationResult(null);
+    setUserAnswer('');
   };
 
   return (
@@ -43,7 +100,9 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
         <div className="practice-header">
           <h3 className="practice-title">
             🗣️ Practice Exercise
-            {isSubmitted && <span className="completed-badge">✓ Completed</span>}
+            {isSubmitted && validationResult?.isCorrect && (
+              <span className="completed-badge">✓ Completed</span>
+            )}
           </h3>
         </div>
 
@@ -83,18 +142,42 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
               <button
                 className="submit-button"
                 onClick={handleSubmit}
-                disabled={!userAnswer.trim()}
+                disabled={!userAnswer.trim() || isValidating}
               >
-                Submit Answer
+                {isValidating ? 'กำลังตรวจสอบ... / Checking...' : 'Submit Answer'}
               </button>
             </div>
           </div>
         ) : (
           <div className="practice-submitted">
+            {/* Validation Result */}
+            {validationResult && (
+              <motion.div
+                className={validationResult.isCorrect ? 'validation-result-correct' : 'validation-result-incorrect'}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h4>
+                  {validationResult.isCorrect ? '✓ ถูกต้อง! / Correct!' : '✗ ลองอีกครั้ง / Try Again'}
+                </h4>
+                <p className="feedback-th">{validationResult.feedbackTh}</p>
+                <p className="feedback-en">{validationResult.feedbackEn}</p>
+              </motion.div>
+            )}
+
+            {/* User's Answer */}
             <div className="submitted-answer">
               <h4>✓ Your Answer:</h4>
               <p>{userAnswer}</p>
             </div>
+
+            {/* Try Again Button (only show if incorrect) */}
+            {validationResult && !validationResult.isCorrect && (
+              <button className="try-again-button" onClick={handleTryAgain}>
+                🔄 ลองอีกครั้ง / Try Again
+              </button>
+            )}
           </div>
         )}
 
@@ -110,8 +193,8 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
           </motion.div>
         )}
 
-        {/* Show expected answer after submission */}
-        {isSubmitted && (
+        {/* Show expected answer after submission only if correct */}
+        {isSubmitted && validationResult?.isCorrect && (
           <motion.div
             className="practice-expected"
             initial={{ opacity: 0 }}

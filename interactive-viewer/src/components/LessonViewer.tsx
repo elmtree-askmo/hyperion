@@ -48,6 +48,7 @@ export const LessonViewer: React.FC = () => {
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
   const [lastCheckedTime, setLastCheckedTime] = useState(0);
   const [lastPausedTime, setLastPausedTime] = useState(0);
+  const [lastPausedPhrase, setLastPausedPhrase] = useState<string | null>(null);
   const [lastVocabPausedTime, setLastVocabPausedTime] = useState(0);
   const [showDebugPanel, setShowDebugPanel] = useState(false);
   
@@ -163,12 +164,6 @@ export const LessonViewer: React.FC = () => {
       // Avoid checking the same time multiple times (but allow re-checking after 0.2s)
       if (Math.abs(currentTime - lastCheckedTime) < 0.2) return;
       
-      // Cooldown period after pausing - prevent immediate re-trigger
-      // If we just paused within the last 1.5 seconds, skip checking
-      if (lastPausedTime > 0 && currentTime - lastPausedTime < 1.5) {
-        return;
-      }
-      
       setLastCheckedTime(currentTime);
 
       // Find ONLY practice_card segments with English textParts
@@ -196,12 +191,23 @@ export const LessonViewer: React.FC = () => {
             hasPhraseJustEnded &&
             !userProgress.practicedPhrases.includes(timing.text)
           ) {
+            // Only prevent re-trigger if it's the SAME phrase within cooldown period
+            const isSamePhraseWithinCooldown = 
+              timing.text === lastPausedPhrase && 
+              lastPausedTime > 0 && 
+              currentTime - lastPausedTime < 0.5;
+            
+            if (isSamePhraseWithinCooldown) {
+              continue; // Skip this phrase but check others
+            }
+            
             // Pause immediately at current position to show overlay while phrase is visible
             playerRef.pause();
             setIsPlaying(false);
             setCurrentPracticePhrase(timing.text);
             setIsPracticePaused(true);
             setLastPausedTime(currentTime);
+            setLastPausedPhrase(timing.text);
             return;
           }
         }
@@ -219,6 +225,7 @@ export const LessonViewer: React.FC = () => {
     userProgress.practicedPhrases,
     lastCheckedTime,
     lastPausedTime,
+    lastPausedPhrase,
     setIsPlaying,
     setCurrentPracticePhrase,
     setIsPracticePaused,
@@ -402,6 +409,13 @@ export const LessonViewer: React.FC = () => {
   };
 
   const handlePracticeContinue = () => {
+    // Update last paused time and phrase to prevent immediate re-trigger
+    if (playerRef) {
+      const currentTime = playerRef.getCurrentFrame() / VIDEO_CONFIG.fps;
+      setLastPausedTime(currentTime);
+      setLastPausedPhrase(currentPracticePhrase);
+    }
+    
     setIsPracticePaused(false);
     setCurrentPracticePhrase(null);
     

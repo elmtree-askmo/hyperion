@@ -16,6 +16,7 @@ import { ProxyConfigService } from './services/proxy-config.service';
 import { FlashcardsService } from './services/flashcards.service';
 import { RemotionVideoService } from './services/remotion-video.service';
 import { StorageService } from './services/storage.service';
+import { PracticeValidationService } from './services/practice-validation.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([VideoJob])],
@@ -35,6 +36,7 @@ import { StorageService } from './services/storage.service';
     GeminiImageService,
     FlashcardsService,
     RemotionVideoService,
+    PracticeValidationService,
   ],
   exports: [VideoTransformService, StorageService],
 })

@@ -71,12 +71,15 @@
   position: sticky;
   top: 0;
   z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .episode-sidebar-header h3 {
   font-size: 20px;
   color: #e2e8f0;
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 .episode-count {
