@@ -44,7 +44,7 @@ export const LessonViewer: React.FC = () => {
 
   const [playerRef, setPlayerRef] = useState<any>(null);
   const [showInteractivePanel, setShowInteractivePanel] = useState(false);
-  const [currentMode, setCurrentMode] = useState<'video' | 'flashcard' | 'practice'>('video');
+  const [currentMode, setCurrentMode] = useState<'video' | 'practice'>('video');
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0);
   const [lastCheckedTime, setLastCheckedTime] = useState(0);
   const [lastPausedTime, setLastPausedTime] = useState(0);
@@ -601,12 +601,6 @@ export const LessonViewer: React.FC = () => {
             📺 Video Mode
           </button>
           <button
-            className={`mode-button ${currentMode === 'flashcard' ? 'active' : ''}`}
-            onClick={() => setCurrentMode('flashcard')}
-          >
-            📚 Flashcard Mode
-          </button>
-          <button
             className={`mode-button ${currentMode === 'practice' ? 'active' : ''}`}
             onClick={() => setCurrentMode('practice')}
           >
@@ -617,6 +611,61 @@ export const LessonViewer: React.FC = () => {
 
       {/* Main Layout with Episode Sidebar */}
       <div className="lesson-layout">
+        {/* Episode Navigation Sidebar - Left */}
+        <div className="episode-sidebar">
+          <div className="episode-sidebar-header">
+            <h3>📚 Episodes</h3>
+            <p className="episode-count">
+              {lessonData.lesson.episodeNumber} / {lessonData.lesson.totalEpisodes}
+            </p>
+          </div>
+
+          <div className="episode-list">
+            {episodesMetadata.map((episode) => (
+              <div
+                key={episode.episodeNumber}
+                className={`episode-card ${
+                  episode.episodeNumber === lessonData.lesson.episodeNumber ? 'active' : ''
+                }`}
+                onClick={() => {
+                  setCurrentLessonId(`lesson_${episode.episodeNumber}`);
+                  setCurrentMode('video');
+                }}
+              >
+                <div className="episode-thumbnail">
+                  <img 
+                    src={episode.thumbnail} 
+                    alt={episode.title}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      const placeholderUrl = generatePlaceholderThumbnail(episode.episodeNumber);
+                      // Prevent infinite loop: only set fallback if not already a data URI
+                      if (!target.src.startsWith('data:')) {
+                        target.src = placeholderUrl;
+                      }
+                    }}
+                  />
+                  <div className="episode-number-badge">{episode.episodeNumber}</div>
+                  {episode.episodeNumber === lessonData.lesson.episodeNumber && (
+                    <div className="playing-indicator">
+                      <span className="playing-icon">▶</span>
+                    </div>
+                  )}
+                </div>
+                <div className="episode-info">
+                  <h4 className="episode-title">{episode.title}</h4>
+                  <p className="episode-title-th">{episode.titleTh}</p>
+                  <div className="episode-meta">
+                    <span className="episode-duration">
+                      {Math.floor(episode.duration / 60)}:{String(Math.floor(episode.duration % 60)).padStart(2, '0')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Main Content */}
         <div className="lesson-content">
           <div className="lesson-content-inner">
@@ -822,7 +871,7 @@ export const LessonViewer: React.FC = () => {
               )}
             </div>
 
-            {/* Flashcards Sidebar */}
+            {/* Vocabulary Sidebar */}
             <div className="flashcards-sidebar">
               <h3>📚 Vocabulary Cards</h3>
               <div className="flashcards-list">
@@ -878,34 +927,6 @@ export const LessonViewer: React.FC = () => {
               </div>
             </div>
           </>
-        ) : currentMode === 'flashcard' ? (
-          /* Flashcard Mode */
-          <div className="flashcard-mode">
-            <div className="flashcard-mode-intro">
-              <h2>📚 Vocabulary Review</h2>
-              <p>
-                Review and memorize all vocabulary from this lesson. Click each card to reveal the word and flip to see the translation.
-              </p>
-              <div className="flashcard-stats">
-                <span>Total Cards: {flashcardSegments.length}</span>
-                <span>•</span>
-                <span>Mastered: {userProgress.completedFlashcards.length}</span>
-              </div>
-            </div>
-
-            <div className="flashcard-mode-grid">
-              {flashcardSegments.map((segment, index) => (
-                <InteractiveFlashcard
-                  key={index}
-                  flashcard={segment.data}
-                  onReveal={() => handleFlashcardReveal(segment.data.word)}
-                  revealed={userProgress.completedFlashcards.includes(
-                    segment.data.word
-                  )}
-                />
-              ))}
-            </div>
-          </div>
         ) : (
           /* Practice Mode */
           <div className="practice-mode">
@@ -974,107 +995,6 @@ export const LessonViewer: React.FC = () => {
             )}
           </div>
         )}
-          </div>
-
-        {/* Progress Bar - Show in Flashcard and Practice Mode */}
-        {currentMode === 'flashcard' && (
-          <div className="lesson-progress">
-            <div className="progress-stats">
-              <span>
-                Flashcards: {userProgress.completedFlashcards.length} /{' '}
-                {flashcardSegments.length}
-              </span>
-            </div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{
-                  width: `${
-                    (userProgress.completedFlashcards.length /
-                      flashcardSegments.length) *
-                    100
-                  }%`,
-                }}
-              />
-            </div>
-          </div>
-        )}
-        {currentMode === 'practice' && (
-          <div className="lesson-progress">
-            <div className="progress-stats">
-              <span>
-                Practices: {userProgress.completedPractices.length} /{' '}
-                {practiceSegments.length}
-              </span>
-            </div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{
-                  width: `${
-                    (userProgress.completedPractices.length /
-                      practiceSegments.length) *
-                    100
-                  }%`,
-                }}
-              />
-            </div>
-          </div>
-        )}
-        </div>
-
-        {/* Episode Navigation Sidebar - Right */}
-        <div className="episode-sidebar">
-          <div className="episode-sidebar-header">
-            <h3>📚 Episodes</h3>
-            <p className="episode-count">
-              {lessonData.lesson.episodeNumber} / {lessonData.lesson.totalEpisodes}
-            </p>
-          </div>
-
-          <div className="episode-list">
-            {episodesMetadata.map((episode) => (
-              <div
-                key={episode.episodeNumber}
-                className={`episode-card ${
-                  episode.episodeNumber === lessonData.lesson.episodeNumber ? 'active' : ''
-                }`}
-                onClick={() => {
-                  setCurrentLessonId(`lesson_${episode.episodeNumber}`);
-                  setCurrentMode('video');
-                }}
-              >
-                <div className="episode-thumbnail">
-                  <img 
-                    src={episode.thumbnail} 
-                    alt={episode.title}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      const placeholderUrl = generatePlaceholderThumbnail(episode.episodeNumber);
-                      // Prevent infinite loop: only set fallback if not already a data URI
-                      if (!target.src.startsWith('data:')) {
-                        target.src = placeholderUrl;
-                      }
-                    }}
-                  />
-                  <div className="episode-number-badge">{episode.episodeNumber}</div>
-                  {episode.episodeNumber === lessonData.lesson.episodeNumber && (
-                    <div className="playing-indicator">
-                      <span className="playing-icon">▶</span>
-                    </div>
-                  )}
-                </div>
-                <div className="episode-info">
-                  <h4 className="episode-title">{episode.title}</h4>
-                  <p className="episode-title-th">{episode.titleTh}</p>
-                  <div className="episode-meta">
-                    <span className="episode-duration">
-                      {Math.floor(episode.duration / 60)}:{String(Math.floor(episode.duration % 60)).padStart(2, '0')}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

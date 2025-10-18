@@ -53,11 +53,11 @@
   font-size: 14px;
 }
 
-/* Episode Sidebar - Right */
+/* Episode Sidebar - Left */
 .episode-sidebar {
   width: 320px;
   background: #1e293b;
-  border-left: 2px solid #334155;
+  border-right: 2px solid #334155;
   overflow-y: auto;
   position: sticky;
   top: 0;
@@ -293,6 +293,7 @@
   flex-direction: column;
   overflow-y: auto;
   position: relative;
+  min-height: calc(100vh - 200px);
 }
 
 .lesson-content-inner {
@@ -391,8 +392,12 @@
   border-radius: 12px;
   padding: 20px;
   height: fit-content;
-  max-height: calc(100vh - 300px);
+  min-height: 800px;
+  max-height: 800px;
   overflow-y: auto;
+  overflow-x: visible;
+  display: flex;
+  flex-direction: column;
   position: sticky;
   top: 20px;
 }
@@ -401,12 +406,17 @@
   font-size: 20px;
   margin-bottom: 16px;
   color: #e2e8f0;
+  flex-shrink: 0;
 }
 
 .flashcards-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: visible;
+  width: 100%;
 }
 
 .flashcard-item {
@@ -416,16 +426,21 @@
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
+  width: calc(100% - 8px);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  margin: 4px;
 }
 
 .flashcard-item:hover {
   border-color: #667eea;
-  transform: translateX(4px);
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .flashcard-item.completed {
   border-color: #10b981;
-  background: linear-gradient(135deg, #10b98110 0%, #059669 10 100%);
+  background: linear-gradient(135deg, #10b98110 0%, #05966910 100%);
 }
 
 .flashcard-item-header {
@@ -449,56 +464,6 @@
 .check-icon {
   color: #10b981;
   font-size: 18px;
-}
-
-.flashcard-mode {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 20px;
-}
-
-.flashcard-mode-intro {
-  background: #1e293b;
-  padding: 32px;
-  border-radius: 12px;
-  margin-bottom: 32px;
-  text-align: center;
-  border: 2px solid #334155;
-}
-
-.flashcard-mode-intro h2 {
-  font-size: 32px;
-  margin-bottom: 12px;
-  color: #e2e8f0;
-}
-
-.flashcard-mode-intro p {
-  font-size: 18px;
-  color: #94a3b8;
-  margin-bottom: 16px;
-}
-
-.flashcard-stats {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  font-size: 16px;
-  color: #667eea;
-  font-weight: 600;
-}
-
-.flashcard-stats span {
-  display: flex;
-  align-items: center;
-}
-
-.flashcard-mode-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-  gap: 32px;
-  margin-bottom: 48px;
 }
 
 .practice-mode {
@@ -629,39 +594,6 @@
   border-color: #34d399;
 }
 
-.lesson-progress {
-  background: #1e293b;
-  padding: 20px 32px;
-  border-top: 2px solid #334155;
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
-}
-
-.progress-stats {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-bottom: 12px;
-  color: #94a3b8;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.progress-bar {
-  height: 8px;
-  background: #0f172a;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  transition: width 0.5s ease;
-  border-radius: 4px;
-}
-
 @media (max-width: 1024px) {
   .lesson-layout {
     flex-direction: column;
@@ -677,16 +609,13 @@
     top: 0;
   }
 
-  .flashcard-mode-grid {
-    grid-template-columns: 1fr;
-  }
-
   .episode-sidebar {
     width: 100%;
     height: auto;
     position: relative;
-    border-left: none;
-    border-top: 2px solid #334155;
+    border-right: none;
+    border-bottom: 2px solid #334155;
+    order: -1;
   }
 
   .episode-list {
