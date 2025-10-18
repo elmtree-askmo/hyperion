@@ -3,7 +3,6 @@ import { Player } from '@remotion/player';
 import { InteractiveFlashcard } from './InteractiveFlashcard';
 import { InteractivePractice } from './InteractivePractice';
 import { PracticePauseOverlay } from './PracticePauseOverlay';
-import { VocabularyPauseOverlay } from './VocabularyPauseOverlay';
 import { useLessonStore } from '../store/lessonStore';
 import { LessonComposition } from '../remotion/components/LessonComposition';
 import { VIDEO_CONFIG } from '../remotion/styles/theme';
@@ -119,9 +118,10 @@ export const LessonViewer: React.FC = () => {
     loadEpisodesMetadata();
   }, [currentVideoId]); // Only depend on currentVideoId to avoid duplicate requests
 
-  // Auto-pause when encountering interactive segment
+  // Auto-pause when encountering interactive segment (DISABLED for flashcards - using vocabulary pause instead)
   useEffect(() => {
-    if (activeSegment && !showInteractivePanel) {
+    // Skip flashcard segments - they're now handled by vocabulary pause overlay
+    if (activeSegment && activeSegment.type !== 'flashcard' && !showInteractivePanel) {
       setShowInteractivePanel(true);
       if (playerRef && isPlaying) {
         playerRef.pause();
@@ -171,11 +171,6 @@ export const LessonViewer: React.FC = () => {
       
       setLastCheckedTime(currentTime);
 
-      // Debug: Log current position (only occasionally to reduce noise)
-      if (Math.abs(currentTime - lastCheckedTime) > 1) {
-        console.log('🔍 Checking at time:', currentTime.toFixed(2));
-      }
-
       // Find ONLY practice_card segments with English textParts
       const segments = lessonData.lesson.segmentBasedTiming;
       
@@ -201,16 +196,6 @@ export const LessonViewer: React.FC = () => {
             hasPhraseJustEnded &&
             !userProgress.practicedPhrases.includes(timing.text)
           ) {
-            // Debug log
-            console.log('🎤 Practice pause triggered:', {
-              phrase: timing.text,
-              currentTime: currentTime.toFixed(2),
-              phraseWindow: `${absoluteStartTime.toFixed(2)} - ${absoluteEndTime.toFixed(2)}`,
-              pauseTriggerTime: pauseTriggerTime.toFixed(2),
-              segment: segment.screenElement,
-              isPlaying,
-            });
-
             // Pause immediately at current position to show overlay while phrase is visible
             playerRef.pause();
             setIsPlaying(false);
@@ -264,7 +249,9 @@ export const LessonViewer: React.FC = () => {
         if (!segment.vocabWord) continue;
 
         // Check if we've already reviewed this word
-        if (userProgress.reviewedVocabulary.includes(segment.vocabWord)) continue;
+        if (userProgress.reviewedVocabulary.includes(segment.vocabWord)) {
+          continue;
+        }
 
         // Skip if user just clicked to jump (using ref for immediate check)
         // "*" means skip all detection (user is manually navigating)
@@ -276,16 +263,6 @@ export const LessonViewer: React.FC = () => {
         const hasSegmentJustEnded = currentTime >= pauseTriggerTime && currentTime <= segment.endTime + 0.2;
         
         if (hasSegmentJustEnded) {
-          // Debug log
-          console.log('📚 Vocabulary pause triggered:', {
-            word: segment.vocabWord,
-            currentTime: currentTime.toFixed(2),
-            segmentStart: segment.startTime.toFixed(2),
-            segmentEnd: segment.endTime.toFixed(2),
-            pauseTriggerTime: pauseTriggerTime.toFixed(2),
-            segment: segment.screenElement,
-            isPlaying,
-          });
 
           // Find the flashcard data for this word
           const flashcard = lessonData.flashcards.find(f => f.word === segment.vocabWord);
@@ -318,6 +295,16 @@ export const LessonViewer: React.FC = () => {
     setIsVocabularyPaused,
   ]);
 
+  // Auto-reveal flashcard when vocabulary overlay appears
+  useEffect(() => {
+    if (isVocabularyPaused && currentVocabularyWord) {
+      // Auto-reveal the flashcard when the overlay is shown
+      if (!userProgress.completedFlashcards.includes(currentVocabularyWord)) {
+        handleFlashcardReveal(currentVocabularyWord);
+      }
+    }
+  }, [isVocabularyPaused, currentVocabularyWord]);
+
   // Monitor playback state changes - close overlays if user manually plays video
   useEffect(() => {
     if (!playerRef) return;
@@ -345,14 +332,12 @@ export const LessonViewer: React.FC = () => {
       // This prevents closing when we just seeked to a new position
       if (consecutiveChanges >= requiredConsecutiveChanges) {
         if (isPracticePaused) {
-          console.log('📹 Video resumed during practice pause - closing overlay');
           setIsPracticePaused(false);
           setCurrentPracticePhrase(null);
           setIsPlaying(true);
           consecutiveChanges = 0; // Reset after closing
         }
         if (isVocabularyPaused) {
-          console.log('📹 Video resumed during vocabulary pause - closing overlay');
           setIsVocabularyPaused(false);
           setCurrentVocabularyWord(null);
           setIsPlaying(true);
@@ -434,8 +419,6 @@ export const LessonViewer: React.FC = () => {
   const handlePracticeReplay = () => {
     // Find the segment containing the current practice phrase
     if (currentPracticePhrase && lessonData && playerRef) {
-      console.log('🔄 Replaying phrase:', currentPracticePhrase);
-      
       // Search through ONLY practice_card segments
       for (const segment of lessonData.lesson.segmentBasedTiming) {
         // Only look in practice_card segments
@@ -450,13 +433,6 @@ export const LessonViewer: React.FC = () => {
             // Seek to the start of this specific phrase within the segment
             const phraseStartTime = segment.startTime + timing.startTime;
             const startFrame = Math.round(phraseStartTime * VIDEO_CONFIG.fps);
-            
-            console.log('🔄 Found phrase in segment:', {
-              segment: segment.screenElement,
-              segmentStart: segment.startTime.toFixed(2),
-              phraseStart: phraseStartTime.toFixed(2),
-              frame: startFrame,
-            });
             
             playerRef.seekTo(startFrame);
             
@@ -473,8 +449,6 @@ export const LessonViewer: React.FC = () => {
           }
         }
       }
-      
-      console.warn('⚠️ Could not find phrase in segments:', currentPracticePhrase);
     }
   };
 
@@ -594,28 +568,12 @@ export const LessonViewer: React.FC = () => {
           }}>
             🐛 Debug Info
           </div>
-          <div>Is Paused: {isPracticePaused ? '⏸️ Yes' : '▶️ No'}</div>
+          <div>Is Paused: {isPracticePaused || isVocabularyPaused ? '⏸️ Yes' : '▶️ No'}</div>
           <div>Mode: {currentMode}</div>
           <div>Playing: {isPlaying ? '▶️ Yes' : '⏸️ No'}</div>
           <div>Practiced: {userProgress.practicedPhrases.length} phrases</div>
           {playerRef && (
-            <>
-              <div>Current Time: {(playerRef.getCurrentFrame() / VIDEO_CONFIG.fps).toFixed(2)}s</div>
-              {lastPausedTime > 0 && (
-                <div style={{ color: '#facc15' }}>
-                  Cooldown: {Math.max(0, 3 - ((playerRef.getCurrentFrame() / VIDEO_CONFIG.fps) - lastPausedTime)).toFixed(1)}s
-                </div>
-              )}
-              <div style={{ marginTop: '12px', fontSize: '10px', color: '#888', borderTop: '1px solid #333', paddingTop: '8px' }}>
-                💡 Check console for "🔍 Checking" logs
-              </div>
-            </>
-          )}
-          {currentPracticePhrase && (
-            <div style={{ marginTop: '12px', padding: '8px', background: '#1a1a1a', borderRadius: '6px', border: '1px solid #333' }}>
-              <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>Current Phrase:</div>
-              <div style={{ color: '#10b981' }}>{currentPracticePhrase.substring(0, 40)}{currentPracticePhrase.length > 40 ? '...' : ''}</div>
-            </div>
+            <div>Current Time: {(playerRef.getCurrentFrame() / VIDEO_CONFIG.fps).toFixed(2)}s</div>
           )}
         </div>
       )}
@@ -734,21 +692,99 @@ export const LessonViewer: React.FC = () => {
                 />
               )}
 
-              {/* Vocabulary Pause Overlay */}
-              {isVocabularyPaused && currentVocabularyWord && lessonData && (
-                (() => {
-                  const flashcard = lessonData.flashcards.find(f => f.word === currentVocabularyWord);
-                  return flashcard ? (
-                    <VocabularyPauseOverlay
-                      word={flashcard.word}
-                      thaiTranslation={flashcard.thaiTranslation}
-                      pronunciation={flashcard.pronunciation}
-                      onContinue={handleVocabularyContinue}
-                      onReplay={handleVocabularyReplay}
-                      isReviewed={userProgress.reviewedVocabulary.includes(currentVocabularyWord)}
+              {/* Vocabulary Pause Overlay - Now uses InteractiveFlashcard */}
+              {isVocabularyPaused && currentVocabularyWord && lessonData && 
+                lessonData.flashcards.find(f => f.word === currentVocabularyWord) && (
+                <div 
+                  className="vocabulary-pause-overlay"
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 9999,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px',
+                  }}
+                >
+                  <div 
+                    className="vocabulary-pause-backdrop"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      backdropFilter: 'blur(4px)',
+                      zIndex: 1,
+                    }}
+                  />
+                  <div 
+                    className="vocabulary-flashcard-content"
+                    style={{
+                      position: 'relative',
+                      zIndex: 2,
+                      background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%)',
+                      borderRadius: '24px',
+                      padding: '32px',
+                      maxWidth: '800px',
+                      width: '90%',
+                      maxHeight: '90vh',
+                      overflowY: 'auto',
+                      border: '2px solid rgba(168, 85, 247, 0.6)',
+                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
+                    }}
+                  >
+                    <button 
+                      className="vocabulary-close-button" 
+                      onClick={handleVocabularyContinue}
+                      style={{
+                        position: 'absolute',
+                        top: '16px',
+                        right: '16px',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        border: 'none',
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        color: 'white',
+                        fontSize: '20px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s',
+                        zIndex: 10,
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
+                    >
+                      ✕
+                    </button>
+                    
+                    <div className="vocabulary-flashcard-header">
+                      <h2>📚 New Word</h2>
+                      {userProgress.reviewedVocabulary.includes(currentVocabularyWord) && (
+                        <span className="reviewed-badge">✓ Reviewed</span>
+                      )}
+                    </div>
+                    
+                    <InteractiveFlashcard
+                      flashcard={lessonData.flashcards.find(f => f.word === currentVocabularyWord)!}
+                      onReveal={() => {
+                        // Auto-reveal when shown in overlay
+                        if (!userProgress.completedFlashcards.includes(currentVocabularyWord)) {
+                          handleFlashcardReveal(currentVocabularyWord);
+                        }
+                      }}
+                      revealed={true}
                     />
-                  ) : null;
-                })()
+                  </div>
+                </div>
               )}
 
               {/* Next Lesson Overlay - Show when video ends */}

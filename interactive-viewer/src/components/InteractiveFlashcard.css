@@ -242,3 +242,156 @@
   text-transform: uppercase;
 }
 
+/* ============================================
+   Vocabulary Pause Overlay Styles
+   (Merged from VocabularyPauseOverlay.css)
+   ============================================ */
+
+.vocabulary-pause-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.vocabulary-pause-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: grayscale(0.8) blur(4px) brightness(0.7);
+  -webkit-backdrop-filter: grayscale(0.8) blur(4px) brightness(0.7);
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  pointer-events: auto;
+}
+
+/* Container for flashcard content in overlay */
+.vocabulary-flashcard-content {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+  border-radius: 24px;
+  padding: 32px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(168, 85, 247, 0.5),
+    0 0 40px rgba(168, 85, 247, 0.3);
+  border: 2px solid rgba(168, 85, 247, 0.6);
+  pointer-events: auto;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header for flashcard overlay */
+.vocabulary-flashcard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.vocabulary-flashcard-header h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.reviewed-badge {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Flashcard styling within vocabulary overlay */
+.vocabulary-flashcard-content .flashcard-container {
+  margin: 20px 0;
+  max-width: 100%;
+}
+
+.vocabulary-flashcard-content .flashcard {
+  height: 400px;
+  max-width: 100%;
+}
+
+/* Ensure flashcard is always revealed in overlay */
+.vocabulary-flashcard-content .locked-placeholder {
+  display: none;
+}
+
+/* Make details panel fit better in overlay */
+.vocabulary-flashcard-content .flashcard-details {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* Adjust flashcard face sizing for overlay */
+.vocabulary-flashcard-content .flashcard-face {
+  font-size: 0.95em;
+}
+
+.vocabulary-flashcard-content .word {
+  font-size: 52px;
+}
+
+.vocabulary-flashcard-content .thai-word {
+  font-size: 48px;
+}
+
+/* Mobile Responsive for Vocabulary Overlay */
+@media (max-width: 640px) {
+  .vocabulary-flashcard-content {
+    padding: 24px 20px;
+    max-width: 95%;
+  }
+
+  .vocabulary-flashcard-header h2 {
+    font-size: 24px;
+  }
+  
+  /* Adjust flashcard sizing for mobile */
+  .vocabulary-flashcard-content .flashcard-container {
+    margin: 16px 0;
+  }
+  
+  .vocabulary-flashcard-content .flashcard {
+    height: 350px;
+  }
+}
+
