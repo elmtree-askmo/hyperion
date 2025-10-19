@@ -2,35 +2,50 @@
 
 ## Overview
 
-The Interactive Practice feature allows learners to pause the video automatically at English phrases to practice pronunciation. This creates an engaging, interactive learning experience where students can:
+The Interactive Practice feature provides two main capabilities:
+
+1. **Auto-Pause for Pronunciation Practice**: Video automatically pauses after English phrases in practice segments
+2. **AI-Powered Answer Validation**: Practice Mode with intelligent answer checking
+
+This creates an engaging, interactive learning experience where students can:
 
 1. Listen to English phrases in context
 2. Have the video automatically pause after each phrase
 3. Practice speaking the phrase out loud
 4. Mark phrases as practiced to track progress
-5. Continue at their own pace
+5. Complete comprehension questions with AI feedback
 
 ## Features
 
-### Auto-Pause Functionality
+### Auto-Pause Functionality (Video Mode)
 
 - **Automatic Detection**: The system automatically detects English phrases in Practice Card segments
-- **Smart Timing**: Video pauses right after each English phrase is spoken (within 0.5 seconds)
+- **Smart Timing**: Video pauses right after each English phrase is spoken (within 0.05 seconds)
 - **One-Time Pause**: Each phrase only triggers a pause once until marked as practiced
-- **Toggle Control**: Users can enable/disable auto-pause with a single button click
+- **Always Enabled**: Auto-pause is always active in Video Mode (no toggle needed)
 
-### Practice Overlay
+### Practice Overlay (PracticePauseOverlay)
 
 When a video pauses for practice, an overlay appears with:
 
-- **Phrase Display**: Shows the English phrase prominently
-- **Thai Translation**: Displays translation if available (future enhancement)
+- **Phrase Display**: Shows the English phrase prominently with replay button (🔊)
+- **Thai Translation**: Displays translation if available
 - **Instructions**: Step-by-step guidance on how to practice
-- **Recording Button**: Placeholder for future voice recording feature
-- **Multiple Actions**:
-  - Mark as Practiced
-  - Continue Now
-  - Auto-Continue in 3 seconds
+- **Recording Button**: Placeholder for future voice recording feature (disabled)
+- **Primary Action**:
+  - Mark as Practiced - Marks phrase and resumes video
+- **Close Button**: Click backdrop or ✕ button to resume without marking
+
+### Practice Mode with AI Validation
+
+Separate mode for completing comprehension questions:
+
+- **Question Display**: Context, situation, and question text
+- **Text Input**: Multi-line textarea for answers
+- **Hint System**: Optional hints for each question
+- **AI Validation**: Submit answers for intelligent checking
+- **Bilingual Feedback**: Results shown in both Thai and English
+- **Try Again**: Option to retry incorrect answers
 
 ### Visual Feedback
 
@@ -41,17 +56,18 @@ When a video pauses for practice, an overlay appears with:
 
 ## User Interface
 
-### Toggle Button
+### Mode Buttons
 
 Located in the lesson header:
 
 ```
-🎤 Auto-Pause: ON/OFF
+[📺 Video Mode] [✍️ Practice Mode]
 ```
 
-- **OFF State**: Grey background, disabled styling
-- **ON State**: Green gradient background, glowing effect
-- **Tooltip**: Shows current state on hover
+- **Video Mode**: Watch video with auto-pause features
+- **Practice Mode**: Complete comprehension questions
+- **Active State**: Purple gradient background
+- **Inactive State**: Dark background
 
 ### Practice Overlay
 
@@ -59,12 +75,12 @@ Modal that appears when video pauses:
 
 ```
 ┌─────────────────────────────────┐
-│ 🎤 Practice Time!         ✓ ✕  │
+│ 🎤 Practice Time!           ✕  │
 ├─────────────────────────────────┤
 │  Practice this phrase:          │
 │                                 │
-│  Could you recommend a          │
-│  restaurant?                    │
+│  🔊 Could you recommend a       │
+│     restaurant?                 │
 │                                 │
 │  คุณช่วยแนะนำร้านอาหารได้ไหม    │
 ├─────────────────────────────────┤
@@ -72,103 +88,137 @@ Modal that appears when video pauses:
 │  🗣️ Say it out loud 2-3 times  │
 │  ✅ Mark as practiced           │
 ├─────────────────────────────────┤
-│  [🎙️ Record Voice - Coming]    │
+│  [🎙️ Record Voice (Coming)]    │
 ├─────────────────────────────────┤
 │  [✓ Mark as Practiced]          │
-│  [Continue Now →]               │
-│  [Auto-Continue in 3s]          │
-├─────────────────────────────────┤
-│  💡 Tip: Auto-pause at English  │
-│  phrases. Disable in settings.  │
 └─────────────────────────────────┘
 ```
+
+Note: Click backdrop or ✕ to close without marking.
 
 ## Technical Implementation
 
 ### State Management (Zustand Store)
 
-New state properties:
+State properties for practice features:
 
 ```typescript
 interface LessonState {
-  // ... existing properties
-  practicePauseEnabled: boolean;
+  // Auto-pause state
   currentPracticePhrase: string | null;
   isPracticePaused: boolean;
+
+  // Progress tracking
   userProgress: {
-    // ... existing properties
-    practicedPhrases: string[];
+    practicedPhrases: string[]; // Video mode practice phrases
+    completedPractices: string[]; // Practice mode questions
+    quizAnswers: Record<string, string>;
   };
 }
 ```
 
-New actions:
+Actions:
 
 ```typescript
-setPracticePauseEnabled(enabled: boolean)
 setCurrentPracticePhrase(phrase: string | null)
 setIsPracticePaused(paused: boolean)
 completePracticePhrase(phrase: string)
+completePractice(practiceId: string)
+submitQuizAnswer(questionId: string, answer: string)
 ```
 
 ### Auto-Pause Detection
 
 The system monitors video playback every 100ms and checks:
 
-1. Is practice pause enabled?
-2. Is current mode "video"?
-3. Are we not already paused?
-4. Are we at the end of an English phrase?
-5. Has this phrase not been practiced yet?
+1. Is current mode "video"?
+2. Are we not already paused?
+3. Are we at the end of an English phrase in a practice_card segment?
+4. Has this phrase not been practiced yet?
 
 If all conditions are true, the video pauses and shows the practice overlay.
 
 ```typescript
-// Pseudo-code
-if (practicePauseEnabled && currentMode === 'video' && !isPracticePaused && currentTime >= englishPhraseEndTime && !practicedPhrases.includes(phrase)) {
-  pauseVideo();
-  showPracticeOverlay(phrase);
+// Simplified detection logic
+for (segment of practice_card_segments) {
+  for (timing of segment.textPartTimings) {
+    if (
+      timing.language === "en" &&
+      currentTime >= segment.startTime + timing.endTime - 0.05 &&
+      !userProgress.practicedPhrases.includes(timing.text)
+    ) {
+      playerRef.pause();
+      setCurrentPracticePhrase(timing.text);
+      setIsPracticePaused(true);
+    }
+  }
 }
 ```
+
+**Cooldown Mechanism:** Uses `lastPausedTime` and `lastPausedPhrase` to prevent immediate re-trigger of the same phrase within 0.5 seconds.
 
 ### Component Architecture
 
 ```
 LessonViewer
-├── Player (Remotion)
-├── PracticePauseOverlay (conditional)
-│   ├── Phrase Display
-│   ├── Instructions
-│   ├── Recording Button (disabled)
-│   └── Action Buttons
-└── Practice Toggle Button
+├── Mode Buttons (Video/Practice)
+├── Video Mode
+│   ├── Player (Remotion)
+│   ├── PracticePauseOverlay (conditional)
+│   │   ├── Phrase Display with Replay
+│   │   ├── Instructions
+│   │   ├── Recording Button (disabled)
+│   │   └── Mark as Practiced Button
+│   ├── Episode Sidebar (left)
+│   └── Vocabulary Sidebar (right)
+└── Practice Mode
+    └── InteractivePractice Components
+        ├── Question Display
+        ├── Text Input
+        ├── Hint Toggle
+        ├── Submit Button
+        └── Validation Feedback
 ```
 
 ## Usage Guide
 
 ### For Learners
 
-1. **Enable Auto-Pause**:
-   - Click the "🎤 Auto-Pause: OFF" button in the header
-   - Button will turn green and show "Auto-Pause: ON"
+#### Video Mode
 
-2. **Watch the Video**:
-   - Video will automatically pause after English phrases
+1. **Watch the Video**:
+
+   - Video will automatically pause after English phrases in practice segments
    - Practice overlay will appear
 
-3. **Practice the Phrase**:
-   - Read the English phrase
+2. **Practice the Phrase**:
+
+   - Read the English phrase displayed
+   - Click 🔊 replay button to hear it again
    - Say it out loud 2-3 times
    - Try to match the pronunciation you heard
 
-4. **Continue Learning**:
-   - Click "Mark as Practiced" to track progress
-   - Click "Continue Now" to resume immediately
-   - Or click "Auto-Continue in 3s" for automatic continuation
+3. **Continue Learning**:
+   - Click "Mark as Practiced" to track progress and resume
+   - Or click ✕ or backdrop to resume without marking
 
-5. **Disable When Needed**:
-   - Click the toggle button again to turn off auto-pause
-   - Video will play continuously without pausing
+#### Practice Mode
+
+1. **Complete Questions**:
+
+   - Switch to Practice Mode using top button
+   - Read each question's context and prompt
+
+2. **Submit Answers**:
+
+   - Type your answer in the text area
+   - Use "Show Hint" if you need help
+   - Click "Submit Answer"
+
+3. **Review Feedback**:
+   - Get bilingual AI feedback (Thai & English)
+   - If incorrect, click "Try Again" to resubmit
+   - Navigate between questions using dots or buttons
 
 ### For Developers
 
@@ -181,26 +231,32 @@ LessonViewer
    npm run dev
    ```
 
-2. **Enable Practice Mode**:
-   - Open http://localhost:5173
-   - Click "🎤 Auto-Pause: OFF" to enable
+2. **Test Auto-Pause**:
 
-3. **Test Auto-Pause**:
-   - Play the video
-   - Video should pause after English phrases
+   - Open http://localhost:3001
+   - Play the video in Video Mode
+   - Video should pause after English phrases in practice segments
    - Practice overlay should appear
 
-4. **Test Actions**:
-   - Try all three action buttons
-   - Verify state updates correctly
-   - Check that practiced phrases don't trigger pauses again
+3. **Test Overlay Actions**:
+
+   - Test replay button (should seek back and replay)
+   - Test "Mark as Practiced" button
+   - Verify practiced phrases don't trigger pauses again
+   - Test closing overlay with ✕ or backdrop click
+
+4. **Test Practice Mode**:
+   - Switch to Practice Mode
+   - Try submitting correct and incorrect answers
+   - Verify AI validation feedback appears
+   - Test "Try Again" functionality
 
 #### Debugging
 
 Enable console logs:
 
 ```typescript
-console.log('Practice pause triggered:', {
+console.log("Practice pause triggered:", {
   phrase: currentPracticePhrase,
   time: currentTime,
   segment: segment.screenElement,
@@ -371,15 +427,28 @@ Mobile-first approach with breakpoints:
 
 ### Functional Tests
 
-- [ ] Toggle button switches state correctly
-- [ ] Video pauses at end of English phrases
+#### Video Mode
+
+- [ ] Video pauses at end of English phrases in practice_card segments
 - [ ] Practice overlay appears with correct phrase
-- [ ] "Mark as Practiced" prevents future pauses
-- [ ] "Continue Now" resumes video immediately
-- [ ] "Auto-Continue" counts down and resumes
-- [ ] Practiced phrases show in progress tracker
-- [ ] Feature works with all lesson types
-- [ ] State persists during lesson navigation
+- [ ] Replay button seeks back and plays phrase again
+- [ ] "Mark as Practiced" prevents future pauses and resumes video
+- [ ] Close button (✕) resumes video without marking
+- [ ] Backdrop click resumes video
+- [ ] Practiced phrases don't trigger pause again
+- [ ] Cooldown prevents immediate re-trigger
+
+#### Practice Mode
+
+- [ ] All comprehension questions display correctly
+- [ ] Text input accepts user answers
+- [ ] Hint button shows/hides hints
+- [ ] Submit button calls validation API
+- [ ] Correct answers show success feedback (Thai + English)
+- [ ] Incorrect answers show error feedback with "Try Again"
+- [ ] Try Again allows resubmission
+- [ ] Progress tracking updates
+- [ ] Navigation between questions works
 
 ### Edge Cases
 
@@ -410,21 +479,22 @@ Mobile-first approach with breakpoints:
 
 ## Troubleshooting
 
-### Video Doesn't Pause
+### Video Doesn't Pause for Practice
 
 **Possible Causes**:
 
-1. Practice pause not enabled (check toggle button)
-2. Already practiced the phrase (check `practicedPhrases` array)
-3. Not in video mode (must be in "Video Mode")
-4. No English phrases in current segment
+1. Already practiced the phrase (check `practicedPhrases` array)
+2. Not in video mode (must be in "Video Mode")
+3. No English phrases in current practice_card segment
+4. Within cooldown period after last pause
 
 **Solutions**:
 
-- Enable practice pause toggle
-- Reset progress to practice again
-- Switch to video mode
-- Check segment `textPartTimings` data
+- Reset progress by refreshing page
+- Switch to Video Mode
+- Verify segment has `screenElement === 'practice_card'`
+- Check `textPartTimings` has entries with `language === 'en'`
+- Wait for cooldown to expire (0.5 seconds)
 
 ### Overlay Doesn't Appear
 
@@ -478,16 +548,17 @@ Mobile-first approach with breakpoints:
 
 ### Planned for Version 1.1
 
-- Voice recording integration
-- Thai translation in overlay
-- Custom pause duration settings
+- Voice recording integration (Web Audio API)
+- Enhanced replay with slow-motion option
 - Practice history viewer
+- Custom cooldown settings
 - Export practice report
 
 ### Planned for Version 2.0
 
 - Speech recognition feedback
-- Pronunciation scoring
+- Pronunciation scoring with visual feedback
 - Adaptive learning algorithms
 - Multi-language support beyond Thai
 - Social sharing of progress
+- Offline practice mode
