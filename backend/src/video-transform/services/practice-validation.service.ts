@@ -21,6 +21,9 @@ export class PracticeValidationService {
       this.logger.log('🎓 Validating practice answer with LLM...');
 
       const llm = this.llmConfigService.getLLMWithConfig({
+        model: {
+          openai: 'gpt-5',
+        },
         temperature: 0.3,
       });
 

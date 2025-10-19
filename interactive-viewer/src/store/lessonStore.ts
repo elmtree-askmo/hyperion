@@ -1,6 +1,18 @@
 import { create } from "zustand";
 import { LessonData, InteractiveSegment } from "../types/lesson";
 
+interface ValidationResult {
+  isCorrect: boolean;
+  feedbackTh: string;
+  feedbackEn: string;
+  evaluation?: string;
+}
+
+interface PracticeAnswer {
+  userAnswer: string;
+  validationResult: ValidationResult;
+}
+
 interface LessonState {
   lessonData: LessonData | null;
   currentTime: number;
@@ -21,6 +33,7 @@ interface LessonState {
     quizAnswers: Record<string, string>;
     practicedPhrases: string[];
     reviewedVocabulary: string[];
+    practiceAnswers: Record<string, PracticeAnswer>;
   };
 
   // Actions
@@ -41,8 +54,15 @@ interface LessonState {
   revealFlashcard: (word: string) => void;
   completePractice: (practiceId: string) => void;
   submitQuizAnswer: (questionId: string, answer: string) => void;
+  savePracticeAnswer: (
+    practiceId: string,
+    userAnswer: string,
+    validationResult: ValidationResult
+  ) => void;
   resetProgress: () => void;
 }
+
+export type { ValidationResult, PracticeAnswer };
 
 export const useLessonStore = create<LessonState>((set, get) => ({
   lessonData: null,
@@ -64,6 +84,7 @@ export const useLessonStore = create<LessonState>((set, get) => ({
     quizAnswers: {},
     practicedPhrases: [],
     reviewedVocabulary: [],
+    practiceAnswers: {},
   },
 
   setLessonData: (data) => {
@@ -208,6 +229,19 @@ export const useLessonStore = create<LessonState>((set, get) => ({
     });
   },
 
+  savePracticeAnswer: (practiceId, userAnswer, validationResult) => {
+    const { userProgress } = get();
+    set({
+      userProgress: {
+        ...userProgress,
+        practiceAnswers: {
+          ...userProgress.practiceAnswers,
+          [practiceId]: { userAnswer, validationResult },
+        },
+      },
+    });
+  },
+
   resetProgress: () => {
     set({
       userProgress: {
@@ -216,6 +250,7 @@ export const useLessonStore = create<LessonState>((set, get) => ({
         quizAnswers: {},
         practicedPhrases: [],
         reviewedVocabulary: [],
+        practiceAnswers: {},
       },
       interactiveSegments: get().interactiveSegments.map((seg) => ({
         ...seg,

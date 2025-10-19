@@ -1,19 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ComprehensionQuestion } from '../types/lesson';
+import { useLessonStore, ValidationResult } from '../store/lessonStore';
 import './InteractivePractice.css';
 
 interface InteractivePracticeProps {
   question: ComprehensionQuestion;
   onComplete: (answer: string) => void;
   completed: boolean;
-}
-
-interface ValidationResult {
-  isCorrect: boolean;
-  feedbackTh: string;
-  feedbackEn: string;
-  evaluation?: string;
 }
 
 // Get API base URL from environment variable or use default
@@ -24,11 +18,32 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
   onComplete,
   completed,
 }) => {
-  const [userAnswer, setUserAnswer] = useState('');
+  const { userProgress, savePracticeAnswer } = useLessonStore();
+  
+  // Get saved answer and validation result if this practice was completed before
+  const savedPracticeAnswer = userProgress.practiceAnswers[question.question];
+  
+  const [userAnswer, setUserAnswer] = useState(savedPracticeAnswer?.userAnswer || '');
   const [isSubmitted, setIsSubmitted] = useState(completed);
   const [showHint, setShowHint] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
-  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(
+    savedPracticeAnswer?.validationResult || null
+  );
+
+  // Update state when navigating to a different question
+  useEffect(() => {
+    const saved = userProgress.practiceAnswers[question.question];
+    if (saved) {
+      setUserAnswer(saved.userAnswer);
+      setValidationResult(saved.validationResult);
+      setIsSubmitted(true);
+    } else {
+      setUserAnswer('');
+      setValidationResult(null);
+      setIsSubmitted(completed);
+    }
+  }, [question.question, userProgress.practiceAnswers, completed]);
 
   const handleSubmit = async () => {
     if (userAnswer.trim()) {
@@ -56,6 +71,9 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
         const result: ValidationResult = await response.json();
         setValidationResult(result);
         setIsSubmitted(true);
+        
+        // Save the answer and validation result
+        savePracticeAnswer(question.question, userAnswer, result);
         
         // Only mark as complete if answer is correct
         if (result.isCorrect) {
@@ -167,8 +185,10 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
             )}
 
             {/* User's Answer */}
-            <div className="submitted-answer">
-              <h4>✓ Your Answer:</h4>
+            <div className={validationResult?.isCorrect ? 'submitted-answer submitted-answer-correct' : 'submitted-answer submitted-answer-incorrect'}>
+              <h4>
+                {validationResult?.isCorrect ? '✓' : '✗'} Your Answer:
+              </h4>
               <p>{userAnswer}</p>
             </div>
 
