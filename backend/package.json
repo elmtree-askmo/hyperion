@@ -22,7 +22,6 @@
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "test:llm": "ts-node scripts/test-llm-service.ts",
     "test:gemini": "ts-node scripts/test-gemini-image-service.ts",
-    "test:image-optimization": "ts-node scripts/test-image-optimization.ts",
     "test:tts": "ts-node scripts/test-tts-service.ts",
     "regenerate:sync": "ts-node scripts/regenerate-synchronized-lessons.ts",
     "remotion:preview": "cd remotion && npx remotion preview src/index.ts",
