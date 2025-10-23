@@ -22,7 +22,9 @@
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "test:llm": "ts-node scripts/test-llm-service.ts",
     "test:gemini": "ts-node scripts/test-gemini-image-service.ts",
+    "test:image-optimization": "ts-node scripts/test-image-optimization.ts",
     "test:tts": "ts-node scripts/test-tts-service.ts",
+    "regenerate:sync": "ts-node scripts/regenerate-synchronized-lessons.ts",
     "remotion:preview": "cd remotion && npx remotion preview src/index.ts",
     "remotion:render": "cd remotion && npx remotion render",
     "test:video": "ts-node scripts/test-video-generation.ts"
@@ -69,6 +71,7 @@
     "reflect-metadata": "^0.2.2",
     "remotion": "^4.0.356",
     "rxjs": "^7.8.1",
+    "sharp": "^0.33.5",
     "typeorm": "^0.3.27",
     "undici": "^7.16.0",
     "winston": "^3.13.1",

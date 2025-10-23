@@ -259,17 +259,35 @@ export class SynchronizedLessonService {
 
     // If the last part is "lesson_X" format, it's an episode directory
     const lessonMatch = /^lesson_(\d+)$/.exec(lastPart);
-    let filePath: string;
+    let webpFilePath: string;
+    let pngFilePath: string;
+
     if (lessonMatch) {
       const episodeNumber = lessonMatch[1];
-      filePath = `${videoId}/lesson_${episodeNumber}/lesson_segments/${segmentId}.png`;
+      webpFilePath = `${videoId}/lesson_${episodeNumber}/lesson_segments/${segmentId}.webp`;
+      pngFilePath = `${videoId}/lesson_${episodeNumber}/lesson_segments/${segmentId}.png`;
     } else {
       // Legacy single microlesson structure
-      filePath = `${videoId}/lesson_segments/${segmentId}.png`;
+      webpFilePath = `${videoId}/lesson_segments/${segmentId}.webp`;
+      pngFilePath = `${videoId}/lesson_segments/${segmentId}.png`;
     }
 
-    // Use StorageService to get the public URL (supports both local and S3)
-    return this.storageService.getPublicUrl(filePath);
+    // Check if WebP version exists
+    const webpFullPath = path.join(process.cwd(), 'videos', webpFilePath);
+    const pngFullPath = path.join(process.cwd(), 'videos', pngFilePath);
+
+    // Prefer WebP if it exists, otherwise fall back to PNG
+    if (fs.existsSync(webpFullPath)) {
+      this.logger.debug(`Using WebP image: ${webpFilePath}`);
+      return this.storageService.getPublicUrl(webpFilePath);
+    } else if (fs.existsSync(pngFullPath)) {
+      this.logger.debug(`WebP not found, using PNG: ${pngFilePath}`);
+      return this.storageService.getPublicUrl(pngFilePath);
+    } else {
+      // If neither exists, return the WebP path anyway (might be in S3/CDN)
+      this.logger.debug(`No local image found, returning WebP path: ${webpFilePath}`);
+      return this.storageService.getPublicUrl(webpFilePath);
+    }
   }
 
   private async saveSynchronizedLesson(videoDir: string, synchronizedLesson: SynchronizedLesson): Promise<void> {

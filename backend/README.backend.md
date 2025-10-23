@@ -16,6 +16,8 @@ A secure NestJS backend application with enterprise-grade security features.
 - 🔄 **Database Migrations** for Schema Management
 - 🎓 **AI-Powered Content Analysis** with LangChain & OpenAI GPT-4
 - 📺 **YouTube Video Processing** with intelligent segmentation
+- 🖼️ **AI Image Generation** with Google Gemini
+- 🔧 **Automatic Image Optimization** for web usage with Sharp
 
 ## Security Features
 
@@ -124,6 +126,7 @@ A secure NestJS backend application with enterprise-grade security features.
 | `LANGCHAIN_API_KEY`    | LangSmith API key for LLM debugging   | Optional for debugging                |
 | `LANGCHAIN_TRACING_V2` | Enable LangSmith tracing              | `true` (optional)                     |
 | `LANGCHAIN_PROJECT`    | LangSmith project name                | `hyperion-content-analysis`           |
+| `GEMINI_API_KEY`       | Google Gemini API key for images      | Required for image generation         |
 
 ## LLM Provider Configuration
 
@@ -310,6 +313,14 @@ psql -h localhost -U postgres -d hyperion -c "\dn"
 - `npm run test:cov` - Run tests with coverage
 - `npm run lint` - Lint code
 - `npm run format` - Format code with Prettier
+
+### Service Testing Scripts
+
+- `npm run test:llm` - Test LLM service integration
+- `npm run test:gemini` - Test Gemini image generation
+- `npm run test:image-optimization` - Test image optimization feature
+- `npm run test:tts` - Test text-to-speech service
+- `npm run test:video` - Test video generation
 
 ### Database Scripts
 
