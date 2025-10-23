@@ -155,8 +155,11 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
             Component = (
               <ObjectiveCard
                 text={segment.text}
+                textParts={segment.textParts}
+                textPartTimings={segment.textPartTimings}
                 audioUrl={audioUrl}
                 backgroundImage={backgroundImage}
+                durationInFrames={durationInFrames}
               />
             );
             break;
