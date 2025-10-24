@@ -231,9 +231,9 @@ export class MicrolessonScriptService {
 
     const llmResults = await this.llmEnhancedService.generateEnhancedMicrolessonScript(analysis.videoId || 'unknown', episodeAnalysis);
 
-    // Extract all generated content
-    const microlessonTitle = episode.title;
-    const titleTh = this.translateEpisodeTitle(episode.title);
+    // Extract all generated content from LLM (including enhanced titles)
+    const microlessonTitle = llmResults.enhancedTitle || episode.title;
+    const titleTh = llmResults.enhancedTitleTh || this.translateEpisodeTitle(episode.title);
     const learningObjectives = llmResults.enhancedObjectives;
     const keyVocabulary = llmResults.enhancedVocabulary;
     const comprehensionQuestions = llmResults.enhancedQuestions;
