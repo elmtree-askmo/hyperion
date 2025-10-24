@@ -9,6 +9,7 @@ interface TextPartTiming {
   duration: number;
   startTime: number;
   endTime: number;
+  englishTranslation?: string;
 }
 
 interface TimingSegment {
@@ -25,6 +26,7 @@ interface TextPart {
   text: string;
   language: string;
   speakingRate?: number;
+  englishTranslation?: string;
 }
 
 interface SegmentBasedTiming {

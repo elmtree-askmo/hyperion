@@ -330,8 +330,10 @@ Return ONLY valid JSON:
   {{
     "question": "คำถามเป็นภาษาไทย พร้อมวลี English phrase ที่ต้องฝึก",
     "questionTh": "คำถามเป็นภาษาไทยเต็มรูปแบบ",
+    "questionEn": "English translation of the question for reference",
     "expectedAnswer": "English answer - คำอธิบายเป็นภาษาไทย",
-    "context": "บริบทและคำอธิบายเป็นภาษาไทย"
+    "context": "บริบทและคำอธิบายเป็นภาษาไทย",
+    "contextEn": "English translation of the context for reference"
   }}
 ]
 `);

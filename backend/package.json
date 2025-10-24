@@ -26,7 +26,8 @@
     "regenerate:sync": "ts-node scripts/regenerate-synchronized-lessons.ts",
     "remotion:preview": "cd remotion && npx remotion preview src/index.ts",
     "remotion:render": "cd remotion && npx remotion render",
-    "test:video": "ts-node scripts/test-video-generation.ts"
+    "test:video": "ts-node scripts/test-video-generation.ts",
+    "add:question:translations": "ts-node scripts/add-question-translations.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.910.0",

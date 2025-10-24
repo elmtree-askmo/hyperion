@@ -41,8 +41,10 @@ interface MicrolessonScript {
     comprehensionQuestions: Array<{
       question: string;
       questionTh: string;
+      questionEn?: string; // English translation of question for display reference
       expectedAnswer: string;
       context: string;
+      contextEn?: string; // English translation of context for display reference
     }>;
     originalSegments: string[];
   };
@@ -170,66 +172,75 @@ For vocabulary segments, include the target English word clearly but explain it 
 VISUAL DESCRIPTION GUIDELINES:
 CRITICAL: Every single segment MUST include BOTH visualDescription and backgroundImageDescription fields.
 - visualDescription: A short, engaging description of what the learner will see/experience in this segment (1-2 sentences) (in English)
-- backgroundImageDescription: Detailed description of the Thai cultural setting/location for AI image generation (in English)
+- backgroundImageDescription: Detailed description for AI image generation that reflects the episode's REAL-LIFE SCENARIO (in English)
 
-For backgroundImageDescription:
-- Describes authentic Thai cultural settings and locations
-- Supports the learning content visually
-- Uses recognizable Bangkok/Thailand landmarks when appropriate
-- Creates an immersive cultural learning environment
-- Matches the segment's educational purpose
+For backgroundImageDescription - REFLECT THE EPISODE'S ACTUAL SCENARIO:
+- For "From Lobby to Table" episode: Use hotel lobby, reception desk, restaurant entrance, dining table settings
+- For "At the Airport" episode: Use airport terminal, check-in counter, boarding gate, luggage area
+- For "Shopping" episode: Use shopping mall, retail stores, clothing shops, payment counter
+- For "Transportation" episode: Use BTS station, taxi, street scene, bus stop
+- CRITICAL: Match the background to the SPECIFIC LEARNING SITUATION, not generic classrooms
+- Use authentic Thai locations that match the scenario (e.g., Novotel Bangkok lobby, Terminal 21 restaurant area)
+- Create immersive real-world learning environments
+- Support the learning content with contextually relevant settings
 
-TEXT PARTS FORMAT (CRITICAL FOR TTS):
+TEXT PARTS FORMAT (CRITICAL FOR TTS AND DISPLAY):
 Each segment MUST include BOTH "text" and "textParts" fields:
 - "text": Complete text for display purposes (Thai + English mixed)
 - "textParts": Array separating Thai and English portions for optimized TTS synthesis
-  - Thai parts: {{"text": "...", "language": "th"}}
+  - Thai parts: {{"text": "...", "language": "th", "englishTranslation": "English reference translation"}}
   - English parts: {{"text": "...", "language": "en", "speakingRate": 0.8}}
   
-The "textParts" allows the TTS system to apply slower speaking rate (0.8x) to English parts for better learning comprehension, while keeping Thai at normal speed (1.0x).
+IMPORTANT RULES FOR TEXT PARTS:
+1. For ALL Thai text parts (language: "th"), you MUST provide an "englishTranslation" field with an English translation. This translation is for visual reference only and will NOT be spoken.
+2. The "textParts" allows the TTS system to apply slower speaking rate (0.8x) to English parts for better learning comprehension, while keeping Thai at normal speed (1.0x).
+3. CRITICAL: For segments with LONG Thai text (especially intro and conclusion), you MUST split the Thai text into multiple shorter textParts (ideally 1-2 sentences each). Each Thai textPart should have its own englishTranslation. This is ESSENTIAL for proper display with line-by-line English translations on screen.
+4. Do NOT create one long Thai textPart for intro or conclusion - break them into logical sentence groups for better readability and display.
 
 Return ONLY a valid JSON object in this exact format:
 {{
   "audioSegments": [
     {{
       "id": "intro",
-      "text": "สวัสดีค่ะ ยินดีต้อนรับสู่บทเรียนวันนี้...",
+      "text": "สวัสดีทุกคน ยินดีต้อนรับสู่บทเรียนวันนี้ วันนี้เราจะเรียนรู้วิธีสนทนาในสถานการณ์จริง พร้อมฝึกทักษะที่ใช้ได้ในชีวิตประจำวัน",
       "textParts": [
-        {{"text": "สวัสดีค่ะ ยินดีต้อนรับสู่บทเรียนวันนี้...", "language": "th"}}
+        {{"text": "สวัสดีทุกคน ยินดีต้อนรับสู่บทเรียนวันนี้", "language": "th", "englishTranslation": "Hello everyone, welcome to today's lesson"}},
+        {{"text": " วันนี้เราจะเรียนรู้วิธีสนทนาในสถานการณ์จริง", "language": "th", "englishTranslation": " Today we'll learn how to have conversations in real situations"}},
+        {{"text": " พร้อมฝึกทักษะที่ใช้ได้ในชีวิตประจำวัน", "language": "th", "englishTranslation": " and practice skills you can use in everyday life"}}
       ],
-      "description": "คำอธิบายเป็นภาษาไทย",
+      "description": "เกริ่นนำและบอกเป้าหมายของบทเรียน",
       "screenElement": "title_card",
       "visualDescription": "Bright and welcoming introduction to the lesson",
-      "backgroundImageDescription": "Modern English language learning classroom in Bangkok with Thai and international students, bright natural lighting, Thai cultural elements visible through windows"
+      "backgroundImageDescription": "Modern hotel lobby in Bangkok with stylish reception desk, comfortable seating area, Thai cultural artwork on walls, natural lighting through large windows, welcoming atmosphere for English conversation practice"
     }},
     {{
       "id": "learning_objective1",
       "text": "เป้าหมายแรกคือ I'd like to make a reservation และ Could you recommend a restaurant?",
       "textParts": [
-        {{"text": "เป้าหมายแรกคือ ", "language": "th"}},
+        {{"text": "เป้าหมายแรกคือ ", "language": "th", "englishTranslation": "The first goal is "}},
         {{"text": "I'd like to make a reservation", "language": "en", "speakingRate": 0.8}},
-        {{"text": " และ ", "language": "th"}},
+        {{"text": " และ ", "language": "th", "englishTranslation": " and "}},
         {{"text": "Could you recommend a restaurant?", "language": "en", "speakingRate": 0.8}}
       ],
       "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "objective_card",
       "visualDescription": "Clear presentation of the first learning goal",
-      "backgroundImageDescription": "Relevant Thai setting that matches the learning objective"
+      "backgroundImageDescription": "Hotel reception desk in Bangkok with friendly Thai staff, guest making restaurant reservation, modern interior design with Thai elements, professional hospitality setting"
     }},
     {{
       "id": "vocab_restaurant", 
       "text": "คำศัพท์: restaurant — ร้านอาหาร ใช้เมื่อพูดถึงสถานที่กินข้าว เช่น Let's go to a Japanese restaurant near Siam",
       "textParts": [
-        {{"text": "คำศัพท์: ", "language": "th"}},
+        {{"text": "คำศัพท์: ", "language": "th", "englishTranslation": "Vocabulary: "}},
         {{"text": "restaurant", "language": "en", "speakingRate": 0.8}},
-        {{"text": " — ร้านอาหาร ใช้เมื่อพูดถึงสถานที่กินข้าว เช่น ", "language": "th"}},
+        {{"text": " — ร้านอาหาร ใช้เมื่อพูดถึงสถานที่กินข้าว เช่น ", "language": "th", "englishTranslation": " — a place to eat, used when talking about where to have a meal, for example "}},
         {{"text": "Let's go to a Japanese restaurant near Siam", "language": "en", "speakingRate": 0.8}}
       ],
       "description": "คำอธิบายเป็นภาษาไทย",
       "screenElement": "vocabulary_card",
       "vocabWord": "restaurant",
       "visualDescription": "Introduction to the vocabulary word with visual context",
-      "backgroundImageDescription": "Relevant Thai cultural scene that supports the vocabulary learning, such as Terminal 21 Food Court or Café Amazon setting"
+      "backgroundImageDescription": "Stylish Bangkok restaurant interior with elegant dining tables, Thai and international cuisine presentation, warm ambient lighting, Sukhumvit or Silom dining area atmosphere"
     }}
   ]
 }}
@@ -239,8 +250,11 @@ IMPORTANT REMINDERS:
 2. Every segment must have both "text" (complete) and "textParts" (separated by language)
 3. English parts in textParts should have "speakingRate": 0.8 for slower, clearer pronunciation
 4. Thai parts in textParts should NOT have speakingRate (defaults to 1.0)
-5. Ensure textParts accurately reflects the content in the "text" field
-6. AVOID creating very short textParts (< 3 characters like ", " or " และ "). Instead, merge short connectors with adjacent Thai text to ensure smooth TTS generation`;
+5. ALL Thai textParts MUST include "englishTranslation" field with accurate English translation
+6. English textParts should NOT have "englishTranslation" field (they are already in English)
+7. Ensure textParts accurately reflects the content in the "text" field
+8. AVOID creating very short textParts (< 3 characters like ", " or " และ "). Instead, merge short connectors with adjacent Thai text to ensure smooth TTS generation
+9. CRITICAL: For intro and conclusion segments, ALWAYS split long Thai text into multiple shorter textParts (1-2 sentences each). This ensures proper line-by-line display with English translations on screen. DO NOT use a single long textPart for these segments.`;
 
       const promptTemplate = PromptTemplate.fromTemplate(prompt);
       const chain = RunnableSequence.from([promptTemplate, this.llm, new StringOutputParser()]);

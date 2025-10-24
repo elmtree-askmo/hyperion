@@ -127,14 +127,20 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
         {/* Context */}
         <div className="practice-context">
           <h4>📍 Context</h4>
-          <p>{question.context}</p>
+          <p className="context-text-th">{question.context}</p>
+          {question.contextEn && (
+            <p className="context-text-en">{question.contextEn}</p>
+          )}
         </div>
 
         {/* Question */}
         <div className="practice-question">
           <h4>Question:</h4>
-          <p className="question-text-en">{question.question}</p>
+          <p className="question-text-main">{question.question}</p>
           <p className="question-text-th">{question.questionTh}</p>
+          {question.questionEn && (
+            <p className="question-text-en">{question.questionEn}</p>
+          )}
         </div>
 
         {/* Answer Input */}
@@ -158,7 +164,7 @@ export const InteractivePractice: React.FC<InteractivePracticeProps> = ({
                 {showHint ? '🙈 Hide Hint' : '💡 Show Hint'}
               </button>
               <button
-                className="submit-button"
+                className={`submit-button ${isValidating ? 'validating' : ''}`}
                 onClick={handleSubmit}
                 disabled={!userAnswer.trim() || isValidating}
               >

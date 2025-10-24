@@ -139,6 +139,7 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
 
         switch (segment.screenElement) {
           case 'title_card':
+            // Use TitleCard for intro - beautiful presentation style
             Component = (
               <TitleCard
                 title={lesson.title}
@@ -229,12 +230,29 @@ export const LessonComposition: React.FC<{ lessonData: LessonData }> = ({
             );
             break;
 
+          case 'conclusion_card':
+            // Use ObjectiveCard for conclusion text to show English translations
+            Component = (
+              <ObjectiveCard
+                text={segment.text}
+                textParts={segment.textParts}
+                textPartTimings={segment.textPartTimings}
+                audioUrl={audioUrl}
+                backgroundImage={backgroundImage}
+                durationInFrames={durationInFrames}
+              />
+            );
+            break;
+
           default:
             Component = (
               <ObjectiveCard
                 text={segment.text}
+                textParts={segment.textParts}
+                textPartTimings={segment.textPartTimings}
                 audioUrl={audioUrl}
                 backgroundImage={backgroundImage}
+                durationInFrames={durationInFrames}
               />
             );
         }

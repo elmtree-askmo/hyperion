@@ -11,6 +11,7 @@ interface TextPart {
   text: string;
   language: 'th' | 'en';
   speakingRate?: number;
+  englishTranslation?: string;
 }
 
 interface AudioSegment {
@@ -35,6 +36,7 @@ export interface TextPartTiming {
   duration: number;
   startTime: number;
   endTime: number;
+  englishTranslation?: string;
 }
 
 export interface TimingMetadata {
@@ -205,13 +207,20 @@ export class TtsAudioSegmentsService {
         const partDuration = await this.getAudioDuration(tempFilePath);
 
         // Record timing for this part
-        partTimings.push({
+        const timing: TextPartTiming = {
           text: part.text,
           language: part.language,
           duration: partDuration,
           startTime: currentTime,
           endTime: currentTime + partDuration,
-        });
+        };
+
+        // Include English translation if available (for Thai text parts)
+        if (part.englishTranslation) {
+          timing.englishTranslation = part.englishTranslation;
+        }
+
+        partTimings.push(timing);
 
         currentTime += partDuration;
 
@@ -279,6 +288,12 @@ export class TtsAudioSegmentsService {
         if (previous.language === current.language) {
           // Merge with previous part
           previous.text += current.text;
+          // Merge English translations if both exist
+          if (previous.englishTranslation && current.englishTranslation) {
+            previous.englishTranslation += current.englishTranslation;
+          } else if (current.englishTranslation) {
+            previous.englishTranslation = current.englishTranslation;
+          }
           this.logger.log(`Merged short part "${current.text}" with previous part`);
           i++;
           continue;
@@ -290,11 +305,18 @@ export class TtsAudioSegmentsService {
         const next = textParts[i + 1];
         if (next.language === current.language) {
           // Merge current with next
-          merged.push({
+          const mergedPart: TextPart = {
             text: current.text + next.text,
             language: current.language,
             speakingRate: current.speakingRate || next.speakingRate,
-          });
+          };
+          // Merge English translations if available
+          if (current.englishTranslation && next.englishTranslation) {
+            mergedPart.englishTranslation = current.englishTranslation + next.englishTranslation;
+          } else if (current.englishTranslation || next.englishTranslation) {
+            mergedPart.englishTranslation = current.englishTranslation || next.englishTranslation;
+          }
+          merged.push(mergedPart);
           this.logger.log(`Merged short part "${current.text}" with next part`);
           i += 2; // Skip both current and next
           continue;

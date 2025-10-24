@@ -43,6 +43,7 @@ export interface TextPart {
   text: string;
   language: 'th' | 'en';
   speakingRate?: number; // Default: th=1.0, en=0.8
+  englishTranslation?: string; // English reference translation for Thai text (for display only, not spoken)
 }
 
 export interface AudioSegment {

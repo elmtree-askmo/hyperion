@@ -54,8 +54,10 @@ interface MicrolessonScript {
     comprehensionQuestions: Array<{
       question: string;
       questionTh: string;
+      questionEn?: string; // English translation of question for display reference
       expectedAnswer: string;
       context: string;
+      contextEn?: string; // English translation of context for display reference
     }>;
     originalSegments: string[];
   };

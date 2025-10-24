@@ -91,7 +91,11 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
     // Use precise textPartTimings if available, otherwise fall back to estimation
     const timingsToUse = textPartTimings && textPartTimings.length > 0
       ? textPartTimings.map((timing) => ({
-          part: { text: timing.text, language: timing.language },
+          part: { 
+            text: timing.text, 
+            language: timing.language,
+            englishTranslation: (timing as any).englishTranslation 
+          },
           startFrame: Math.round(timing.startTime * fps),
           endFrame: Math.round(timing.endTime * fps),
         }))
@@ -117,43 +121,64 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
     return (
       <div
         style={{
-          fontSize: 36,
+          fontSize: 32,
           fontFamily: theme.fonts.primary,
           color: theme.colors.text,
-          lineHeight: 1.8,
+          lineHeight: 1.6,
           display: 'flex',
           flexDirection: 'column',
-          gap: '12px',
+          gap: '8px',
         }}
       >
         {timingsToUse.map((timing, index) => {
           const isActive = frame >= timing.startFrame && frame < timing.endFrame;
           const isEnglish = timing.part.language === 'en';
+          const englishTranslation = (timing.part as any).englishTranslation;
 
           return (
-            <span
+            <div
               key={index}
               style={{
-                color: isActive
-                  ? theme.colors.accent
-                  : isEnglish
-                  ? theme.colors.text
-                  : theme.colors.textSecondary,
-                fontWeight: isEnglish ? (isActive ? 'bold' : '600') : 'normal',
-                textShadow: isActive ? theme.shadows.md : 'none',
-                transition: 'color 0.2s ease, background-color 0.2s ease, text-shadow 0.2s ease',
-                fontSize: isEnglish ? 40 : 34,
-                backgroundColor: isActive
-                  ? `${theme.colors.accent}20`
-                  : 'transparent',
-                padding: '4px 8px',
-                borderRadius: theme.borderRadius.sm,
                 display: 'inline-block',
-                boxSizing: 'border-box',
+                padding: '3px 6px',
+                borderRadius: theme.borderRadius.sm,
+                backgroundColor: isActive ? `${theme.colors.accent}20` : 'transparent',
+                transition: 'background-color 0.2s ease',
               }}
             >
-              {timing.part.text}
-            </span>
+              <span
+                style={{
+                  color: isActive
+                    ? theme.colors.accent
+                    : isEnglish
+                    ? theme.colors.text
+                    : theme.colors.textSecondary,
+                  fontWeight: isEnglish ? (isActive ? 'bold' : '600') : 'normal',
+                  textShadow: isActive ? theme.shadows.md : 'none',
+                  transition: 'color 0.2s ease, text-shadow 0.2s ease',
+                  fontSize: isEnglish ? 36 : 30,
+                  display: 'block',
+                  lineHeight: 1.4,
+                }}
+              >
+                {timing.part.text}
+              </span>
+              {!isEnglish && englishTranslation && (
+                <span
+                  style={{
+                    color: theme.colors.textSecondary,
+                    fontSize: 20,
+                    fontStyle: 'italic',
+                    display: 'block',
+                    marginTop: '2px',
+                    opacity: 0.75,
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {englishTranslation}
+                </span>
+              )}
+            </div>
           );
         })}
       </div>

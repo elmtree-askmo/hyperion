@@ -20,6 +20,183 @@ Tests the Text-to-Speech (TTS) audio generation service using Google Cloud TTS A
 
 Tests the vocabulary flashcards generation service with LLM-powered content creation including Thai pronunciations and memory hooks.
 
+### 5. English Translation Test (`test-english-translation.ts`)
+
+Tests the English translation feature for Thai text parts in audio segments. Verifies that all Thai text has corresponding English reference translations that will be displayed in videos.
+
+## Utility Scripts
+
+### 1. Regenerate Audio Segments (`regenerate-audio-segments.ts`)
+
+Regenerates audio_segments.json files with improved text splitting. This ensures intro and conclusion segments have their Thai text split into multiple shorter parts, each with its own English translation for better display.
+
+**Usage:**
+
+```bash
+# Regenerate for a specific lesson
+ts-node scripts/regenerate-audio-segments.ts henIVlCPVIY 1
+
+# Regenerate all lessons for a video
+ts-node scripts/regenerate-audio-segments.ts henIVlCPVIY
+
+# Regenerate all videos and lessons
+ts-node scripts/regenerate-audio-segments.ts
+```
+
+**Note:** This will delete existing audio_segments.json files. After running, you should:
+
+1. Regenerate TTS audio files
+2. Regenerate synchronized lessons
+3. Restart the backend server
+
+### 2. Regenerate Synchronized Lessons (`regenerate-synchronized-lessons.ts`)
+
+Regenerates final_synchronized_lesson.json files to update timing and metadata.
+
+**Usage:**
+
+```bash
+# Regenerate for a specific lesson
+ts-node scripts/regenerate-synchronized-lessons.ts henIVlCPVIY 1
+
+# Regenerate all lessons for a video
+ts-node scripts/regenerate-synchronized-lessons.ts henIVlCPVIY
+
+# Regenerate all videos and lessons
+ts-node scripts/regenerate-synchronized-lessons.ts
+```
+
+### 3. Add Question Translations (`add-question-translations.ts`)
+
+Adds English translations (questionEn and contextEn) to comprehension questions in existing microlesson_script.json files. Uses LLM to generate accurate translations.
+
+**Usage:**
+
+```bash
+# Add translations for a specific lesson
+ts-node scripts/add-question-translations.ts henIVlCPVIY 1
+
+# Add translations for all lessons in a video
+ts-node scripts/add-question-translations.ts henIVlCPVIY
+
+# Add translations for all videos and lessons
+ts-node scripts/add-question-translations.ts
+```
+
+**Features:**
+
+- Automatically detects questions missing translations
+- Skips questions that already have translations
+- Creates backup file before modifying
+- Processes in batches to avoid rate limits
+- Shows sample translations for verification
+
+**Note:** Requires LLM API key (OpenAI, Groq, or OpenRouter) to generate translations.
+
+## English Translation Test
+
+This script tests the English translation feature for Thai text parts in audio segments.
+
+### Prerequisites
+
+1. **LLM API Key**: OpenAI, Groq, or OpenRouter API key (for generating translations)
+2. **Video Data**: Existing video with microlesson script
+3. **Node.js**: Version 18+ with TypeScript support
+
+### Usage
+
+```bash
+# Build the project first
+npm run build
+
+# Run the test script with video ID and lesson number
+node dist/scripts/test-english-translation.js <videoId> <lessonNumber>
+
+# Example:
+node dist/scripts/test-english-translation.js henIVlCPVIY 1
+```
+
+### Tests Performed
+
+1. **Generate Audio Segments with Translations**
+   - Creates audio segments with English translations for all Thai text
+   - Uses LLM to generate accurate English translations
+
+2. **Verify Translation Coverage**
+   - Checks that all Thai text parts have englishTranslation field
+   - Reports any missing translations
+
+3. **Display Sample Translations**
+   - Shows first 5 Thai-English translation pairs
+   - Provides statistics on translation coverage
+
+### Sample Output
+
+```
+🧪 Testing English Translation Feature
+
+📹 Video ID: henIVlCPVIY
+📚 Lesson Number: 1
+
+🔄 Generating audio segments with English translations...
+
+✅ Generated 15 audio segments
+
+🔍 Verifying English translations...
+
+📊 Statistics:
+   Total text parts: 45
+   Thai text parts: 30
+   Translated parts: 30
+   Missing translations: 0
+
+📝 Sample Translations:
+
+1. Segment: intro
+   Thai: สวัสดีค่ะ ยินดีต้อนรับสู่คอร์ส Everyday English in Real Life
+   English: Hello everyone, welcome to the Everyday English in Real Life course
+
+2. Segment: learning_objective1
+   Thai: เป้าหมายแรกคือ
+   English: The first goal is
+
+✅ SUCCESS: All Thai text parts have English translations!
+
+✨ Test completed!
+```
+
+### Output Files
+
+The test generates or updates:
+
+- `videos/{videoId}/lesson_{number}/audio_segments.json` - Contains Thai text with English translations
+
+### Troubleshooting
+
+1. **Missing LLM API Key**
+
+   ```
+   ❌ LLM is required for audio segments generation
+   ```
+
+   - Solution: Add LLM API key to `.env` file
+
+2. **Missing Microlesson Script**
+
+   ```
+   ❌ Microlesson script not found
+   ```
+
+   - Solution: Generate microlesson script first
+
+3. **Missing Translations**
+
+   ```
+   ❌ FAILURE: X Thai text parts are missing English translations
+   ```
+
+   - Solution: Check LLM prompt and regenerate
+
 ## Flashcards Service Test
 
 This script tests the Flashcards generation service that creates vocabulary flashcards with Thai pronunciations, translations, and memory hooks using LLM.
@@ -185,6 +362,7 @@ Example structure:
    - Check your API usage quota
 
 4. **Invalid JSON Response**
+
    ```
    ❌ Failed to parse LLM flashcards response
    ```
