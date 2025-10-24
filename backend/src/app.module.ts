@@ -44,7 +44,7 @@ import { VideoJob } from './video-transform/entities/video-job.entity';
     ThrottlerModule.forRoot([
       {
         ttl: parseInt(process.env.RATE_LIMIT_TTL) || 60000, // 60 seconds
-        limit: parseInt(process.env.RATE_LIMIT_LIMIT) || 10, // 10 requests per TTL
+        limit: parseInt(process.env.RATE_LIMIT_LIMIT) || 100, // 100 requests per TTL
       },
     ]),
 
