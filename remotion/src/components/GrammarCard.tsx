@@ -12,6 +12,7 @@ interface TextPart {
   text: string;
   language: string;
   speakingRate?: number;
+  englishTranslation?: string;
 }
 
 interface TextPartTiming {
@@ -88,6 +89,62 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
 
   const partTimings = getPartTimings();
 
+  // Calculate total content length to determine font scaling
+  const getTotalContentLength = () => {
+    if (!textParts || textParts.length === 0) {
+      return text?.length || 0;
+    }
+    let totalLength = 0;
+    textParts.forEach(part => {
+      totalLength += part.text.length;
+      if (part.englishTranslation) {
+        totalLength += part.englishTranslation.length * 0.6; // English counts less
+      }
+    });
+    return totalLength;
+  };
+
+  // Dynamic font sizing based on content length
+  const getDynamicFontSizes = () => {
+    const contentLength = getTotalContentLength();
+    
+    // Base sizes
+    let baseFontSize = 32;
+    let fallbackFontSize = 36;
+    let mainTextSize = { th: 30, en: 36 };
+    let translationSize = 20;
+    let lineHeight = 1.6;
+    let gap = 8;
+
+    // Adjust based on content length
+    if (contentLength > 800) {
+      baseFontSize = 26;
+      fallbackFontSize = 29;
+      mainTextSize = { th: 24, en: 28 };
+      translationSize = 16;
+      lineHeight = 1.45;
+      gap = 6;
+    } else if (contentLength > 600) {
+      baseFontSize = 28;
+      fallbackFontSize = 32;
+      mainTextSize = { th: 26, en: 30 };
+      translationSize = 18;
+      lineHeight = 1.5;
+      gap = 7;
+    } else if (contentLength > 400) {
+      baseFontSize = 30;
+      fallbackFontSize = 34;
+      mainTextSize = { th: 28, en: 33 };
+      translationSize = 19;
+      lineHeight = 1.55;
+      gap = 7;
+    }
+
+    return { baseFontSize, fallbackFontSize, mainTextSize, translationSize, lineHeight, gap };
+  };
+
+  const fontSizes = getDynamicFontSizes();
+
   // Render text with highlighting based on textParts timing
   const renderTextWithHighlight = () => {
     // Use precise textPartTimings if available, otherwise fall back to estimation
@@ -106,7 +163,7 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
     if (!textParts || textParts.length === 0 || timingsToUse.length === 0) {
       // Fallback to simple display without highlighting
       return (
-        <div style={{ fontSize: 36, lineHeight: 1.6 }}>
+        <div style={{ fontSize: fontSizes.fallbackFontSize, lineHeight: fontSizes.lineHeight }}>
           {text}
         </div>
       );
@@ -115,13 +172,13 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
     return (
       <div
         style={{
-          fontSize: 32,
+          fontSize: fontSizes.baseFontSize,
           fontFamily: theme.fonts.primary,
           color: theme.colors.text,
-          lineHeight: 1.6,
+          lineHeight: fontSizes.lineHeight,
           display: 'flex',
           flexDirection: 'column',
-          gap: '8px',
+          gap: `${fontSizes.gap}px`,
         }}
       >
         {timingsToUse.map((timing, index) => {
@@ -150,7 +207,7 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
                   fontWeight: isEnglish ? (isActive ? 'bold' : '600') : 'normal',
                   textShadow: isActive ? theme.shadows.md : 'none',
                   transition: 'color 0.2s ease, text-shadow 0.2s ease',
-                  fontSize: isEnglish ? 36 : 30,
+                  fontSize: isEnglish ? fontSizes.mainTextSize.en : fontSizes.mainTextSize.th,
                   display: 'block',
                   lineHeight: 1.4,
                 }}
@@ -161,7 +218,7 @@ export const GrammarCard: React.FC<GrammarCardProps> = ({
                 <span
                   style={{
                     color: theme.colors.textSecondary,
-                    fontSize: 20,
+                    fontSize: fontSizes.translationSize,
                     fontStyle: 'italic',
                     display: 'block',
                     marginTop: '2px',

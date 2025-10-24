@@ -12,6 +12,7 @@ interface TextPart {
   text: string;
   language: string;
   speakingRate?: number;
+  englishTranslation?: string;
 }
 
 interface TextPartTiming {
@@ -86,6 +87,62 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
 
   const partTimings = getPartTimings();
 
+  // Calculate total content length to determine font scaling
+  const getTotalContentLength = () => {
+    if (!textParts || textParts.length === 0) {
+      return text?.length || 0;
+    }
+    let totalLength = 0;
+    textParts.forEach(part => {
+      totalLength += part.text.length;
+      if (part.englishTranslation) {
+        totalLength += part.englishTranslation.length * 0.6; // English counts less
+      }
+    });
+    return totalLength;
+  };
+
+  // Dynamic font sizing based on content length
+  const getDynamicFontSizes = () => {
+    const contentLength = getTotalContentLength();
+    
+    // Base sizes
+    let baseFontSize = 38;
+    let fallbackFontSize = 44;
+    let mainTextSize = { th: 30, en: 36 };
+    let translationSize = 20;
+    let lineHeight = 1.7;
+    let gap = 12;
+
+    // Adjust based on content length
+    if (contentLength > 800) {
+      baseFontSize = 30;
+      fallbackFontSize = 34;
+      mainTextSize = { th: 24, en: 28 };
+      translationSize = 16;
+      lineHeight = 1.5;
+      gap = 8;
+    } else if (contentLength > 600) {
+      baseFontSize = 33;
+      fallbackFontSize = 38;
+      mainTextSize = { th: 26, en: 30 };
+      translationSize = 18;
+      lineHeight = 1.6;
+      gap = 9;
+    } else if (contentLength > 400) {
+      baseFontSize = 36;
+      fallbackFontSize = 41;
+      mainTextSize = { th: 28, en: 33 };
+      translationSize = 19;
+      lineHeight = 1.65;
+      gap = 10;
+    }
+
+    return { baseFontSize, fallbackFontSize, mainTextSize, translationSize, lineHeight, gap };
+  };
+
+  const fontSizes = getDynamicFontSizes();
+
   // Render text with highlighting based on textParts timing
   const renderTextWithHighlight = () => {
     // Use precise textPartTimings if available, otherwise fall back to estimation
@@ -106,10 +163,10 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
       return (
         <div
           style={{
-            fontSize: 44,
+            fontSize: fontSizes.fallbackFontSize,
             fontFamily: theme.fonts.primary,
             color: theme.colors.text,
-            lineHeight: 1.7,
+            lineHeight: fontSizes.lineHeight,
             textAlign: 'center',
           }}
         >
@@ -121,13 +178,13 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
     return (
       <div
         style={{
-          fontSize: 32,
+          fontSize: fontSizes.baseFontSize,
           fontFamily: theme.fonts.primary,
           color: theme.colors.text,
-          lineHeight: 1.6,
+          lineHeight: fontSizes.lineHeight,
           display: 'flex',
           flexDirection: 'column',
-          gap: '8px',
+          gap: `${fontSizes.gap}px`,
         }}
       >
         {timingsToUse.map((timing, index) => {
@@ -156,9 +213,9 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
                   fontWeight: isEnglish ? (isActive ? 'bold' : '600') : 'normal',
                   textShadow: isActive ? theme.shadows.md : 'none',
                   transition: 'color 0.2s ease, text-shadow 0.2s ease',
-                  fontSize: isEnglish ? 36 : 30,
+                  fontSize: isEnglish ? fontSizes.mainTextSize.en : fontSizes.mainTextSize.th,
                   display: 'block',
-                  lineHeight: 1.4,
+                  lineHeight: 1.5,
                 }}
               >
                 {timing.part.text}
@@ -167,12 +224,12 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
                 <span
                   style={{
                     color: theme.colors.textSecondary,
-                    fontSize: 20,
+                    fontSize: fontSizes.translationSize,
                     fontStyle: 'italic',
                     display: 'block',
-                    marginTop: '2px',
+                    marginTop: '4px',
                     opacity: 0.75,
-                    lineHeight: 1.3,
+                    lineHeight: 1.4,
                   }}
                 >
                   {englishTranslation}
