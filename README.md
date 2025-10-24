@@ -1,10 +1,8 @@
-# Hyperion
+# Hyperion - AI-Powered Micro-Learning Platform
 
-An AI-powered educational video transformation platform that converts long-form English learning YouTube videos into engaging, bite-sized micro-lessons optimized for Thai college students.
+> Transforming long-form English learning YouTube videos into engaging, bite-sized lessons optimized for Thai college students
 
-## 🎯 Overview
-
-Hyperion is a comprehensive video learning platform consisting of three main components:
+Hyperion is an AI-powered video learning platform consisting of three main components:
 
 1. **Backend API** - NestJS-based REST API for video processing and content analysis
 2. **Interactive Viewer** - React-based web application for viewing and interacting with lessons
@@ -134,15 +132,18 @@ npm run test:video
 
 ## 📚 Documentation
 
-Comprehensive documentation is available in the `docs/` directory:
+**Quick Links:**
 
-- [Database Setup](docs/DATABASE.md) - PostgreSQL configuration and migrations
-- [Flashcards Guide](docs/FLASHCARDS_QUICKSTART.md) - Flashcard generation and usage
-- [Mixed Language TTS](docs/MIXED_LANGUAGE_TTS.md) - Text-to-speech setup
-- [Video Generation](docs/VIDEO_GENERATION_SUMMARY.md) - Video rendering workflow
-- [Remotion Usage](docs/REMOTION_USAGE.md) - Remotion configuration and customization
-- [Interactive Viewer Index](docs/INTERACTIVE_VIEWER_INDEX.md) - Frontend features
-- [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
+- 🚀 **[Interactive Viewer Quick Start](docs/INTERACTIVE_VIEWER_QUICKSTART.md)** - Get started in 5 minutes
+- 📖 **[Documentation Index](docs/README.md)** - Complete documentation hub
+- 🔧 **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+
+**Core Documentation:**
+
+- [Interactive Viewer Guide](docs/INTERACTIVE_VIEWER_GUIDE.md) - Complete frontend guide
+- [Backend Architecture](backend/README.backend.md) - Backend API documentation
+- [Video Generation](docs/VIDEO_GENERATION_SUMMARY.md) - Processing pipeline
+- [Database Setup](docs/DATABASE.md) - PostgreSQL configuration
 
 ## 🔧 Configuration
 
@@ -300,27 +301,10 @@ This project is proprietary software. All rights reserved.
 - NestJS for backend framework
 - React for frontend framework
 
-## 📚 Documentation
+## 🔗 Additional Resources
 
-### Getting Started
-
-- [interactive-viewer/README.md](interactive-viewer/README.md) - Interactive Viewer setup and usage
-- [backend/README.backend.md](backend/README.backend.md) - Backend API documentation
-- [remotion/README.md](remotion/README.md) - Remotion video generation
-
-### Architecture & Deployment
-
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Remotion components sharing architecture
-- [vercel.json](vercel.json) - Vercel deployment configuration
-
-### Feature Documentation
-
-- [docs/DATABASE.md](docs/DATABASE.md) - Database schema and migrations
-- [docs/MIXED_LANGUAGE_TTS.md](docs/MIXED_LANGUAGE_TTS.md) - Mixed language text-to-speech
-- [docs/VIDEO_GENERATION_SUMMARY.md](docs/VIDEO_GENERATION_SUMMARY.md) - Video processing pipeline
-- [docs/FLASHCARDS_QUICKSTART.md](docs/FLASHCARDS_QUICKSTART.md) - Flashcard system
-- [docs/INTERACTIVE_PRACTICE_FEATURE.md](docs/INTERACTIVE_PRACTICE_FEATURE.md) - Practice exercises
-- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) - Common issues and solutions
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Component sharing architecture
+- [Vercel Deployment](docs/VERCEL_DEPLOYMENT.md) - Production deployment guide
 
 ## 📧 Support
 

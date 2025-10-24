@@ -22,20 +22,20 @@
 ### Video Processing (Backend)
 
 - [Video Generation Pipeline](./VIDEO_GENERATION_SUMMARY.md) - How videos are created
-- [Flashcards System](./FLASHCARDS_IMPLEMENTATION.md) - Vocabulary generation
 - [Mixed Language TTS](./MIXED_LANGUAGE_TTS.md) - Text-to-speech
+- [English Translation Feature](./ENGLISH_TRANSLATION_FEATURE.md) - Translation system
+- [Image Optimization](./IMAGE_OPTIMIZATION.md) - Image processing and optimization
+- [Image Optimization Quick Start](./IMAGE_OPTIMIZATION_QUICKSTART.md) - Quick setup guide
 
 ### Technical Setup
 
 - [Database Setup](./DATABASE.md) - PostgreSQL configuration
 - [Remotion Usage](./REMOTION_USAGE.md) - Video composition
-- [Storage Configuration](./STORAGE_CONFIGURATION.md) - File storage options
 
 ### Deployment & Operations
 
 - [Vercel Deployment](./VERCEL_DEPLOYMENT.md) - Production deployment
 - [Troubleshooting](./TROUBLESHOOTING.md) - Common issues
-- [Video Generation Status](./VIDEO_GENERATION_STATUS.md) - Job tracking
 
 ## 🎯 Common Tasks
 
@@ -180,6 +180,16 @@ When updating documentation:
 
 ## 🔄 Documentation Changelog
 
+### v2.1 (October 24, 2025)
+
+- 🗑️ Removed redundant and outdated documentation files
+- 🗑️ Deleted 9_16_VERTICAL_VIDEO_OPTIMIZATION.md (info in code)
+- 🗑️ Deleted FLASHCARDS_IMPLEMENTATION.md and FLASHCARDS_QUICKSTART.md (duplicate content)
+- 🗑️ Deleted VIDEO_GENERATION_STATUS.md (simple feature, no dedicated doc needed)
+- 🗑️ Deleted STORAGE_CONFIGURATION.md (not implemented)
+- 📝 Updated documentation index to reflect current state
+- ✨ Added Image Optimization documentation references
+
 ### v2.0 (October 19, 2025)
 
 - ✨ Created comprehensive Interactive Viewer Guide
@@ -205,6 +215,6 @@ When updating documentation:
 
 ---
 
-**Last Updated**: October 19, 2025  
-**Version**: 2.0  
+**Last Updated**: October 24, 2025  
+**Version**: 2.1  
 **Maintained by**: Hyperion Development Team
