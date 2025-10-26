@@ -623,7 +623,7 @@ export const LessonViewer: React.FC = () => {
             className={`mode-button ${currentMode === 'video' ? 'active' : ''}`}
             onClick={() => setCurrentMode('video')}
           >
-            📺 Video Mode
+            📺 Instruction Mode
           </button>
           <button
             className={`mode-button ${currentMode === 'practice' ? 'active' : ''}`}
