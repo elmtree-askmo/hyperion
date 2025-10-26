@@ -9,12 +9,18 @@
   height: 400px;
   cursor: pointer;
   position: relative;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
 }
 
 .flashcard-inner {
   width: 100%;
   height: 100%;
   position: relative;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  /* Force hardware acceleration in Safari */
+  -webkit-font-smoothing: antialiased;
 }
 
 .flashcard-face {
@@ -22,6 +28,7 @@
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   border-radius: 16px;
   padding: 32px;
   display: flex;
@@ -32,12 +39,15 @@
 .flashcard-front {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  transform: rotateY(0deg) translateZ(1px);
+  -webkit-transform: rotateY(0deg) translateZ(1px);
 }
 
 .flashcard-back {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: white;
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(1px);
+  -webkit-transform: rotateY(180deg) translateZ(1px);
 }
 
 .card-header {

@@ -44,13 +44,19 @@ export const InteractiveFlashcard: React.FC<InteractiveFlashcardProps> = ({
         onClick={handleClick}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        style={{ perspective: 1000 }}
+        style={{ 
+          perspective: 1000,
+          WebkitPerspective: 1000
+        }}
       >
         <motion.div
           className="flashcard-inner"
           animate={{ rotateY: isFlipped ? 180 : 0 }}
           transition={{ duration: 0.6, type: 'spring' }}
-          style={{ transformStyle: 'preserve-3d' }}
+          style={{ 
+            transformStyle: 'preserve-3d',
+            WebkitTransformStyle: 'preserve-3d'
+          }}
         >
           {/* Front */}
           <div className="flashcard-face flashcard-front">
