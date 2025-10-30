@@ -233,19 +233,19 @@ export class MicrolessonScriptService {
 
     // Extract all generated content from LLM (including enhanced titles)
     const microlessonTitle = llmResults.enhancedTitle || episode.title;
-    const titleTh = llmResults.enhancedTitleTh || this.translateEpisodeTitle(episode.title);
+    const titleTh = llmResults.enhancedTitleTh || episode.title; // Simple fallback
     const learningObjectives = llmResults.enhancedObjectives;
     const keyVocabulary = llmResults.enhancedVocabulary;
     const comprehensionQuestions = llmResults.enhancedQuestions;
 
-    // Extract enhanced grammar points for this episode
-    const grammarPoints = this.extractEpisodeGrammarPoints(episodeAnalysis);
+    // Use LLM-generated grammar points
+    const grammarPoints = llmResults.enhancedGrammarPoints || [];
 
     // Get original segment titles for reference
     const originalSegments = episodeSegments.map((seg) => seg.title);
 
-    // Create series info with episode context
-    const seriesInfo = this.createEpisodeSeriesInfo(analysis, episode);
+    // Create series info with episode context and LLM translations
+    const seriesInfo = await this.createEpisodeSeriesInfo(analysis, episode);
 
     return {
       lesson: {
@@ -279,14 +279,14 @@ export class MicrolessonScriptService {
     const keyVocabulary = llmResults.enhancedVocabulary;
     const comprehensionQuestions = llmResults.enhancedQuestions;
 
-    // Extract enhanced grammar points (2-5 items) - use template-based for structure consistency
-    const grammarPoints = this.extractEnhancedGrammarPoints(analysis);
+    // Use LLM-generated grammar points
+    const grammarPoints = llmResults.enhancedGrammarPoints || [];
 
     // Get original segment titles for reference
     const originalSegments = analysis.segments.map((seg) => seg.title);
 
-    // Create series info with Thai context
-    const seriesInfo = this.createSeriesInfo(analysis);
+    // Create series info with LLM translations
+    const seriesInfo = await this.createSeriesInfo(analysis);
 
     return {
       lesson: {
@@ -304,270 +304,63 @@ export class MicrolessonScriptService {
     };
   }
 
-  private extractEnhancedGrammarPoints(analysis: LessonAnalysis): any[] {
-    const grammarPoints: any[] = [];
+  // Removed: extractEnhancedGrammarPoints() - now using LLM-generated grammar points
+  // Removed: translateGrammarExplanation() - no longer needed, LLM handles translation
 
-    // Extract from existing grammar points if available
-    if (analysis.grammarPoints && analysis.grammarPoints.length > 0) {
-      for (const point of analysis.grammarPoints.slice(0, 5)) {
-        grammarPoints.push({
-          structure: point.structure || point.topic || 'Grammar Point',
-          explanation: point.explanation || point.description || 'Important grammar structure for communication',
-          thaiExplanation: point.thaiExplanation || this.translateGrammarExplanation(point.explanation || point.description),
-          examples: point.examples || [`Example: ${point.structure || 'structure'} in use`],
-        });
-      }
-    }
-
-    // Add common grammar points if not enough
-    if (grammarPoints.length < 2) {
-      const commonGrammarPoints = [
-        {
-          structure: 'Present Simple Tense',
-          explanation: 'Used for habits, facts, and general truths',
-          thaiExplanation: 'ใช้สำหรับนิสัย ข้อเท็จจริง และความจริงทั่วไป',
-          examples: ['I go to work every day', 'The sun rises in the east', 'She speaks English well'],
-        },
-        {
-          structure: 'Modal Verbs (Can/Could/Would)',
-          explanation: 'Used for requests, possibilities, and polite expressions',
-          thaiExplanation: 'ใช้สำหรับการขอร้อง ความเป็นไปได้ และการแสดงออกอย่างสุภาพ',
-          examples: ['Can you help me?', 'Could you please speak slowly?', 'Would you like some coffee?'],
-        },
-        {
-          structure: 'Question Formation',
-          explanation: 'How to form questions in English conversations',
-          thaiExplanation: 'วิธีการตั้งคำถามในการสนทนาภาษาอังกฤษ',
-          examples: ['What time is it?', 'Where is the bathroom?', 'How much does this cost?'],
-        },
-        {
-          structure: 'Prepositions of Place and Time',
-          explanation: 'Common prepositions used in daily situations',
-          thaiExplanation: 'คำบุพบทที่ใช้บ่อยในสถานการณ์ประจำวัน',
-          examples: ['at the restaurant', 'in the morning', 'on Monday', 'next to the bank'],
-        },
-      ];
-
-      grammarPoints.push(...commonGrammarPoints.slice(0, 5 - grammarPoints.length));
-    }
-
-    return grammarPoints.slice(0, 5);
-  }
-
-  private translateGrammarExplanation(explanation: string): string {
-    if (!explanation) return 'โครงสร้างไวยากรณ์สำคัญสำหรับการสื่อสาร';
-
-    // Simple translation mappings
-    const translations: { [key: string]: string } = {
-      'present tense': 'กาลปัจจุบัน',
-      'past tense': 'กาลอดีต',
-      'future tense': 'กาลอนาคต',
-      'modal verbs': 'กริยาช่วย',
-      questions: 'คำถาม',
-      prepositions: 'คำบุพบท',
-      adjectives: 'คำคุณศัพท์',
-      adverbs: 'คำกริยาวิเศษณ์',
-    };
-
-    let thaiExplanation = explanation.toLowerCase();
-    for (const [english, thai] of Object.entries(translations)) {
-      thaiExplanation = thaiExplanation.replace(new RegExp(english, 'g'), thai);
-    }
-
-    return thaiExplanation;
-  }
-
-  private createSeriesInfo(analysis: LessonAnalysis): any {
+  private async createSeriesInfo(analysis: LessonAnalysis): Promise<any> {
     const seriesStructure = analysis.seriesStructure;
 
-    return {
+    const baseInfo = {
       seriesTitle: seriesStructure.seriesTitle || 'English Learning Series',
-      seriesTitleTh: this.translateSeriesTitle(seriesStructure.seriesTitle),
       episodeNumber: seriesStructure.episodeNumber || 1,
       totalEpisodes: seriesStructure.totalEpisodes || 4,
       description: seriesStructure.description || 'A comprehensive English learning series for Thai students',
-      descriptionTh: this.translateSeriesDescription(seriesStructure.description),
-    };
-  }
-
-  private translateSeriesTitle(englishTitle: string): string {
-    if (!englishTitle) return 'หลักสูตรการเรียนภาษาอังกฤษ';
-
-    const titleMappings: { [key: string]: string } = {
-      'Everyday English Mastery': 'การเรียนรู้ภาษาอังกฤษในชีวิตประจำวัน',
-      'Business English Course': 'หลักสูตรภาษาอังกฤษธุรกิจ',
-      'Travel English Guide': 'คู่มือภาษาอังกฤษสำหรับการเดินทาง',
-      'English for Beginners': 'ภาษาอังกฤษสำหรับผู้เริ่มต้น',
     };
 
-    // Try to find exact match
-    for (const [pattern, translation] of Object.entries(titleMappings)) {
-      if (englishTitle.includes(pattern)) {
-        return translation;
-      }
+    // Use LLM to translate series info
+    try {
+      const translatedInfo = await this.llmEnhancedService.generateSeriesInfoTranslations(baseInfo);
+      return translatedInfo;
+    } catch (error) {
+      this.logger.warn('Failed to generate LLM translations for series info, using simple fallback');
+      return {
+        ...baseInfo,
+        seriesTitleTh: baseInfo.seriesTitle,
+        descriptionTh: baseInfo.description,
+      };
     }
-
-    // Create basic translation
-    return `หลักสูตรการเรียนภาษาอังกฤษ: ${englishTitle}`;
   }
 
-  private translateSeriesDescription(englishDesc: string): string {
-    if (!englishDesc) return 'หลักสูตรการเรียนภาษาอังกฤษสำหรับนักเรียนไทย';
+  // Removed: translateSeriesTitle() - now using LLM translations via generateSeriesInfoTranslations()
+  // Removed: translateSeriesDescription() - now using LLM translations
+  // Removed: translateEpisodeTitle() - now using LLM translations
 
-    // Simple translation for common terms
-    let thaiDesc = englishDesc;
-    thaiDesc = thaiDesc.replace(/comprehensive/g, 'ครอบคลุม');
-    thaiDesc = thaiDesc.replace(/English/g, 'ภาษาอังกฤษ');
-    thaiDesc = thaiDesc.replace(/students/g, 'นักเรียน');
-    thaiDesc = thaiDesc.replace(/learning/g, 'การเรียนรู้');
-    thaiDesc = thaiDesc.replace(/conversation/g, 'การสนทนา');
-    thaiDesc = thaiDesc.replace(/practical/g, 'ปฏิบัติ');
+  // Removed: extractEpisodeGrammarPoints() - now using LLM-generated grammar points
+  // Removed: getEpisodeSpecificGrammar() - no longer needed
 
-    return thaiDesc;
-  }
-
-  private translateEpisodeTitle(englishTitle: string): string {
-    if (!englishTitle) return 'บทเรียนภาษาอังกฤษ';
-
-    const titleTranslations: { [key: string]: string } = {
-      'Service Industry Essentials': 'พื้นฐานอุตสาหกรรมบริการ',
-      'Hotels & Restaurants': 'โรงแรมและร้านอาหาร',
-      'Everyday Transactions': 'การทำธุรกรรมประจำวัน',
-      'Libraries, Banks & Bookstores': 'ห้องสมุด ธนาคาร และร้านหนังสือ',
-      'Daily Life & Decision Making': 'ชีวิตประจำวันและการตัดสินใจ',
-      'Shopping & Routines': 'การช้อปปิ้งและกิจวัตรประจำวัน',
-    };
-
-    // Try exact matches first
-    for (const [pattern, translation] of Object.entries(titleTranslations)) {
-      if (englishTitle.includes(pattern)) {
-        return englishTitle.replace(pattern, translation);
-      }
-    }
-
-    // Basic word replacements
-    let thaiTitle = englishTitle;
-    thaiTitle = thaiTitle.replace(/Service/g, 'บริการ');
-    thaiTitle = thaiTitle.replace(/Industry/g, 'อุตสาหกรรม');
-    thaiTitle = thaiTitle.replace(/Essentials/g, 'พื้นฐาน');
-    thaiTitle = thaiTitle.replace(/Hotels/g, 'โรงแรม');
-    thaiTitle = thaiTitle.replace(/Restaurants/g, 'ร้านอาหาร');
-    thaiTitle = thaiTitle.replace(/Everyday/g, 'ประจำวัน');
-    thaiTitle = thaiTitle.replace(/Transactions/g, 'ธุรกรรม');
-    thaiTitle = thaiTitle.replace(/Daily Life/g, 'ชีวิตประจำวัน');
-    thaiTitle = thaiTitle.replace(/Decision Making/g, 'การตัดสินใจ');
-    thaiTitle = thaiTitle.replace(/Shopping/g, 'การช้อปปิ้ง');
-    thaiTitle = thaiTitle.replace(/Routines/g, 'กิจวัตร');
-
-    return thaiTitle;
-  }
-
-  private extractEpisodeGrammarPoints(episodeAnalysis: any): any[] {
-    const grammarPoints: any[] = [];
-
-    // Extract from existing grammar points if available
-    if (episodeAnalysis.grammarPoints && episodeAnalysis.grammarPoints.length > 0) {
-      for (const point of episodeAnalysis.grammarPoints.slice(0, 3)) {
-        grammarPoints.push({
-          structure: point.structure || point.topic || 'Grammar Point',
-          explanation: point.explanation || point.description || 'Important grammar structure for this episode',
-          thaiExplanation: point.thaiExplanation || this.translateGrammarExplanation(point.explanation || point.description),
-          examples: point.examples || [`Example: ${point.structure || 'structure'} in use`],
-        });
-      }
-    }
-
-    // Add episode-specific grammar points if not enough
-    if (grammarPoints.length < 2) {
-      const episodeSpecificGrammar = this.getEpisodeSpecificGrammar(episodeAnalysis);
-      grammarPoints.push(...episodeSpecificGrammar.slice(0, 3 - grammarPoints.length));
-    }
-
-    return grammarPoints.slice(0, 3);
-  }
-
-  private getEpisodeSpecificGrammar(episodeAnalysis: any): any[] {
-    // Determine episode focus based on segments
-    const segmentTopics = episodeAnalysis.segments.flatMap((seg) => seg.keyTopics || []);
-
-    // Grammar points based on common topics
-    const grammarByTopic: { [key: string]: any } = {
-      'hotel service': {
-        structure: 'Polite Requests with "Can you" and "Could you"',
-        explanation: 'Used for making polite requests in service situations',
-        thaiExplanation: 'ใช้สำหรับการขอร้องอย่างสุภาพในสถานการณ์บริการ',
-        examples: ['Can you recommend a restaurant?', 'Could you arrange a taxi?', 'Can you help me with directions?'],
-      },
-      restaurant: {
-        structure: 'Food Ordering Language with "I would like"',
-        explanation: 'Polite way to order food and express preferences',
-        thaiExplanation: 'วิธีสุภาพในการสั่งอาหารและแสดงความต้องการ',
-        examples: ['I would like the chicken curry', 'I would like it not too spicy', 'I would like to order drinks first'],
-      },
-      'daily routines': {
-        structure: 'Present Simple for Daily Habits',
-        explanation: 'Used to describe regular activities and routines',
-        thaiExplanation: 'ใช้บรรยายกิจกรรมปกติและกิจวัตรประจำวัน',
-        examples: ['I wake up at 6 AM', 'She goes to work by bus', 'We have dinner together every evening'],
-      },
-      bank: {
-        structure: 'Transaction Language with "I want to" and "I need to"',
-        explanation: 'Expressing needs and wants in formal transactions',
-        thaiExplanation: 'การแสดงความต้องการในการทำธุรกรรมอย่างเป็นทางการ',
-        examples: ['I want to deposit a check', 'I need to check my balance', 'I want to open an account'],
-      },
-    };
-
-    const relevantGrammar = [];
-    for (const topic of segmentTopics) {
-      for (const [key, grammar] of Object.entries(grammarByTopic)) {
-        if (topic.toLowerCase().includes(key) && !relevantGrammar.find((g) => g.structure === grammar.structure)) {
-          relevantGrammar.push(grammar);
-        }
-      }
-    }
-
-    // Add default grammar if none found
-    if (relevantGrammar.length === 0) {
-      relevantGrammar.push({
-        structure: 'Question Formation in English',
-        explanation: 'How to ask questions in everyday conversations',
-        thaiExplanation: 'วิธีการตั้งคำถามในการสนทนาประจำวัน',
-        examples: ['What time is it?', 'Where is the bathroom?', 'How much does this cost?'],
-      });
-    }
-
-    return relevantGrammar;
-  }
-
-  private createEpisodeSeriesInfo(analysis: LessonAnalysis, episode: any): any {
+  private async createEpisodeSeriesInfo(analysis: LessonAnalysis, episode: any): Promise<any> {
     const seriesStructure = analysis.seriesStructure;
 
-    return {
+    const baseInfo = {
       seriesTitle: seriesStructure.seriesTitle || 'English Learning Series',
-      seriesTitleTh: this.translateSeriesTitle(seriesStructure.seriesTitle),
       episodeNumber: episode.episodeNumber,
       totalEpisodes: seriesStructure.episodes?.length || 3,
       description: episode.description || 'A focused microlesson on practical English skills',
-      descriptionTh: this.translateEpisodeDescription(episode.description),
     };
+
+    // Use LLM to translate series info
+    try {
+      const translatedInfo = await this.llmEnhancedService.generateSeriesInfoTranslations(baseInfo);
+      return translatedInfo;
+    } catch (error) {
+      this.logger.warn('Failed to generate LLM translations for episode series info, using simple fallback');
+      return {
+        ...baseInfo,
+        seriesTitleTh: baseInfo.seriesTitle,
+        descriptionTh: baseInfo.description,
+      };
+    }
   }
 
-  private translateEpisodeDescription(englishDesc: string): string {
-    if (!englishDesc) return 'บทเรียนสั้นที่เน้นทักษะภาษาอังกฤษเชิงปฏิบัติ';
-
-    // Basic translation patterns
-    let thaiDesc = englishDesc;
-    thaiDesc = thaiDesc.replace(/Learn to navigate/g, 'เรียนรู้การจัดการ');
-    thaiDesc = thaiDesc.replace(/Practice common/g, 'ฝึกฝน');
-    thaiDesc = thaiDesc.replace(/Develop vocabulary/g, 'พัฒนาคำศัพท์');
-    thaiDesc = thaiDesc.replace(/hotel services/g, 'บริการโรงแรม');
-    thaiDesc = thaiDesc.replace(/restaurant/g, 'ร้านอาหาร');
-    thaiDesc = thaiDesc.replace(/dietary preferences/g, 'ความต้องการด้านอาหาร');
-    thaiDesc = thaiDesc.replace(/service transactions/g, 'การทำธุรกรรมบริการ');
-    thaiDesc = thaiDesc.replace(/grocery shopping/g, 'การซื้อของในซูเปอร์มาร์เก็ต');
-    thaiDesc = thaiDesc.replace(/daily routines/g, 'กิจวัตรประจำวัน');
-
-    return thaiDesc;
-  }
+  // Removed: translateEpisodeDescription() - now using LLM translations
 }
