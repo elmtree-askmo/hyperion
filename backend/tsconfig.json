@@ -22,5 +22,6 @@
       "@/*": ["src/*"]
     }
   },
+  "include": ["src/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "dist", "../interactive-viewer", "../docs", "../remotion"]
 }
