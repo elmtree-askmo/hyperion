@@ -11,6 +11,7 @@ export interface LLMConfig {
     openai?: string;
     openrouter?: string;
     groq?: string;
+    modelscope?: string;
   };
 }
 
@@ -19,6 +20,7 @@ export class LLMConfigService {
   private readonly logger = new Logger(LLMConfigService.name);
   private openaiClient: ChatOpenAI;
   private openrouterClient: ChatOpenAI;
+  private modelscopeClient: ChatOpenAI;
   private groqClient: ChatGroq;
   private readonly selectedLLM: LLMClient;
   private readonly llmProvider: string;
@@ -53,6 +55,18 @@ export class LLMConfigService {
         baseURL: 'https://openrouter.ai/api/v1',
       },
     });
+
+    this.modelscopeClient = new ChatOpenAI({
+      model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+      temperature: 0,
+      apiKey: process.env.MODELSCOPE_API_KEY,
+      configuration: {
+        baseURL: 'https://api-inference.modelscope.cn/v1/',
+      },
+      modelKwargs: {
+        enable_thinking: false,
+      },
+    });
   }
 
   private selectLLMProvider(): LLMClient {
@@ -73,13 +87,20 @@ export class LLMConfigService {
           return this.groqClient;
 
         case 'openrouter':
-        default:
           if (!process.env.OPENROUTER_API_KEY) {
             console.warn('⚠️  OPENROUTER_API_KEY not found, LLM features will be disabled');
             return null;
           }
           this.logger.log('🤖 Using OpenRouter LLM provider');
           return this.openrouterClient;
+        case 'modelscope':
+          if (!process.env.MODELSCOPE_API_KEY) {
+            throw new Error('MODELSCOPE_API_KEY not found');
+          }
+          this.logger.log('🤖 Using ModelScope LLM provider');
+          return this.modelscopeClient;
+        default:
+          throw new Error(`Unsupported LLM provider: ${this.llmProvider}`);
       }
     } catch (error) {
       console.warn(`⚠️  Failed to initialize LLM provider (${this.llmProvider}): ${error.message}`);
@@ -121,7 +142,6 @@ export class LLMConfigService {
         });
 
       case 'openrouter':
-      default:
         return new ChatOpenAI({
           model: config.model?.openrouter || 'deepseek/deepseek-chat-v3.1:free',
           temperature,
@@ -130,6 +150,20 @@ export class LLMConfigService {
             baseURL: 'https://openrouter.ai/api/v1',
           },
         });
+      case 'modelscope':
+        return new ChatOpenAI({
+          model: config.model?.modelscope || 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+          temperature,
+          apiKey: process.env.MODELSCOPE_API_KEY,
+          configuration: {
+            baseURL: 'https://api-inference.modelscope.cn/v1/',
+          },
+          modelKwargs: {
+            enable_thinking: false,
+          },
+        });
+      default:
+        throw new Error(`Unsupported LLM provider: ${this.llmProvider}`);
     }
   }
 
