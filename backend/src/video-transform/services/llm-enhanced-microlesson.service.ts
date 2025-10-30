@@ -36,12 +36,13 @@ export class LLMEnhancedMicrolessonService {
 
     try {
       // 并行生成所有部分 - 纯LLM方案，包括标题
-      const [titles, objectives, vocabulary, questions, memoryHooks] = await Promise.all([
+      const [titles, objectives, vocabulary, questions, memoryHooks, grammarPoints] = await Promise.all([
         this.generateEnhancedTitles(lessonAnalysis),
         this.generateEnhancedObjectives(lessonAnalysis),
         this.generateEnhancedVocabulary(lessonAnalysis),
         this.generateEnhancedQuestions(lessonAnalysis),
         this.generateEnhancedMemoryHooks(lessonAnalysis),
+        this.generateEnhancedGrammarPoints(lessonAnalysis),
       ]);
 
       return {
@@ -51,6 +52,7 @@ export class LLMEnhancedMicrolessonService {
         enhancedVocabulary: vocabulary,
         enhancedQuestions: questions,
         enhancedMemoryHooks: memoryHooks,
+        enhancedGrammarPoints: grammarPoints,
         errors: [],
       };
     } catch (error) {
@@ -392,6 +394,115 @@ Return ONLY a JSON array of strings in Thai:
     } catch (parseError) {
       console.warn('Failed to parse LLM memory hooks response:', parseError);
       throw parseError;
+    }
+  }
+
+  private async generateEnhancedGrammarPoints(lessonAnalysis: any): Promise<any[]> {
+    this.logger.log('📖 Generating LLM-enhanced grammar points...');
+
+    const grammarPoints = lessonAnalysis.grammarPoints || [];
+    const keyTopics =
+      lessonAnalysis.segments
+        ?.map((s: any) => s.keyTopics)
+        .flat()
+        .join(', ') || '';
+
+    const prompt = PromptTemplate.fromTemplate(`
+You are an expert English teacher creating grammar explanations for Thai college students.
+
+Lesson Title: {title}
+Key Topics: {keyTopics}
+Existing Grammar Points: {existingGrammar}
+
+Create 2-3 focused grammar points that are most relevant to this lesson. ALL explanations must be in Thai language.
+
+Each grammar point should include:
+1. Structure name in English (e.g., "Present Simple Tense", "Modal Verbs")
+2. Clear explanation in English
+3. Thai explanation (natural, easy to understand)
+4. 3-4 practical examples in English
+
+CRITICAL REQUIREMENTS:
+- Focus on grammar that appears in THIS lesson's content
+- Explanations in Thai must be natural and clear
+- Examples should be practical and relevant to Thai students
+- Use REAL Thai contexts in examples when possible
+
+Return ONLY valid JSON:
+[
+  {{
+    "structure": "Grammar structure name in English",
+    "explanation": "Clear explanation in English",
+    "thaiExplanation": "คำอธิบายเป็นภาษาไทยที่เข้าใจง่าย",
+    "examples": ["Example 1", "Example 2", "Example 3"]
+  }}
+]
+`);
+
+    const chain = prompt.pipe(this.llm).pipe(new StringOutputParser());
+
+    const result = await chain.invoke({
+      title: lessonAnalysis.title || 'English Lesson',
+      keyTopics: keyTopics,
+      existingGrammar: grammarPoints.map((g: any) => g.structure || g.topic).join(', ') || 'general English grammar',
+    });
+
+    try {
+      const enhancedGrammar = JSON.parse(this.cleanJsonResponse(result));
+      this.logger.log(`✅ LLM generated ${enhancedGrammar.length} grammar points`);
+      return enhancedGrammar;
+    } catch (parseError) {
+      console.warn('Failed to parse LLM grammar points response:', parseError);
+      throw parseError;
+    }
+  }
+
+  async generateSeriesInfoTranslations(seriesInfo: any): Promise<any> {
+    this.logger.log('🌐 Generating LLM translations for series info...');
+
+    const prompt = PromptTemplate.fromTemplate(`
+You are translating series information for Thai college students learning English.
+
+Series Title: {seriesTitle}
+Description: {description}
+
+Translate to natural, engaging Thai that appeals to Thai university students.
+
+Requirements:
+- Translations should be natural and modern Thai
+- Keep educational terminology accurate
+- Make it appealing and motivating
+- Use language that Thai college students use
+
+Return ONLY valid JSON:
+{{
+  "seriesTitleTh": "ชื่อซีรีส์เป็นภาษาไทย",
+  "descriptionTh": "คำอธิบายเป็นภาษาไทย"
+}}
+`);
+
+    const chain = prompt.pipe(this.llm).pipe(new StringOutputParser());
+
+    const result = await chain.invoke({
+      seriesTitle: seriesInfo.seriesTitle || 'English Learning Series',
+      description: seriesInfo.description || 'A comprehensive English learning series',
+    });
+
+    try {
+      const translations = JSON.parse(this.cleanJsonResponse(result));
+      return {
+        ...seriesInfo,
+        seriesTitleTh: translations.seriesTitleTh,
+        descriptionTh: translations.descriptionTh,
+      };
+    } catch (parseError) {
+      console.warn('Failed to parse LLM series translations response:', parseError);
+      // Fallback to simple translations
+      return {
+        ...seriesInfo,
+        seriesTitleTh: seriesInfo.seriesTitle || 'หลักสูตรการเรียนภาษาอังกฤษ',
+        descriptionTh: seriesInfo.description || 'หลักสูตรการเรียนภาษาอังกฤษสำหรับนักเรียนไทย',
+      };
     }
   }
 
