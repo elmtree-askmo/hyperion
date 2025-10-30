@@ -17,6 +17,8 @@ export interface TextPartTiming {
   duration: number;
   startTime: number;
   endTime: number;
+  englishTranslation?: string; // For Thai text parts, provides English reference
+  thaiTranslation?: string; // For English text parts, provides Thai reference
 }
 
 export interface SegmentTiming {

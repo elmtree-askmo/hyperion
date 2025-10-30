@@ -10,6 +10,7 @@ interface TextPartTiming {
   startTime: number;
   endTime: number;
   englishTranslation?: string;
+  thaiTranslation?: string;
 }
 
 interface TimingSegment {
@@ -27,6 +28,7 @@ interface TextPart {
   language: string;
   speakingRate?: number;
   englishTranslation?: string;
+  thaiTranslation?: string;
 }
 
 interface SegmentBasedTiming {
@@ -165,6 +167,25 @@ export class SynchronizedLessonService {
       // Add textPartTimings if available from timing-metadata.json
       if (segment.textPartTimings) {
         timingSegment.textPartTimings = segment.textPartTimings;
+
+        // Merge thaiTranslation from textParts into textPartTimings
+        // This ensures Thai translations are available in the final synchronized lesson
+        if (audioSegment?.textParts && audioSegment.textParts.length > 0) {
+          timingSegment.textPartTimings = timingSegment.textPartTimings.map((timing) => {
+            // Find corresponding textPart by matching text content
+            const matchingTextPart = audioSegment.textParts.find((part) => part.text === timing.text && part.language === timing.language);
+
+            // If found and has thaiTranslation, add it to timing
+            if (matchingTextPart?.thaiTranslation) {
+              return {
+                ...timing,
+                thaiTranslation: matchingTextPart.thaiTranslation,
+              };
+            }
+
+            return timing;
+          });
+        }
       }
 
       // Use vocabWord from audio_segments.json if available for vocabulary cards

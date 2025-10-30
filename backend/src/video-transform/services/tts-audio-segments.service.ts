@@ -11,7 +11,8 @@ interface TextPart {
   text: string;
   language: 'th' | 'en';
   speakingRate?: number;
-  englishTranslation?: string;
+  englishTranslation?: string; // For Thai text parts, provides English reference
+  thaiTranslation?: string; // For English text parts, provides Thai reference
 }
 
 interface AudioSegment {
@@ -36,7 +37,8 @@ export interface TextPartTiming {
   duration: number;
   startTime: number;
   endTime: number;
-  englishTranslation?: string;
+  englishTranslation?: string; // For Thai text parts, provides English reference
+  thaiTranslation?: string; // For English text parts, provides Thai reference
 }
 
 export interface TimingMetadata {
@@ -220,6 +222,11 @@ export class TtsAudioSegmentsService {
           timing.englishTranslation = part.englishTranslation;
         }
 
+        // Include Thai translation if available (for English text parts)
+        if (part.thaiTranslation) {
+          timing.thaiTranslation = part.thaiTranslation;
+        }
+
         partTimings.push(timing);
 
         currentTime += partDuration;
@@ -268,7 +275,7 @@ export class TtsAudioSegmentsService {
 
   /**
    * Merge short text parts (especially single punctuation) with adjacent parts of the same language
-   * to avoid TTS issues with very short texts
+   * to avoid TTS issues with very short texts. Also filters out empty or whitespace-only parts.
    */
   private mergeShortTextParts(textParts: TextPart[]): TextPart[] {
     if (textParts.length <= 1) {
@@ -280,6 +287,13 @@ export class TtsAudioSegmentsService {
 
     while (i < textParts.length) {
       const current = textParts[i];
+
+      // Skip empty or whitespace-only parts
+      if (!current.text || current.text.trim().length === 0) {
+        this.logger.log(`Skipping empty or whitespace-only part at index ${i}`);
+        i++;
+        continue;
+      }
 
       // If current part is very short (< 3 characters, typically punctuation)
       // and same language as previous part, merge with previous
@@ -294,6 +308,12 @@ export class TtsAudioSegmentsService {
           } else if (current.englishTranslation) {
             previous.englishTranslation = current.englishTranslation;
           }
+          // Merge Thai translations if both exist
+          if (previous.thaiTranslation && current.thaiTranslation) {
+            previous.thaiTranslation += current.thaiTranslation;
+          } else if (current.thaiTranslation) {
+            previous.thaiTranslation = current.thaiTranslation;
+          }
           this.logger.log(`Merged short part "${current.text}" with previous part`);
           i++;
           continue;
@@ -303,6 +323,13 @@ export class TtsAudioSegmentsService {
       // If current part is very short and same language as next part, merge with next
       if (current.text.trim().length < 3 && i + 1 < textParts.length) {
         const next = textParts[i + 1];
+        // Skip if next part is also empty
+        if (!next.text || next.text.trim().length === 0) {
+          // Keep current if it has content, skip next
+          merged.push({ ...current });
+          i += 2;
+          continue;
+        }
         if (next.language === current.language) {
           // Merge current with next
           const mergedPart: TextPart = {
@@ -315,6 +342,12 @@ export class TtsAudioSegmentsService {
             mergedPart.englishTranslation = current.englishTranslation + next.englishTranslation;
           } else if (current.englishTranslation || next.englishTranslation) {
             mergedPart.englishTranslation = current.englishTranslation || next.englishTranslation;
+          }
+          // Merge Thai translations if available
+          if (current.thaiTranslation && next.thaiTranslation) {
+            mergedPart.thaiTranslation = current.thaiTranslation + next.thaiTranslation;
+          } else if (current.thaiTranslation || next.thaiTranslation) {
+            mergedPart.thaiTranslation = current.thaiTranslation || next.thaiTranslation;
           }
           merged.push(mergedPart);
           this.logger.log(`Merged short part "${current.text}" with next part`);

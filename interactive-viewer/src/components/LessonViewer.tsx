@@ -69,6 +69,27 @@ export const LessonViewer: React.FC = () => {
     lessonData.lesson.segmentBasedTiming.length - 1
   ]?.endTime || 300;
 
+  // Helper function to get Thai translation for a practice phrase
+  const getThaiTranslationForPhrase = (englishPhrase: string): string | undefined => {
+    if (!lessonData) return undefined;
+    
+    // Search through all segments to find the English phrase in textPartTimings
+    for (const segment of lessonData.lesson.segmentBasedTiming) {
+      if (segment.screenElement !== 'practice_card') continue;
+      
+      if (!segment.textPartTimings || segment.textPartTimings.length === 0) continue;
+      
+      // Check each textPartTiming for the English phrase
+      for (const timing of segment.textPartTimings) {
+        if (timing.language === 'en' && timing.text === englishPhrase && timing.thaiTranslation) {
+          return timing.thaiTranslation;
+        }
+      }
+    }
+    
+    return undefined;
+  };
+
   // Memoize inputProps for Player to avoid re-creating the object
   const playerInputProps = useMemo(() => ({
     lessonData: {
@@ -770,7 +791,7 @@ export const LessonViewer: React.FC = () => {
                 >
                   <PracticePauseOverlay
                     phrase={currentPracticePhrase}
-                    thaiTranslation={undefined}
+                    thaiTranslation={getThaiTranslationForPhrase(currentPracticePhrase)}
                     onContinue={handlePracticeContinue}
                     onMarkPracticed={handleMarkPracticed}
                     onReplay={handlePracticeReplay}

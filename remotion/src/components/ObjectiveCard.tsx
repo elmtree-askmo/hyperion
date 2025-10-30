@@ -191,6 +191,7 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
           const isActive = frame >= timing.startFrame && frame < timing.endFrame;
           const isEnglish = timing.part.language === 'en';
           const englishTranslation = (timing.part as any).englishTranslation;
+          const thaiTranslation = (timing.part as any).thaiTranslation;
 
           return (
             <div
@@ -220,6 +221,7 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
               >
                 {timing.part.text}
               </span>
+              {/* Show English translation for Thai text */}
               {!isEnglish && englishTranslation && (
                 <span
                   style={{
@@ -233,6 +235,22 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
                   }}
                 >
                   {englishTranslation}
+                </span>
+              )}
+              {/* Show Thai translation for English text */}
+              {isEnglish && thaiTranslation && (
+                <span
+                  style={{
+                    color: theme.colors.textSecondary,
+                    fontSize: fontSizes.translationSize,
+                    fontStyle: 'italic',
+                    display: 'block',
+                    marginTop: '4px',
+                    opacity: 0.75,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {thaiTranslation}
                 </span>
               )}
             </div>

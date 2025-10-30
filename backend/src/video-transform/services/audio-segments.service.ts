@@ -189,13 +189,14 @@ Each segment MUST include BOTH "text" and "textParts" fields:
 - "text": Complete text for display purposes (Thai + English mixed)
 - "textParts": Array separating Thai and English portions for optimized TTS synthesis
   - Thai parts: {{"text": "...", "language": "th", "englishTranslation": "English reference translation"}}
-  - English parts: {{"text": "...", "language": "en", "speakingRate": 0.8}}
+  - English parts: {{"text": "...", "language": "en", "speakingRate": 0.8, "thaiTranslation": "Thai reference translation"}}
   
 IMPORTANT RULES FOR TEXT PARTS:
 1. For ALL Thai text parts (language: "th"), you MUST provide an "englishTranslation" field with an English translation. This translation is for visual reference only and will NOT be spoken.
-2. The "textParts" allows the TTS system to apply slower speaking rate (0.8x) to English parts for better learning comprehension, while keeping Thai at normal speed (1.0x).
-3. CRITICAL: For segments with LONG Thai text (especially intro and conclusion), you MUST split the Thai text into multiple shorter textParts (ideally 1-2 sentences each). Each Thai textPart should have its own englishTranslation. This is ESSENTIAL for proper display with line-by-line English translations on screen.
-4. Do NOT create one long Thai textPart for intro or conclusion - break them into logical sentence groups for better readability and display.
+2. For English text parts in PRACTICE_CARD segments (language: "en"), you MUST provide a "thaiTranslation" field with a Thai translation. This helps learners understand the meaning of practice phrases. This translation is for visual reference only and will NOT be spoken.
+3. The "textParts" allows the TTS system to apply slower speaking rate (0.8x) to English parts for better learning comprehension, while keeping Thai at normal speed (1.0x).
+4. CRITICAL: For segments with LONG Thai text (especially intro and conclusion), you MUST split the Thai text into multiple shorter textParts (ideally 1-2 sentences each). Each Thai textPart should have its own englishTranslation. This is ESSENTIAL for proper display with line-by-line English translations on screen.
+5. Do NOT create one long Thai textPart for intro or conclusion - break them into logical sentence groups for better readability and display.
 
 Return ONLY a valid JSON object in this exact format:
 {{
@@ -241,6 +242,19 @@ Return ONLY a valid JSON object in this exact format:
       "vocabWord": "restaurant",
       "visualDescription": "Introduction to the vocabulary word with visual context",
       "backgroundImageDescription": "Stylish Bangkok restaurant interior with elegant dining tables, Thai and international cuisine presentation, warm ambient lighting, Sukhumvit or Silom dining area atmosphere"
+    }},
+    {{
+      "id": "practice_coffee_order",
+      "text": "ฝึกพูดที่ร้านกาแฟ สมมติว่าอยู่ที่ TRUE Coffee สยามสแควร์วัน ให้พูดประโยคสั่งเครื่องดื่มพร้อมความหวานน้อย พูดตาม 2 รอบนะ Can I have an iced latte with less sugar, please?",
+      "textParts": [
+        {{"text": "ฝึกพูดที่ร้านกาแฟ สมมติว่าอยู่ที่ TRUE Coffee สยามสแควร์วัน ให้พูดประโยคสั่งเครื่องดื่มพร้อมความหวานน้อย", "language": "th", "englishTranslation": "Practice at a coffee shop. Imagine you're at TRUE Coffee in Siam Square One and order a drink with less sugar."}},
+        {{"text": " พูดตาม 2 รอบนะ ", "language": "th", "englishTranslation": " Repeat it twice. "}},
+        {{"text": "Can I have an iced latte with less sugar, please?", "language": "en", "speakingRate": 0.8, "thaiTranslation": "ขอลาเต้เย็นหวานน้อยได้ไหมครับ/ค่ะ"}}
+      ],
+      "description": "ฝึกสั่งเครื่องดื่มในร้านกาแฟ",
+      "screenElement": "practice_card",
+      "visualDescription": "Practice ordering at a coffee shop",
+      "backgroundImageDescription": "Modern TRUE Coffee shop interior in Siam Square One, barista counter with coffee machines, menu board, cozy seating area, Bangkok urban cafe atmosphere"
     }}
   ]
 }}
@@ -251,10 +265,12 @@ IMPORTANT REMINDERS:
 3. English parts in textParts should have "speakingRate": 0.8 for slower, clearer pronunciation
 4. Thai parts in textParts should NOT have speakingRate (defaults to 1.0)
 5. ALL Thai textParts MUST include "englishTranslation" field with accurate English translation
-6. English textParts should NOT have "englishTranslation" field (they are already in English)
-7. Ensure textParts accurately reflects the content in the "text" field
-8. AVOID creating very short textParts (< 3 characters like ", " or " และ "). Instead, merge short connectors with adjacent Thai text to ensure smooth TTS generation
-9. CRITICAL: For intro and conclusion segments, ALWAYS split long Thai text into multiple shorter textParts (1-2 sentences each). This ensures proper line-by-line display with English translations on screen. DO NOT use a single long textPart for these segments.`;
+6. English textParts in PRACTICE_CARD segments MUST include "thaiTranslation" field to help learners understand the practice phrase
+7. English textParts in other segment types (vocab, objective, etc.) do NOT need "thaiTranslation"
+8. Ensure textParts accurately reflects the content in the "text" field
+9. AVOID creating very short textParts (< 3 characters like ", " or " และ "). Instead, merge short connectors with adjacent Thai text to ensure smooth TTS generation
+10. NEVER create empty or whitespace-only textParts (e.g., " " or ""). Empty text will cause TTS generation to fail. Always merge spaces and punctuation with adjacent text of the same language.
+11. CRITICAL: For intro and conclusion segments, ALWAYS split long Thai text into multiple shorter textParts (1-2 sentences each). This ensures proper line-by-line display with English translations on screen. DO NOT use a single long textPart for these segments.`;
 
       const promptTemplate = PromptTemplate.fromTemplate(prompt);
       const chain = RunnableSequence.from([promptTemplate, this.llm, new StringOutputParser()]);

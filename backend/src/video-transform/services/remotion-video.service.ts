@@ -14,7 +14,7 @@ const execAsync = promisify(exec);
 @Injectable()
 export class RemotionVideoService {
   private readonly logger = new Logger(RemotionVideoService.name);
-  private readonly remotionDir = path.join(process.cwd(), 'remotion');
+  private readonly remotionDir = path.join(process.cwd(), '../remotion');
   private readonly videosDir = path.join(process.cwd(), 'videos');
 
   /**
